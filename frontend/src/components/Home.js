@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'; 
+import React, { useEffect, useRef } from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import Logo from '../utils/logo.png';
@@ -7,6 +7,9 @@ import adoptMeImage from '../utils/adoptMe.png';
 import Pets from '../utils/pets.jpg';
 import ScrollTrigger from "gsap/ScrollTrigger";
 import gsap from 'gsap';
+import HowItWorks from './Dashboard/HowItWorks';
+import FAQ from './Dashboard/FAQ';
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,135 +19,77 @@ const cardData = [
     { id: 3, name: "Mishra", location: "Patna", message: "Hi, I adopted this cat 'Luci' with the reference of this site, I'm really satisfied." }
 ];
 
-const HowItWorks = () => {
-    const containerRef = useRef(null);
-    const sectionsRef = useRef(null);
 
-    useEffect(() => {
-        const sections = sectionsRef.current.children;
 
-        gsap.to(sections, {
-            xPercent: -100 * (sections.length - 1),
-            ease: "none",
-            scrollTrigger: {
-                trigger: containerRef.current,
-                pin: true,
-                scrub: true,
-                snap: 1 / (sections.length - 1),
-                end: "+=1000", // Adjust based on your layout
-            }
-        });
 
-        return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill());
-        };
-    }, []);
-
-    return (
-        <div ref={containerRef} className="h-screen overflow-hidden">
-            <div className="flex h-full" ref={sectionsRef}>
-                <div className="flex-shrink-0 w-full h-full flex flex-col justify-center items-center bg-blue-500 text-white">
-                    <h2 className="text-4xl">Step 1</h2>
-                    <p>Description for Step 1.</p>
-                </div>
-                <div className="flex-shrink-0 w-full h-full flex flex-col justify-center items-center bg-green-500 text-white">
-                    <h2 className="text-4xl">Step 2</h2>
-                    <p>Description for Step 2.</p>
-                </div>
-                <div className="flex-shrink-0 w-full h-full flex flex-col justify-center items-center bg-red-500 text-white">
-                    <h2 className="text-4xl">Step 3</h2>
-                    <p>Description for Step 3.</p>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const FAQ = () => {
-    const containerRef = useRef(null);
-    const sectionsRef = useRef(null);
-
-    useEffect(() => {
-        const sections = sectionsRef.current.children;
-
-        gsap.to(sections, {
-            xPercent: -100 * (sections.length - 1),
-            ease: "none",
-            scrollTrigger: {
-                trigger: containerRef.current,
-                pin: true,
-                scrub: true,
-                snap: 1 / (sections.length - 1),
-                end: "+=1000", // Adjust based on your layout
-            }
-        });
-
-        return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill());
-        };
-    }, []);
-
-    return (
-        <div ref={containerRef} className="h-screen overflow-hidden">
-            <div className="flex h-full" ref={sectionsRef}>
-                <div className="flex-shrink-0 w-full h-full flex flex-col justify-center items-center bg-purple-500 text-white">
-                    <h2 className="text-4xl">FAQ 1</h2>
-                    <p>Answer to FAQ 1.</p>
-                </div>
-                <div className="flex-shrink-0 w-full h-full flex flex-col justify-center items-center bg-orange-500 text-white">
-                    <h2 className="text-4xl">FAQ 2</h2>
-                    <p>Answer to FAQ 2.</p>
-                </div>
-                <div className="flex-shrink-0 w-full h-full flex flex-col justify-center items-center bg-yellow-500 text-white">
-                    <h2 className="text-4xl">FAQ 3</h2>
-                    <p>Answer to FAQ 3.</p>
-                </div>
-            </div>
-        </div>
-    );
-};
 
 const WhyChooseUs = () => {
-    const imgRef = useRef(null); 
+    const imgRef = useRef(null);
+    const containerRef = useRef(null);
 
     useEffect(() => {
-        const tl = gsap.timeline({
+        // Timeline for the image animation (left to right)
+        const imgTimeline = gsap.timeline({
             scrollTrigger: {
-                trigger: imgRef.current, 
-                start: "top 80%", 
-                end: "top 30%", 
-                scrub: true, 
-                markers: true, // Set markers to false to remove them
+                trigger: imgRef.current,
+                start: "top 80%",
+                end: "top 30%",
+                scrub: true,
             },
         });
 
-        tl.fromTo(imgRef.current, 
+        imgTimeline.fromTo(
+            imgRef.current,
             { x: '-100%', y: '300' },
-            { x: '0%', y: '0%', duration: 1 } 
+            { x: '0%', y: '0%', duration: 1 }
         );
 
+        // Timeline for the whole section scroll up and fade out
+        const sectionTimeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "bottom 80%", // Start animation when bottom of component hits 80%
+                end: "bottom top", // End when the component is completely out of view
+                scrub: true,
+                pin: true, // Pin the section in place until it scrolls out
+            },
+        });
+
+        sectionTimeline.to(containerRef.current, {
+            y: '-100%', // Move the section up entirely out of view (adjust as needed)
+            opacity: 0, // Fade out the section
+            duration: 1,
+            ease: "none",
+            backgroundColor: "white", // Change background to white
+        });
+
         return () => {
-            tl.kill();
+            imgTimeline.kill();
+            sectionTimeline.kill();
         };
     }, []);
 
     return (
-        <div className='flex flex-col md:flex-row'>
-            <div className='md:w-1/2 h-screen relative overflow-hidden'>
-                <img 
-                    className='h-full object-center md:object-cover' 
-                    src={adoptMeImage} 
-                    ref={imgRef} 
-                    alt="Adopt Me" 
-                />
-            </div>
+        <div className='h-screen'>
+            <div ref={containerRef} className='flex flex-col md:flex-row h-screen'>
+                <div className='md:w-1/2 h-full relative bg-gray-900 overflow-hidden'>
+                    <img
+                        className='h-full object-center md:object-cover'
+                        src={adoptMeImage}
+                        ref={imgRef}
+                        alt="Adopt Me"
+                    />
+                </div>
 
-            <div className='md:w-1/2 h-screen text-center p-8 bg-red-500 flex flex-col justify-center'>
-                <h2 className='text-3xl font-bold'>Why Choose Us?</h2>
+                <div className='md:w-1/2 h-full text-center p-8 bg-gray-900 flex flex-col justify-center'>
+                    <h2 className='text-3xl font-bold'>Why Choose Us?</h2>
+                </div>
             </div>
         </div>
     );
 };
+
+
 
 const HomeCarousel = () => {
     return (
@@ -178,7 +123,7 @@ const Review = () => {
     return (
         <>
             <div className='text-center text-4xl font-bold p-2'>
-                <p className=''>Reviews from Our Happy Pet Parents</p>
+                <p className='text-gray-400'>Reviews from Our Happy Pet Parents</p>
             </div>
 
             <div className='w-screen flex flex-wrap justify-center md:grid md:grid-cols-2 lg:grid-cols-3 md:justify-items-center p-8'>
@@ -201,7 +146,7 @@ function Home() {
             <HomeCarousel />
             <WhyChooseUs />
             <HowItWorks />
-            <FAQ />
+            <FAQ/>
             <Review />
             <div className='h-screen bg-blue-950'></div>
         </div>
