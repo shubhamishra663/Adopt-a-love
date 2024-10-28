@@ -120,6 +120,7 @@ const Review = () => {
 
 
 
+
 function Home() {
     return (
         <div className="relative overflow-hidden">
@@ -134,3 +135,38 @@ function Home() {
 }
 
 export default Home;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div className="w-screen flex flex-wrap justify-center md:grid md:grid-cols-2 lg:grid-cols-3 md:justify-items-center p-8 overflow-x-auto scroll-smooth bg-red-300">
+            {cardData.map(card => (
+                <Card key={card.id} {...card} />
+            ))}
+        </div>
