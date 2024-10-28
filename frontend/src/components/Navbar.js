@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../utils/logo.png';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation(); // Get the current location
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Define a function to get the active class based on the current path
+  const getActiveClass = (path) => {
+    return location.pathname === path
+      ? 'bg-blue-700 text-white' // Active link styles
+      : 'text-gray-900'; // Inactive link styles
   };
 
   return (
@@ -40,29 +49,28 @@ export default function Navbar() {
           </svg>
         </button>
         <div className={`${isMenuOpen ? 'block' : 'hidden'} w-full md:flex md:flex-1 md:justify-center `} id="navbar-default">
-
           <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-white bg-opacity-20 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 backdrop-filter backdrop-blur-lg md:dark:bg-transparent dark:border-gray-700">
             <li>
-              <a
-                href="#"
-                className="block py-2 px-3  bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500"
-                aria-current="page"
+              <Link
+                to="/"
+                className={`block py-2 px-3 rounded md:p-0 ${getActiveClass('/')}`}
+                aria-current={location.pathname === '/' ? 'page' : undefined}
               >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+              <Link
+                to="/profile"
+                className={`block py-2 px-3 rounded md:p-0 ${getActiveClass('/profile')}`}
               >
-                Adopt
-              </a>
+                Profile
+              </Link>
             </li>
             <li>
               <a
                 href="#"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
                 About Us
               </a>
@@ -70,22 +78,21 @@ export default function Navbar() {
             <li>
               <a
                 href="#"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
-                Pricing
+                Adopt
               </a>
             </li>
             <li>
               <a
                 href="#"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
                 Contact
               </a>
             </li>
           </ul>
         </div>
-
       </div>
     </nav>
   );

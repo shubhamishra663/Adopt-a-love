@@ -1,16 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ReactNotifications, Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
-import Profile from './Profile';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/authContext';
 
-export default function Login() {
-  const navigate = useNavigate();
-  const { login, isAuthenticated ,value} = useContext(AuthContext); // Get login function and auth state
+import { Link } from 'react-router-dom';
 
-
+export default function Signup() {
   const [user, setUser] = useState({
+    name: '',
     email: '',
     password: '',
   });
@@ -22,6 +18,8 @@ export default function Login() {
       [id]: value,
     }));
   };
+
+
 
   const showNotification = (title, message, type) => {
     Store.addNotification({
@@ -39,66 +37,77 @@ export default function Login() {
     });
   };
 
-  const loginHandle = async () => {
+
+
+  const signup = async () => {
     try {
-      const res = await fetch('http://localhost:5000/login', {
+      const res = await fetch('http://localhost:5000/signup', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
+        credentials: 'include', 
         body: JSON.stringify({
+          name: user.name,
           email: user.email,
-          password: user.password
+          password: user.password,
         }),
       });
-
+  
       if (res.ok) {
         const responseData = await res.json();
         console.log(responseData);
-
+  
         // Add success notification
-        login(responseData.user.token)
-        showNotification("Success", "Login successful", "success");
-        navigate('/profile');
-      }
-      else {
+        showNotification("Success", "Signup successful", "success");
+      } else {
         // Fetch the error message text if available
         const errorMessage = await res.text();
-        showNotification("Error", errorMessage || "Login failed", "danger");
+        showNotification("Error", errorMessage || "Signup failed", "danger");
         console.log(`Request failed with status: ${res.status}`);
       }
-
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Error during fetch:', error);
-
+  
       // Add error notification
-      showNotification("Error", "Login failed. Please try again later.", "danger");
+      showNotification("Error", "Signup failed. Please try again later.", "danger");
     }
-  }
-
+  };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(user)
-    loginHandle()
-  }
+    signup();
+  };
 
-  
-  
   return (
-    (isAuthenticated?<Profile/>:(
     <div className="min-h-screen relative flex justify-center items-center bg-gray-100">
-      {/* <p>Authenticated : {isAuthenticated ? 'True' : 'false'},{value}</p> */}
       {/* Include React Notifications */}
       <ReactNotifications />
 
       <div className="w-full max-w-lg bg-white shadow-lg py-10 px-14 rounded-lg mx-4 md:mx-0 relative z-10">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-10">Login</h2>
+        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-10">Sign Up</h2>
 
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+          {/* Name Input */}
+          <div className="relative">
+            <input
+              type="text"
+              id="name"
+              value={user.name}
+              onChange={handleChange}
+              className="block px-3 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-transparent rounded-md border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder=" "
+              required
+            />
+            <label
+              htmlFor="name"
+              className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] bg-transparent px-3 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-5 peer-focus:top-4 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+            >
+              Name
+            </label>
+          </div>
 
           {/* Email Input */}
           <div className="relative">
@@ -146,7 +155,9 @@ export default function Login() {
             Submit
           </button>
         </form>
+
+        <p>Already have an account? <Link className='text-blue-600' to='/login'>Login</Link></p>
       </div>
-    </div>)
-    ))
+    </div>
+  );
 }

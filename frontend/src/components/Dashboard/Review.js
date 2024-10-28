@@ -55,17 +55,17 @@ export default function Review() {
             {/* Left Side Content with full-height sections */}
             <div className="w-1/2 overflow-y-auto">
                 <div className="h-screen p-10 flex items-center section-0">
-                    <p className="text-3xl text-gray-700">
+                    <p className="text-3xl text-gray-400">
                         "Every pet deserves a loving home – read how our adopters found friendship and loyalty in unexpected ways."
                     </p>
                 </div>
                 <div className="h-screen p-10 flex items-center section-1">
-                    <p className="text-3xl text-gray-700">
+                    <p className="text-3xl text-gray-400">
                         "We’re proud to share these stories from people just like you, who opened their hearts and homes."
                     </p>
                 </div>
                 <div className="h-screen p-10 flex items-center section-2">
-                    <p className="text-3xl text-gray-700">
+                    <p className="text-3xl text-gray-400">
                         "Join the journey – stories that remind us of the joy and companionship that only pets can bring."
                     </p>
                 </div>
