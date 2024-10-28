@@ -9,7 +9,7 @@ export default function Profile() {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { login, logout, isAuthenticated, value } = useContext(AuthContext); // Get login function and auth state
+  const { logout } = useContext(AuthContext); // Get login function and auth state
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -41,7 +41,6 @@ export default function Profile() {
   }, []);
 
 
-
   // Render loading state
   if (loading) {
     return <div>Loading...</div>;
@@ -52,33 +51,37 @@ export default function Profile() {
     return <div>Error: {error}</div>;
   }
 
-
   // Render profile data
   return (
     <div className='h-screen w-screen bg-gray-200'>
-      <div className='h-[8%] w-full bg-gray-400 flex justify-between'>
-        <div className='flex p-2 gap-2 bg-red-200'>
-          <div>
-            <div className='h-12 w-12 bg-green-800 rounded-full overflow-hidden'>
-              <img src={shu} alt='Profile' className='h-full w-full object-cover' /> {/* Keep the profile picture */}
+
+      {/* Banner and profile pic */}
+      <div className='bg-black h-auto'>
+        <div className='md:h-[20%] h-[12%] w-full bg-gray-400 flex justify-between'>
+          <div className='flex p-3 md:p-5 gap-2'>
+            <div className='top-[80%] md:top-[65%] relative flex justify-center items-center'>
+              <div className='border-2 h-20 w-20 bg-green-800 rounded-full overflow-hidden'>
+                <img src={shu} alt='Profile' className=' h-full w-full object-cover' /> {/* Keep the profile picture */}
+              </div>
             </div>
           </div>
-
-          <div>
-            <p className='font-semibold text-l'>{profileData?.user?.name || 'Name not available'}</p> {/* Display the name */}
-            <p className='text-xs'>{profileData?.user?.email || 'Email not available'}</p> {/* Dynamically render email */}
-          </div>
-        </div>
-
-        <div className='h-full flex items-center p-5'>
-          <button onClick={logout} className='bg-blue-500 p-1 rounded-md text-sm'>Log out</button>
         </div>
       </div>
 
-      <div className="h-40 w-60  p-3">
+      {/* User Details */}
+      <div className='bg-purple-400 p-3 pt-16 md:p-5  md:pt-10  '> {/* Add margin-top to separate from image */}
+        <p className='font-semibold text-2xl'>{profileData?.user?.name || 'Name not available'}</p> {/* Display the name */}
+        <p className='text-xs'>{profileData?.user?.email || 'Email not available'}</p> {/* Dynamically render email */}
+      </div>
+
+      <div className="h-40 w-60 p-3">
         <Link to='/pets'>
-        <img src={pets} alt='Profile' className='h-full w-full object-cover rounded-md' /> {/* Keep the profile picture */}
+          <img src={pets} alt='Profile' className='h-full w-full object-cover rounded-md' /> {/* Keep the profile picture */}
         </Link>
+      </div>
+
+      <div className='h-full flex items-center p-5'>
+        <button onClick={logout} className='bg-blue-500 p-1 rounded-md text-sm'>Log out</button>
       </div>
     </div>
   );
