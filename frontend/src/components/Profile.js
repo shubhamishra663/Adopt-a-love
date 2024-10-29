@@ -9,14 +9,14 @@ export default function Profile() {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { logout } = useContext(AuthContext); // Get login function and auth state
+  const { logout, userData, setUserData } = useContext(AuthContext); // Get login function and auth state
 
   useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true); // Start loading
       setError(null); // Reset error state
       const token = Cookies.get('token');
-      console.log(`Token in Profile: ${token}`);  // Only logging the token, per your preference
+      // console.log(`Token in Profile: ${token}`);  // Only logging the token, per your preference
       try {
         const response = await fetch('http://localhost:5000/profile', {  // Ensure the full URL is correct
           method: 'GET',
@@ -28,9 +28,10 @@ export default function Profile() {
         if (!response.ok) {
           throw new Error('Failed to fetch profile data');
         }
+
         const data = await response.json();
-        console.log('Data after Response:', data); // Print full object in readable format
-        setProfileData(data); // Update state with the profile data
+        // console.log('Data after Response:', data); // Print full object in readable format
+        setUserData(data); // Update state with the profile data
       } catch (error) {
         setError(error.message); // Update error state
       } finally {
@@ -39,6 +40,46 @@ export default function Profile() {
     };
     fetchProfile(); // Call the fetch function
   }, []);
+
+
+
+
+
+
+  const fetchPets = async () => {
+    setLoading(true); // Start loading
+    setError(null); // Reset error state
+    const token = Cookies.get('token');
+
+    console.log("inside fetchpets")
+    console.log(`Token in fetchpet: ${token}`);  // Only logging the token, per your preference
+    try {
+      const response = await fetch(`http://localhost:5000/user-pets/${userData?.user?.email}`, {  // Ensure the full URL is correct
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Use the token from cookies
+          'Accept': 'application/json' // Ensure the response is in JSON format
+        },
+      });
+      console.log(await response.json());
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile data');
+      }
+
+      console.log("above response.json")
+      const data = await response.json();
+      console.log("above response.json")
+
+      console.log('Data after Response:', data);
+    } catch (error) {
+      setError(error.message); // Update error state
+    } finally {
+      setLoading(false); // Loading is complete
+    }
+  };
+
+
 
 
   // Render loading state
@@ -69,10 +110,31 @@ export default function Profile() {
       </div>
 
       {/* User Details */}
-      <div className='bg-purple-400 p-3 pt-16 md:p-5  md:pt-10  '> {/* Add margin-top to separate from image */}
-        <p className='font-semibold text-2xl'>{profileData?.user?.name || 'Name not available'}</p> {/* Display the name */}
-        <p className='text-xs'>{profileData?.user?.email || 'Email not available'}</p> {/* Dynamically render email */}
+      <div className='bg-purple-400 p-3 pt-16 md:p-5  md:pt-10 flex justify-between '> {/* Add margin-top to separate from image */}
+        <div className='bg-red-500'>
+          <p className='font-semibold text-2xl'>{userData?.user?.name || 'Name not available'}</p> {/* Display the name */}
+          <p className='text-xs'>{userData?.user?.email || 'Email not available'}</p> {/* Dynamically render email */}
+        </div>
+
+        <div className='bg-green-500 px-10'>
+          Edit
+        </div>
       </div>
+
+
+      {/* Sections */}
+
+      <div className='w-screen h-28 md:h-32 bg-pink-700 flex md:gap-10 p-3 md:p-5  justify-between md:justify-normal'>
+        <button onClick={fetchPets} className='h-full w-[45%] md:w-40 bg-green-500 rounded-md flex justify-center items-center'><p className='font-semibold text-xl'>Pets</p></button>
+        <button className='h-full w-[45%] md:w-40 bg-green-500 rounded-md flex justify-center items-center'><p className='font-semibold text-xl'>Lost Pets</p></button>
+      </div>
+
+
+
+
+
+
+
 
       <div className="h-40 w-60 p-3">
         <Link to='/pets'>
