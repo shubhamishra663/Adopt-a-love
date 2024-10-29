@@ -7,7 +7,7 @@ import { AuthContext } from '../context/authContext';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login, isAuthenticated ,value} = useContext(AuthContext); // Get login function and auth state
+  const { login, isAuthenticated ,value ,userData} = useContext(AuthContext); // Get login function and auth state
 
 
   const [user, setUser] = useState({
@@ -53,32 +53,27 @@ export default function Login() {
           password: user.password
         }),
       });
-
+  
       if (res.ok) {
         const responseData = await res.json();
         console.log(responseData);
-
-        // Add success notification
-        login(responseData.user.token)
+  
+        // Call login with token and user data
+        login(responseData.user.token, responseData.user); // Make sure to get user data from response
+  
         showNotification("Success", "Login successful", "success");
-        navigate('/profile');
-      }
-      else {
-        // Fetch the error message text if available
+        navigate(`/profile/${responseData.user.email}`); // Redirect to profile with email
+      } else {
+        // Handle error
         const errorMessage = await res.text();
         showNotification("Error", errorMessage || "Login failed", "danger");
         console.log(`Request failed with status: ${res.status}`);
       }
-
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Error during fetch:', error);
-
-      // Add error notification
       showNotification("Error", "Login failed. Please try again later.", "danger");
     }
-  }
-
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();

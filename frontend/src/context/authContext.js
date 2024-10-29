@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = Cookies.get('token');
-    alert(`getting token ${token}`);
+    // alert(`getting token ${token}`);
     if (token) {
       setIsAuthenticated(true);
       // navigate('/profile');

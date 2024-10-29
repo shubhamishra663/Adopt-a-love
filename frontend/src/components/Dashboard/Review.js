@@ -6,7 +6,7 @@ import Cat from '../../utils/cat.jpg';
 gsap.registerPlugin(ScrollTrigger);
 
 const Card = ({ name, location, message }) => (
-    <div className="bg-white bg-opacity-20 backdrop-blur-lg shadow-lg h-[50%] w-[85%] md:w-[60%] lg:w-[50%] flex items-center p-5 rounded-2xl mx-2 my-2">
+    <div className="bg-white bg-opacity-20 backdrop-blur-lg shadow-2xl h-[50%] w-[85%] md:w-[60%] lg:w-[50%] flex items-center p-5 rounded-2xl mx-2 my-2">
         <div className="bg-gray-800 h-[70%] w-full p-3 flex flex-col justify-between rounded-xl shadow-inner">
             <div className="h-[35%] flex justify-center">
                 <img className="h-full w-[25%] rounded-full relative bottom-[60%]" src={Cat} alt="Cat" loading="lazy" />

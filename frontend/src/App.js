@@ -21,26 +21,26 @@ function App() {
 
 // Separate App content for handling background based on theme
 const AppContent = () => {
-  const { isAuthenticated, theme } = useContext(AuthContext);
+  const { isAuthenticated, theme ,userData} = useContext(AuthContext);
 
   // Set the background color based on the theme
   const backgroundColor = theme === 'dark' ? '#333' : '#fff';
 
   return (
     <div style={{ backgroundColor, minHeight: '100vh' }}>
-      <Navbar />
-      <AppRoutes isAuthenticated={isAuthenticated} />
+      <Navbar userData={userData}/>
+      <AppRoutes isAuthenticated={isAuthenticated} userData={userData} />
     </div>
   );
 };
 
-const AppRoutes = ({ isAuthenticated }) => {
+const AppRoutes = ({ isAuthenticated ,userData}) => {
   return (
     <Routes>
       <Route index element={<Home />} />
       <Route path="signup" element={<Signup />} />
-      <Route path="login" element={isAuthenticated ? <Navigate to="/profile" /> : <Login />} />
-      <Route path="profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
+      <Route path="login" element={isAuthenticated ? <Navigate to={`/profile/${userData?.user?.email}`} /> : <Login />} />
+      <Route path="profile/:email" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
       <Route path="pets" element={isAuthenticated ? <Pets /> : <Navigate to="/login" />} />
     </Routes>
   );

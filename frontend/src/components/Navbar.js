@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../utils/logo.png';
 
-export default function Navbar() {
+import AuthContext  from '../context/authContext';
+import { useContext } from 'react';
+
+export default function Navbar({userData}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation(); // Get the current location
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -61,7 +65,7 @@ export default function Navbar() {
             </li>
             <li>
               <Link
-                to="/profile"
+                to={`/profile/${userData?.user?.email}`}
                 className={`block py-2 px-3 rounded md:p-0 ${getActiveClass('/profile')}`}
               >
                 Profile
