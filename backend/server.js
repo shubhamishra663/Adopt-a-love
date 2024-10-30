@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const UserModel = require('./models/userModel');
+const PetModel=require('./models/petModels')
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 
@@ -21,10 +22,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-mongoose.connect(MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log('Connected to MongoDB'))
+mongoose.connect(MONGODB_URL).then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB', err));
 
 // Token verification middleware
@@ -34,23 +32,16 @@ const verifyToken = (req, res, next) => {
   if (!token) {
     return res.status(403).json({ message: "No token provided" });
   }
-
-  // Use your secret from the environment variable or a fallback
   const secretKey = process.env.SECRET_CODE || 'shhhh';
 
   try {
-    // Verify the token
     const decoded = jwt.verify(token, secretKey);
-    
-    // Attach user data to the request object
     req.user = decoded; 
-    next(); // Proceed to the next middleware or route handler
+    next(); 
   } catch (error) {
-    // Handle specific JWT errors if needed
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({ message: "Token expired" });
     }
-    
     return res.status(401).json({ message: "Invalid token" });
   }
 };
@@ -79,7 +70,6 @@ app.post('/signup', async (req, res) => {
     const newUser = new UserModel({ name, email, password: hashedPassword });
     await newUser.save();
 
-    // Generating JWT token
     const token = jwt.sign(
       { id: newUser._id, email },
       'shhhh',
@@ -111,7 +101,6 @@ app.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Invalid password' });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       { id: user._id ,email},
       'shhhh',
@@ -121,7 +110,6 @@ app.post('/login', async (req, res) => {
     );
     user.token = token;
 
-    // Cookie options
     const options = {
       maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
       httpOnly: true,
@@ -136,21 +124,18 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.get('/profile', verifyToken, async(req, res) => {
-  // Example of returning user data
+app.get('/profile/:email', verifyToken, async(req, res) => {
   if (!req.user) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   
   try {
-    // Fetch user data from the database by ID
     const user = await UserModel.findById(req.user.id); // Assuming you're using Mongoose
     
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Respond with the latest user data
     res.status(200).json({
       message: `Welcome, ${user.name}`,
       user: {
@@ -164,6 +149,103 @@ app.get('/profile', verifyToken, async(req, res) => {
   }
   
 });
+
+
+
+
+
+
+// Route to get all pets of a user by email
+app.get('/user-pets/:email', verifyToken,async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const user = await UserModel.findOne({ email }).populate('pets');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'User pets fetched successfully',
+      pets: user.pets
+    });
+  } catch (error) {
+    console.error('Error fetching user pets:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
+
+app.post('/petAdd', async (req, res) => {
+  const { email, petName, age, species, breed, gender, weight, color, size, vaccinated, description, image } = req.body;
+
+  console.log(`${email, petName, age, species, breed, gender, weight, color, size, vaccinated, description, image}`);
+  
+  
+  // if (!email || !petName || !age || !species || !breed || !gender || !color || !size || vaccinated === undefined || !description) {
+  //   return res.status(400).json({ message: 'Missing required fields' });
+  // }
+
+  try {
+    const newPet = new PetModel({
+      email,
+      petName,
+      age,
+      species,
+      breed,
+      gender,
+      weight,
+      color,
+      size,
+      vaccinated,
+      description,
+      image,
+    });
+
+    const savedPet = await newPet.save();
+
+    const user = await UserModel.findOneAndUpdate(
+      { email },
+      { $push: { pets: savedPet._id } }, 
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'Pet added successfully and user updated',
+      pet: savedPet,
+      user,
+    });
+  } catch (error) {
+    console.error('Error adding pet:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+app.get('/adopt', async (req, res) => {
+  try {
+    const pets = await PetModel.find({});
+    res.status(200).json(pets);
+  } catch (error) {
+    console.error('Error fetching pets:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
+
 
 // Start the server
 app.listen(port, () => {

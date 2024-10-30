@@ -5,7 +5,6 @@ import { AuthContext } from '../context/authContext';
 import Pets from './Pets';
 
 export default function Profile() {
-  const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { logout, userData, setUserData } = useContext(AuthContext);

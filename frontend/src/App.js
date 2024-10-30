@@ -8,6 +8,8 @@ import Pets from './components/Pets';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AuthProvider, { AuthContext } from './context/authContext';
 import { useContext } from 'react';
+import PetForm from './components/PetForm';
+import Adopt from './components/Adopt';
 
 function App() {
   return (
@@ -42,6 +44,9 @@ const AppRoutes = ({ isAuthenticated ,userData}) => {
       <Route path="login" element={isAuthenticated ? <Navigate to={`/profile/${userData?.user?.email}`} /> : <Login />} />
       <Route path="profile/:email" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
       <Route path="pets" element={isAuthenticated ? <Pets /> : <Navigate to="/login" />} />
+      <Route path="petform" element={isAuthenticated ? <PetForm/> : <Navigate to="/login" />} />
+      <Route path="adopt" element={<Adopt />} />
+
     </Routes>
   );
 };

@@ -170,3 +170,47 @@ export default Home;
                 <Card key={card.id} {...card} />
             ))}
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        email: formData.email,
+                    // petName: formData.petName,
+                    // breed: formData.breed,
+                    height: formData.height,
+                    weight: formData.weight,
+
+
+                    // age: formData.age,
+                    // species: formData.species,
+                    // gender: formData.gender,
+                    // color: formData.color,
+                    // size: formData.size,
+                    // vaccinated: false,
+                    // description: formData.vaccinated,
+                    // image: formData.image
+
+
+
+
+
+
+
+
+        name,age,species,breed,gender,height,weight,color,size,vaccinated,description,image
