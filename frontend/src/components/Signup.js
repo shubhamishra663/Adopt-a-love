@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ReactNotifications, Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { Link } from 'react-router-dom';
+
 
 export default function Signup() {
   const [user, setUser] = useState({
@@ -10,6 +11,7 @@ export default function Signup() {
     email: '',
     password: '',
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -61,6 +63,7 @@ export default function Signup() {
   
         // Add success notification
         showNotification("Success", "Signup successful", "success");
+        navigate('/login')
       } else {
         // Fetch the error message text if available
         const errorMessage = await res.text();

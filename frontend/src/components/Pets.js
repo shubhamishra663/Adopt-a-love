@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 
 const PetsCard = ({ pet, index }) => {
   return (
-    <div key={index} className="h-72 w-[45%] md:w-[20%] rounded-xl shadow-lg p-2">
+    <div key={index} className="h-72 w-[46%] md:w-[20%] rounded-xl shadow-lg md:p-2">
       <div className="h-[60%] rounded-xl overflow-hidden">
         <img
           className="h-full w-full object-cover"

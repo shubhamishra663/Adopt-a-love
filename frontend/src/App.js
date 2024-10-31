@@ -10,6 +10,7 @@ import AuthProvider, { AuthContext } from './context/authContext';
 import { useContext } from 'react';
 import PetForm from './components/PetForm';
 import Adopt from './components/Adopt';
+import PetProfile from './components/PetProfile';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ const AppRoutes = ({ isAuthenticated ,userData}) => {
       <Route path="pets" element={isAuthenticated ? <Pets /> : <Navigate to="/login" />} />
       <Route path="petform" element={isAuthenticated ? <PetForm/> : <Navigate to="/login" />} />
       <Route path="adopt" element={<Adopt />} />
+      <Route path="petprofile/:petid" element={<PetProfile />} />
 
     </Routes>
   );

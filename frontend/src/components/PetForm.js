@@ -1,5 +1,6 @@
 import React, { useContext, useState, useCallback, useMemo } from 'react';
 import { AuthContext } from '../context/authContext';
+import { useNavigate } from 'react-router-dom';
 
 function PetForm() {
     const { userData } = useContext(AuthContext);
@@ -16,6 +17,7 @@ function PetForm() {
         description: '',
         image: null,
     });
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -47,6 +49,7 @@ function PetForm() {
             const responseData = await res.json();
             if (res.ok) {
                 console.log(responseData);
+                navigate(`/profile/${userData?.user?.email}`)
             } else {
                 console.error(`Request failed with status: ${res.status}`, responseData.message);
             }
