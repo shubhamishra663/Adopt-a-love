@@ -189,7 +189,7 @@ export default function Adopt() {
                             <PetCard 
                                 key={pet._id} 
                                 pet={pet} 
-                                onClick={() => navigate(`/petprofile/${pet._id}`)} // Navigate to pet profile
+                                onClick={() => navigate(`/petprofile/${pet._id}`, { state: pet})} // Navigate to pet profile
                             />
                         ))}
                     </div>
