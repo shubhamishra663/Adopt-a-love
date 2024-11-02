@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ReactNotifications, Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import Profile from './Profile';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
 
 export default function Login() {
   const navigate = useNavigate();
   const { login, isAuthenticated ,value ,userData} = useContext(AuthContext); // Get login function and auth state
-
+  const location = useLocation();
+  const loct = location.state?.from?.pathname ;
 
   const [user, setUser] = useState({
     email: '',
@@ -62,7 +63,10 @@ export default function Login() {
         login(responseData.user.token, responseData.user); // Make sure to get user data from response
   
         showNotification("Success", "Login successful", "success");
-        navigate(`/profile/${responseData.user.email}`); // Redirect to profile with email
+        navigate(); // Redirect to profile with email
+
+        navigate(loct || `/profile/${responseData.user.email}`, { replace: true }); // Navigate back to the previous page
+
       } else {
         // Handle error
         const errorMessage = await res.text();

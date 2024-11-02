@@ -3,11 +3,13 @@ import Cookies from 'js-cookie';
 import shu from '../utils/pets.jpg';
 import { AuthContext } from '../context/authContext';
 import Pets from './Pets';
+import LostPets from './LostPets';
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { logout, userData, setUserData } = useContext(AuthContext);
+  const [activeComponent,setActiveComponent]=useState('pets')
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -78,16 +80,18 @@ export default function Profile() {
 
       {/* Sections */}
       <div className='w-full h-28 md:h-32 flex md:gap-10 p-3 md:p-5 justify-between md:justify-normal'>
-        <button className='h-full w-[45%] md:w-40 bg-green-500 rounded-md flex justify-center items-center'>
+        <button onClick={()=>setActiveComponent('pets')} className='h-full w-[45%] md:w-40 bg-green-100 rounded-md flex justify-center items-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none'>
           <p className='font-semibold text-xl'>Pets</p>
         </button>
-        <button className='h-full w-[45%] md:w-40 bg-green-500 rounded-md flex justify-center items-center'>
+
+        <button onClick={()=>setActiveComponent('lostPets')} className='h-full w-[45%] md:w-40 bg-green-100 rounded-md flex justify-center items-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none'>
           <p className='font-semibold text-xl'>Lost Pets</p>
         </button>
       </div>
 
       <div className='bg-red-700 flex'>
-        <Pets/>
+        {activeComponent==='pets' && <Pets/>}
+        {activeComponent==='lostPets' && <LostPets/>}
       </div>
 
       <div className='h-full flex items-center p-5'>
