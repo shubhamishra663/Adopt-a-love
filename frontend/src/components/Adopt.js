@@ -93,6 +93,7 @@ export default function Adopt() {
         setSortOption(e.target.value);
     };
 
+    
     if (loading) return <p className="text-white">Loading...</p>;
     if (error) return <p className="text-red-400">Error: {error}</p>;
 
@@ -181,7 +182,7 @@ export default function Adopt() {
                         <PetCard 
                             key={pet._id} 
                             pet={pet} 
-                            onClick={() => navigate(`/petprofile/${encodeURIComponent(pet._id)}`, { state: pet })}
+                            onClick={() =>navigate(`/petprofile/${encodeURIComponent(pet._id)}`, { state: pet })}
                         />
                     ))
                 ) : (
