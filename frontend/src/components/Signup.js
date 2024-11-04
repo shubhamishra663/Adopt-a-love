@@ -157,9 +157,11 @@ export default function Signup() {
           >
             Submit
           </button>
+
+          <p className='text-black'>Already have an account? <Link className='text-blue-600' to='/login'>Login</Link></p>
+
         </form>
 
-        <p>Already have an account? <Link className='text-blue-600' to='/login'>Login</Link></p>
       </div>
     </div>
   );

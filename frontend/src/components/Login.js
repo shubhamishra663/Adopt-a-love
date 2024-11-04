@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ReactNotifications, Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import Profile from './Profile';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
 
 export default function Login() {
@@ -144,6 +144,8 @@ export default function Login() {
           >
             Submit
           </button>
+          <p className='text-black'>Don't have an account? <Link className='text-blue-600' to='/signup'>Create an account</Link></p>
+
         </form>
       </div>
     </div>)

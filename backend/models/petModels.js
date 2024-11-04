@@ -13,6 +13,7 @@ const petSchema = new mongoose.Schema({
   vaccinated: { type: Boolean, required: true },
   image: { type: Object, default: null },
   description: { type: String, required: true },
+  state:{type:String, required:true}
 }, {
   timestamps: true, 
 });

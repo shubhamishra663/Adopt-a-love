@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
@@ -7,36 +6,55 @@ export const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState('dark');
-  const [value, setValue] = useState(1);
-
-  const [userData,setUserData]=useState(null)
+  const [theme, setTheme] = useState('dark'); // Theme state
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    // alert(`getting token ${token}`);
+    // Initialize theme from localStorage if present
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    // Check for token in localStorage to set authentication status
+    const token = localStorage.getItem('token');
     if (token) {
       setIsAuthenticated(true);
-      // navigate('/profile');
     } else {
       setIsAuthenticated(false);
     }
     setLoading(false);
-  }, [navigate]);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme); // Save theme preference
+  };
 
   const login = (token) => {
-    Cookies.set('token', token, { expires: 3 });
+    localStorage.setItem('token', token); // Store token in localStorage
     setIsAuthenticated(true);
   };
 
   const logout = () => {
-    Cookies.remove('token');
+    localStorage.removeItem('token'); // Remove token from localStorage
     setIsAuthenticated(false);
+    navigate('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, loading, value ,userData, setUserData }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        login,
+        logout,
+        loading,
+        theme,
+        toggleTheme,
+        userData,
+        setUserData,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

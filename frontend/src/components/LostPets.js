@@ -50,8 +50,7 @@ export default function LostPets() {
     const fetchPets = async () => {
       setLoading(true);
       setError(null);
-      const token = Cookies.get('token');
-
+      const token = localStorage.getItem('token');
       try {
         const response = await axios.get(`http://localhost:5000/user-pets/${userData?.user?.email}`, {
           headers: {

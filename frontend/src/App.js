@@ -22,22 +22,24 @@ function App() {
   );
 }
 
-// Separate App content for handling background based on theme
+// Separate App content for handling background and text color based on theme
 const AppContent = () => {
-  const { isAuthenticated, theme ,userData} = useContext(AuthContext);
+  const { isAuthenticated, theme, userData } = useContext(AuthContext);
 
-  // Set the background color based on the theme
-  const backgroundColor = theme === 'dark' ? '#333' : '#fff';
+  // Apply Tailwind classes based on the theme
+  const themeClasses = theme === 'dark'
+    ? 'bg-[#0d0d0d] text-white'
+    : 'bg-[#D9D9D9] text-black';
 
   return (
-    <div style={{ backgroundColor, minHeight: '100vh' }}>
-      <Navbar userData={userData}/>
-      <AppRoutes isAuthenticated={isAuthenticated} userData={userData} />
+    <div className={`min-h-screen ${themeClasses}`}>
+      <Navbar userData={userData} />
+      <AppRoutes isAuthenticated={isAuthenticated} userData={userData} theme={theme} />
     </div>
   );
 };
 
-const AppRoutes = ({ isAuthenticated ,userData}) => {
+const AppRoutes = ({ isAuthenticated, userData, theme }) => {
   return (
     <Routes>
       <Route index element={<Home />} />
@@ -45,10 +47,9 @@ const AppRoutes = ({ isAuthenticated ,userData}) => {
       <Route path="login" element={isAuthenticated ? <Navigate to={`/profile/${userData?.user?.email}`} /> : <Login />} />
       <Route path="profile/:email" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
       <Route path="pets" element={isAuthenticated ? <Pets /> : <Navigate to="/login" />} />
-      <Route path="petform" element={isAuthenticated ? <PetForm/> : <Navigate to="/login" />} />
+      <Route path="petform" element={isAuthenticated ? <PetForm /> : <Navigate to="/login" />} />
       <Route path="adopt" element={<Adopt />} />
       <Route path="petprofile/:petid" element={<PetProfile />} />
-
     </Routes>
   );
 };

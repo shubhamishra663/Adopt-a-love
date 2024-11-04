@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
     userType: { type: String, default: null },
     latitude: { type: Number, default: null },
     longitude: { type: Number, default: null },
-    pets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pet' }] 
+    pets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pet' }] ,
+    MobileNo:{type:Number, default:null}
     
 });
 

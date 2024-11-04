@@ -1,32 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../utils/logo.png';
+import { AuthContext } from '../context/authContext';
 
-import AuthContext  from '../context/authContext';
-import { useContext } from 'react';
-
-export default function Navbar({userData}) {
+export default function Navbar({ userData }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation(); // Get the current location
-
+  const location = useLocation();
+  const { theme } = useContext(AuthContext);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Define a function to get the active class based on the current path
+  // Function to get active class for the current path
   const getActiveClass = (path) => {
     return location.pathname === path
-      ? 'bg-blue-700 text-white' // Active link styles
-      : 'text-gray-900'; // Inactive link styles
+      ? 'text-white font-semibold' // Active link styles
+      : 'text-gray-900 dark:text-gray-300'; // Inactive link styles
   };
 
   return (
-    <nav className="bg-transparent border-gray-200 dark:bg-transparent shadow-lg">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between p-2">
-        <a href="#" className="flex items-center space-x-2 rtl:space-x-reverse">
+    <nav className={`shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'} transition-colors`}>
+      <div className="max-w-screen-xl flex items-center justify-between p-4">
+        <a href="#" className="flex items-center space-x-2">
           <img src={logo} className="h-10" alt="Pet a Love Logo" />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-black">Adopt a Love</span>
+          <span className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+            Adopt a Love
+          </span>
         </a>
         <button
           onClick={toggleMenu}
@@ -52,12 +52,12 @@ export default function Navbar({userData}) {
             />
           </svg>
         </button>
-        <div className={`${isMenuOpen ? 'block' : 'hidden'} w-full md:flex md:flex-1 md:justify-center `} id="navbar-default">
-          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-white bg-opacity-20 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 backdrop-filter backdrop-blur-lg md:dark:bg-transparent dark:border-gray-700">
+        <div className={`${isMenuOpen ? 'block' : 'hidden'} w-full md:flex md:flex-1 md:justify-center`} id="navbar-default">
+          <ul className="font-medium flex flex-col md:flex-row p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-white bg-opacity-20 md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:items-center md:dark:bg-transparent dark:border-gray-700 backdrop-filter backdrop-blur-lg">
             <li>
               <Link
                 to="/"
-                className={`block py-2 px-3 rounded md:p-0 ${getActiveClass('/')}`}
+                className={`block py-2 px-3 rounded ${getActiveClass('/')}`}
                 aria-current={location.pathname === '/' ? 'page' : undefined}
               >
                 Home
@@ -66,7 +66,7 @@ export default function Navbar({userData}) {
             <li>
               <Link
                 to={`/profile/${userData?.user?.email}`}
-                className={`block py-2 px-3 rounded md:p-0 ${getActiveClass('/profile')}`}
+                className={`block py-2 px-3 rounded ${getActiveClass('/profile')}`}
               >
                 Profile
               </Link>
@@ -74,7 +74,7 @@ export default function Navbar({userData}) {
             <li>
               <Link
                 to="#"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                className={`block py-2 px-3 rounded ${getActiveClass('#')}`}
               >
                 About Us
               </Link>
@@ -82,7 +82,7 @@ export default function Navbar({userData}) {
             <li>
               <Link
                 to="/adopt"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                className={`block py-2 px-3 rounded ${getActiveClass('/adopt')}`}
               >
                 Adopt
               </Link>
@@ -90,9 +90,9 @@ export default function Navbar({userData}) {
             <li>
               <a
                 href="#"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                className={`block py-2 px-3 rounded ${getActiveClass('#contact')}`}
               >
-                Contact
+                Contact Us
               </a>
             </li>
           </ul>

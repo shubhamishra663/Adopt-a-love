@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 import shu from '../utils/pets.jpg';
 import { AuthContext } from '../context/authContext';
 import Pets from './Pets';
@@ -9,13 +8,13 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { logout, userData, setUserData } = useContext(AuthContext);
-  const [activeComponent,setActiveComponent]=useState('pets')
+  const [activeComponent, setActiveComponent] = useState('pets');
 
   useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true);
       setError(null);
-      const token = Cookies.get('token');
+      const token = localStorage.getItem('token'); // Retrieve token from localStorage
       try {
         const response = await fetch(`http://localhost:5000/profile/${userData?.user?.email}`, {
           method: 'GET',
@@ -51,8 +50,7 @@ export default function Profile() {
 
   // Render profile data
   return (
-    <div className='h-auto w-full bg-gray-400 overflow-hidden'> {/* Changed w-screen to w-full and added overflow-hidden */}
-
+    <div className='h-auto w-full bg-gray-400 overflow-hidden'>
       {/* Banner and profile pic */}
       <div className='bg-black h-fit'>
         <div className='md:h-[30%] h-[12%] w-full bg-gray-800 flex justify-between'>
@@ -67,7 +65,7 @@ export default function Profile() {
       </div>
 
       {/* User Details */}
-      <div className='bg-purple-400 p-3 pt-16  md:pt-10 flex justify-between'>
+      <div className='bg-purple-400 p-3 pt-16 md:pt-10 flex justify-between'>
         <div className=''>
           <p className='font-semibold text-2xl'>{userData?.user?.name || 'Name not available'}</p>
           <p className='text-xs'>{userData?.user?.email || 'Email not available'}</p>
@@ -80,18 +78,18 @@ export default function Profile() {
 
       {/* Sections */}
       <div className='w-full h-28 md:h-32 flex md:gap-10 p-3 md:p-5 justify-between md:justify-normal'>
-        <button onClick={()=>setActiveComponent('pets')} className='h-full w-[45%] md:w-40 bg-green-100 rounded-md flex justify-center items-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none'>
+        <button onClick={() => setActiveComponent('pets')} className='h-full w-[45%] md:w-40 bg-green-100 rounded-md flex justify-center items-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none'>
           <p className='font-semibold text-xl'>Pets</p>
         </button>
 
-        <button onClick={()=>setActiveComponent('lostPets')} className='h-full w-[45%] md:w-40 bg-green-100 rounded-md flex justify-center items-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none'>
+        <button onClick={() => setActiveComponent('lostPets')} className='h-full w-[45%] md:w-40 bg-green-100 rounded-md flex justify-center items-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none'>
           <p className='font-semibold text-xl'>Lost Pets</p>
         </button>
       </div>
 
       <div className='bg-red-700 flex'>
-        {activeComponent==='pets' && <Pets/>}
-        {activeComponent==='lostPets' && <LostPets/>}
+        {activeComponent === 'pets' && <Pets />}
+        {activeComponent === 'lostPets' && <LostPets />}
       </div>
 
       <div className='h-full flex items-center p-5'>

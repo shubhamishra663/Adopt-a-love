@@ -73,12 +73,12 @@ export default function PetProfile() {
     return (
         <div className='bg-gray-800 flex flex-col text-white'>
             <header className='bg-purple-600 flex justify-between px-2 md:px-10 p-3'>
-                <p className='font-semibold text-2xl'>Adopt {pet?.name || "Kitty"}</p>
-                <p className='text-blue-400 text-sm'>Posted on 1 November 2024</p>
+                <p className='font-semibold text-2xl'>Adopt {pet?.petName || "Kitty"}</p>
+                <p className='text-blue-400 text-sm'>{pet?.updatedAt}</p>
             </header>
 
             {/* Pet image */}
-            <section className='bg-gray-700 h-[60%] flex items-center justify-center p-5 md:p-14'>
+            <section className='bg-black h-[60%] flex items-center justify-center p-5 md:p-14'>
                 <div className='bg-gray-600 h-96 w-11/12 md:w-1/2 relative rounded-lg overflow-hidden shadow-lg'>
                     <div className='loading-bar bg-[#121212] h-full w-full flex flex-col justify-center items-center absolute top-0 transition-all duration-700'>
                         <div className='loader absolute left-0 h-[4px] bg-green-500' style={{ width: `${counter}%` }}></div>
@@ -91,9 +91,9 @@ export default function PetProfile() {
             </section>
 
             {/* Quick Facts */}
-            <section className='bg-gray-700'>
+            <section className='bg-black'>
                 <p className='font-bold text-3xl p-3'>Quick facts</p>
-                <div className='flex bg-gray-600 justify-evenly p-1 md:p-3 flex-wrap gap-5'>
+                <div className='flex justify-evenly p-1 md:p-3 flex-wrap gap-5'>
                     {facts.map(({ icon, additionalIcon, label, value }, index) => (
                         <div key={index} className='flex items-center bg-gray-500 h-28 w-40 md:h-32 md:w-60 gap-3 rounded-lg shadow-xl p-3'>
                             <div className='flex flex-col items-center w-16 md:w-24'>
@@ -110,8 +110,8 @@ export default function PetProfile() {
             </section>
 
             {/* Contact Info */}
-            <section className='p-3 md:p-5'>
-                <div className='bg-gray-600 border-2 border-gray-500 p-5 rounded-md'>
+            <section className='p-3 md:p-5 bg-black'>
+                <div className='bg-[#0d0d0d] border-2 border-gray-500 p-5 rounded-md'>
                     <div><p className='text-3xl font-bold'>Contact Info</p></div>
                     <div className='p-3 md:p-5 leading-5'>
                         <p className='text-lg bg-purple-400 w-fit'><span className='font-medium text-xl'>Name</span> {pet?.ownerName || "Shubham Mishra"}</p>

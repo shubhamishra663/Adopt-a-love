@@ -241,6 +241,32 @@ app.get('/adopt', async (req, res) => {
 });
 
 
+// GET pet by ID
+app.get('/petprofile/:id', async (req, res) => {
+  const petId = req.params.id;
+  console.log(petId);
+  
+
+  // Validate the ID format
+  if (!mongoose.Types.ObjectId.isValid(petId)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+  }
+
+  try {
+      const pet = await PetModel.findById(petId);
+
+      if (!pet) {
+          return res.status(404).json({ message: 'Pet not found' });
+      }
+
+      res.status(200).json(pet);
+  } catch (error) {
+      console.error('Error fetching pet data:', error.message);
+      res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 
 
 
