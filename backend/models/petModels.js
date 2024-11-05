@@ -11,13 +11,17 @@ const petSchema = new mongoose.Schema({
   weight: { type: Number },
   age: { type: Number, required: true },
   vaccinated: { type: Boolean, required: true },
-  image: { type: Object, default: null },
+  image: { type: String, default: null },
   description: { type: String, required: true },
-  state:{type:String, required:true}
+  state: { type: String, required: true },
+  city: { type: String, required: true },
+  mobileNo: { type: String, required: true },
+  energy: { type: String, required: true }
 }, {
   timestamps: true, 
 });
 
+// Simple index on email for now
 petSchema.index({ email: 1 });
 
 const PetModel = mongoose.model('Pet', petSchema);
