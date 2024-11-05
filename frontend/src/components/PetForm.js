@@ -16,6 +16,10 @@ function PetForm() {
         vaccinated: false,
         description: '',
         image: null,
+        state: '',
+        city: '',
+        mobileNo: '',
+        energy: ''
     });
     const navigate = useNavigate();
 
@@ -33,23 +37,38 @@ function PetForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(formData);
+        
         try {
+            const data = new FormData();
+            data.append('image', formData.image); // Append the image file
+            data.append('email', userData.user.email);
+            data.append('petName', formData.petName);
+            data.append('age', formData.age);
+            data.append('species', formData.species);
+            data.append('breed', formData.breed);
+            data.append('gender', formData.gender);
+            data.append('weight', formData.weight);
+            data.append('color', formData.color);
+            data.append('size', formData.size);
+            data.append('vaccinated', formData.vaccinated);
+            data.append('description', formData.description);
+            data.append('state', formData.state);
+            data.append('city', formData.city);
+            data.append('mobileNo', formData.mobileNo);
+            data.append('energy', formData.energy);
+
+            console.log(`New Formdata: ${formData}`);
+            
             const res = await fetch('http://localhost:5000/petAdd', {
                 method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...formData,
-                    email: userData.user.email,
-                }),
+                body: data, // Send FormData directly
             });
 
             const responseData = await res.json();
             if (res.ok) {
                 console.log(responseData);
-                navigate(`/profile/${userData?.user?.email}`)
+                navigate(`/profile/${userData?.user?.email}`);
             } else {
                 console.error(`Request failed with status: ${res.status}`, responseData.message);
             }
@@ -62,6 +81,7 @@ function PetForm() {
     const speciesOptions = useMemo(() => ['Dog', 'Cat', 'Bird', 'Other'], []);
     const genderOptions = useMemo(() => ['Male', 'Female'], []);
     const sizeOptions = useMemo(() => ['Small', 'Medium', 'Large'], []);
+    const energyOptions = useMemo(() => ['Calm', 'Medium', 'Active'], []);
 
     // Helper function for input rendering to reduce repetition
     const renderInputField = useCallback((label, name, type = 'text', options) => (
@@ -106,6 +126,10 @@ function PetForm() {
                     {renderInputField('Weight (in kg)', 'weight', 'number')}
                     {renderInputField('Color', 'color')}
                     {renderInputField('Size', 'size', 'select', sizeOptions)}
+                    {renderInputField('State', 'state')}
+                    {renderInputField('City', 'city')}
+                    {renderInputField('Mobile No', 'mobileNo')}
+                    {renderInputField('Energy', 'energy', 'select', energyOptions)}
 
                     <div className="flex items-center">
                         <input
@@ -135,6 +159,7 @@ function PetForm() {
                             type="file"
                             onChange={handleImageUpload}
                             className="w-full p-2 border border-gray-300 rounded"
+                            required
                         />
                     </div>
 

@@ -6,14 +6,14 @@ export const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState('dark'); // Theme state
+  // const [theme, setTheme] = useState('dark'); // Theme state
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Initialize theme from localStorage if present
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    setTheme(savedTheme);
+    // const savedTheme = localStorage.getItem('theme') || 'dark';
+    // setTheme(savedTheme);
 
     // Check for token in localStorage to set authentication status
     const token = localStorage.getItem('token');
@@ -25,11 +25,7 @@ const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme); // Save theme preference
-  };
+ 
 
   const login = (token) => {
     localStorage.setItem('token', token); // Store token in localStorage
@@ -49,8 +45,6 @@ const AuthProvider = ({ children }) => {
         login,
         logout,
         loading,
-        theme,
-        toggleTheme,
         userData,
         setUserData,
       }}

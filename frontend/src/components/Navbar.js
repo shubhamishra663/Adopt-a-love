@@ -20,11 +20,11 @@ export default function Navbar({ userData }) {
   };
 
   return (
-    <nav className={`shadow-lg ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'} transition-colors`}>
+    <nav className={`shadow-lg ${'bg-gray-900' } transition-colors`}>
       <div className="max-w-screen-xl flex items-center justify-between p-4">
         <a href="#" className="flex items-center space-x-2">
           <img src={logo} className="h-10" alt="Pet a Love Logo" />
-          <span className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+          <span className={`text-2xl font-semibold  text-white `}>
             Adopt a Love
           </span>
         </a>

@@ -16,7 +16,7 @@ const PetsCard = ({ pet, index, onClick }) => {
       <div className="h-[60%] rounded-xl overflow-hidden">
         <img
           className="h-full w-full object-cover"
-          src={shu} // Display pet image or placeholder
+          src={pet?.image || shu} // Display pet image or placeholder
           alt={pet.petName || "Pet"}
         />
       </div>
@@ -76,7 +76,7 @@ export default function Pets() {
     <div className="bg-gray-400 w-screen p-5">
       <div className="py-5 px-1 bg-blue-950 flex items-center justify-between">
         <p className="font-semibold text-2xl">Pets</p>
-        <Link to='/petform'>
+        <Link to='petform'>
           <button className='bg-blue-400 flex text-xl items-center gap-3 p-1 rounded-md active:bg-blue-600'>
             <p className='font-semibold'>Add</p>
             <FontAwesomeIcon icon={faPlus} />

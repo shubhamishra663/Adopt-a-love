@@ -47,7 +47,7 @@ const AppRoutes = ({ isAuthenticated, userData, theme }) => {
       <Route path="login" element={isAuthenticated ? <Navigate to={`/profile/${userData?.user?.email}`} /> : <Login />} />
       <Route path="profile/:email" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
       <Route path="pets" element={isAuthenticated ? <Pets /> : <Navigate to="/login" />} />
-      <Route path="petform" element={isAuthenticated ? <PetForm /> : <Navigate to="/login" />} />
+      <Route path="profile/:email/petform" element={isAuthenticated ? <PetForm /> : <Navigate to="/login" />} />
       <Route path="adopt" element={<Adopt />} />
       <Route path="petprofile/:petid" element={<PetProfile />} />
     </Routes>
