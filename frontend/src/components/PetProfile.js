@@ -19,6 +19,8 @@ import axios from "axios";
 
 const mobileNumber = process.env.REACT_APP_MOBILE_NO || "+919060823275";
 
+const approachMessage=(name,petName)=>{return `Hi%20${name}!%20👋%20I%20saw%20${petName}%20on%20the%20adoption%20portal,%20and%20I’m%20really%20interested!%20They%20seem%20like%20such%20a%20great%20pet,%20and%20I'd%20love%20to%20know%20a%20bit%20more%20about%20them.%20Could%20we%20chat%20for%20a%20bit%20about%20their%20personality%20and%20any%20specific%20needs?%20Thanks%20so%20much!`}
+
 export default function PetProfile() {
   const location = useLocation();
   const { petid } = useParams(); // Destructure petid from useParams
@@ -122,7 +124,7 @@ export default function PetProfile() {
             <img
               src={pet?.image || petPlaceholderImage}
               alt="Pet"
-              className="rounded-lg w-full h-full object-cover"
+              className="rounded-lg w-full h-full object-center"
             />
           </div>
         </div>
@@ -220,7 +222,7 @@ export default function PetProfile() {
             </div>
             <a
               aria-label="Chat on WhatsApp"
-              href={`https://wa.me/${pet?.mobileNo}/?text=hello:${currentURL}`}
+              href={`https://wa.me/${pet?.mobileNo}/?text=${approachMessage(pet?.name,pet?.petName)}`}
               className="flex  items-center gap-3"
             >
               <FontAwesomeIcon

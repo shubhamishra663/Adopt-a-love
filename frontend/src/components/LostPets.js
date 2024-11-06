@@ -15,11 +15,11 @@ import { Link } from 'react-router-dom';
 
 const PetsCard = ({ pet, index }) => {
   return (
-    <div key={index} className="h-72 w-[46%] md:w-[20%] rounded-xl shadow-lg md:p-2">
+    <div key={index} className="bg-red-500 h-72 w-[46%] md:w-[20%] rounded-xl shadow-lg md:p-2">
       <div className="h-[60%] rounded-xl overflow-hidden">
         <img
-          className="h-full w-full object-cover"
-          src={shu} // Display pet image or placeholder
+          className="h-full w-full object-cover transition-transform duration-300 transform hover:scale-125"
+          src={pet?.image || shu} // Display pet image or placeholder
           alt={pet.petName || "Pet"}
         />
       </div>
@@ -41,7 +41,7 @@ const PetsCard = ({ pet, index }) => {
 
 
 export default function LostPets() {
-  const [petsData, setPetsData] = useState([]);
+  const [lostPetsData, setLostPetsData] = useState([]);
   const { userData } = useContext(AuthContext); // Get userData from AuthContext
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -52,7 +52,7 @@ export default function LostPets() {
       setError(null);
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`http://localhost:5000/user-pets/${userData?.user?.email}`, {
+        const response = await axios.get(`http://localhost:5000/user-lostPets/${userData?.user?.email}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'
@@ -60,7 +60,7 @@ export default function LostPets() {
         });
 
         console.log('Data after Response:', response.data);
-        setPetsData(response.data.pets); // Update state with fetched data
+        setLostPetsData(response.data.lostPets); // Update state with fetched data
       } catch (error) {
         console.error('Error fetching user pets:', error.response?.data || error.message);
         setError(error.response?.data?.message || error.message);
@@ -73,9 +73,9 @@ export default function LostPets() {
   }, [userData]);
 
   useEffect(() => {
-    console.log("Pets data after update:", petsData); // Log petsData after it updates
+    console.log("Pets data after update:", lostPetsData); // Log lostPetsData after it updates
 
-  }, [petsData]);
+  }, [lostPetsData]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -84,16 +84,16 @@ export default function LostPets() {
     <div className="bg-gray-400 w-screen p-5">
       <div className="py-5 px-1 bg-blue-950 flex items-center justify-between">
         <p className="font-semibold text-2xl">Lost Pets</p>
-        <Link to='/petform'>
+        <Link to='petform' state="lostPets">
         <button className='bg-blue-400 flex text-xl items-center gap-3 p-1 rounded-md active:bg-blue-600'>
           <p className='font-semibold'>Add</p>
           <FontAwesomeIcon icon={faPlus} />
         </button></Link>
       </div>
 
-      {petsData.length > 0 ? (
+      {lostPetsData.length > 0 ? (
         <div className="bg-gray-300 flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14">
-          {petsData.map((pet, index) => (
+          {lostPetsData.map((pet, index) => (
             <PetsCard pet={pet} index={index} />
           ))}
         </div>

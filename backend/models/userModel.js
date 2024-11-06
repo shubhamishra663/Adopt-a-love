@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
     latitude: { type: Number, default: null },
     longitude: { type: Number, default: null },
     pets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pet' }] ,
+    lostPets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LostPet' }] ,
     MobileNo:{type:Number, default:null}
     
 });

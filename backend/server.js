@@ -5,6 +5,7 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const UserModel = require('./models/userModel');
 const PetModel=require('./models/petModels')
+const LostPetModel=require('./models/LostPetModels')
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
@@ -195,13 +196,26 @@ app.get('/user-pets/:email', verifyToken,async (req, res) => {
 
 
 
+// Route to get all lostPets of a user by email
+app.get('/user-lostPets/:email', verifyToken,async (req, res) => {
+  const { email } = req.params;
 
+  try {
+    const user = await UserModel.findOne({ email }).populate('lostPets');
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-
-
-
-
+    res.status(200).json({
+      message: 'User Lostpets fetched successfully',
+      lostPets: user.lostPets
+    });
+  } catch (error) {
+    console.error('Error fetching user pets:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 
@@ -275,7 +289,7 @@ app.post('/petAdd', upload.single('image'), async (req, res) => {
       res.status(200).json({
           message: 'Pet added successfully and user updated',
           pet: savedPet,
-          user,
+          // user,
       });
 
   } catch (error) {
@@ -292,6 +306,82 @@ app.post('/petAdd', upload.single('image'), async (req, res) => {
 
 
 
+
+
+app.post('/lostPetAdd', upload.single('image'), async (req, res) => {
+  const { email, petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy } = req.body;
+
+  try {
+      // Ensure image is available before attempting to upload
+      if (!req.file) {
+          return res.status(400).json({ message: 'No image uploaded' });
+      }
+
+      // Create a promise to handle the Cloudinary upload
+      const uploadImage = () => {
+          return new Promise((resolve, reject) => {
+              cloudinary.uploader.upload_stream({
+                  resource_type: 'auto',
+                  use_filename: true,
+                  unique_filename: false,
+                  overwrite: true,
+              }, (error, result) => {
+                  if (error) {
+                      reject(error);
+                  } else {
+                      resolve(result);
+                  }
+              }).end(req.file.buffer);  // Use the buffer instead of stream
+          });
+      };
+
+      // Wait for the upload to complete
+      const uploadResult = await uploadImage();
+
+      // Create new pet entry in the database
+      const newPet = new LostPetModel({
+          email,
+          petName,
+          age,
+          species,
+          breed,
+          gender,
+          weight,
+          color,
+          size,
+          vaccinated,
+          description,
+          image: uploadResult.secure_url, // Use the secure URL from Cloudinary
+          state,
+          city,
+          mobileNo,
+          energy,
+      });
+
+      const savedPet = await newPet.save();
+
+      // Update user with the new pet reference
+      const user = await UserModel.findOneAndUpdate(
+          { email },
+          { $push: { lostPets: savedPet._id } },
+          { new: true }
+      );
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.status(200).json({
+          message: 'Pet added successfully and user updated',
+          lostPet: savedPet,
+          // user,
+      });
+
+  } catch (error) {
+      console.error('Error adding pet:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 

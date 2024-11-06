@@ -98,7 +98,7 @@ export default function Adopt() {
     if (error) return <p className="text-red-400">Error: {error}</p>;
 
     return (
-        <div className="bg-gray-900 min-h-screen w-screen p-5 relative">
+        <div className="bg-black min-h-screen w-screen p-5 relative">
             {/* Filter and Sort */}
             <div className="flex gap-4 mb-4">
                 {/* Filter Section */}

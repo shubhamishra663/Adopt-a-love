@@ -11,12 +11,12 @@ const PetsCard = ({ pet, index, onClick }) => {
     <div 
       key={index} 
       className="h-72 w-[46%] md:w-[20%] rounded-xl shadow-lg md:p-2 cursor-pointer" 
-      onClick={onClick} // Attach onClick here
+      onClick={onClick}
     >
       <div className="h-[60%] rounded-xl overflow-hidden">
         <img
-          className="h-full w-full object-cover"
-          src={pet?.image || shu} // Display pet image or placeholder
+          className="h-full w-full object-center transition-transform duration-300 transform hover:scale-125"
+          src={pet?.image || shu} 
           alt={pet.petName || "Pet"}
         />
       </div>
@@ -76,7 +76,7 @@ export default function Pets() {
     <div className="bg-gray-400 w-screen p-5">
       <div className="py-5 px-1 bg-blue-950 flex items-center justify-between">
         <p className="font-semibold text-2xl">Pets</p>
-        <Link to='petform'>
+        <Link to='petform' state="pets">
           <button className='bg-blue-400 flex text-xl items-center gap-3 p-1 rounded-md active:bg-blue-600'>
             <p className='font-semibold'>Add</p>
             <FontAwesomeIcon icon={faPlus} />
@@ -85,7 +85,7 @@ export default function Pets() {
       </div>
 
       {petsData.length > 0 ? (
-        <div className="bg-gray-300 flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14">
+        <div className="bg-gray-300 flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14 p-3">
           {petsData.map((pet, index) => (
             <PetsCard 
               key={index} 

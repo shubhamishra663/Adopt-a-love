@@ -16,6 +16,8 @@ export default function Profile() {
       setError(null);
       const token = localStorage.getItem('token'); // Retrieve token from localStorage
       try {
+        console.log(`userData?.user?.email : ${userData?.user?.email}`);
+        
         const response = await fetch(`http://localhost:5000/profile/${userData?.user?.email}`, {
           method: 'GET',
           headers: {
