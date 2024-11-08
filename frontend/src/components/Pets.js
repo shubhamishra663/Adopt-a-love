@@ -5,35 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import shu from '../utils/pets.jpg'; // Update the path as necessary
-
-const PetsCard = ({ pet, index, onClick }) => {
-  return (
-    <div 
-      key={index} 
-      className="h-72 w-[46%] md:w-[20%] rounded-xl shadow-lg md:p-2 cursor-pointer" 
-      onClick={onClick}
-    >
-      <div className="h-[60%] rounded-xl overflow-hidden">
-        <img
-          className="h-full w-full object-center transition-transform duration-300 transform hover:scale-125"
-          src={pet?.image || shu} 
-          alt={pet.petName || "Pet"}
-        />
-      </div>
-
-      <div className="h-[40%] w-full p-3">
-        <p className="text-lg font-bold">{pet.petName || "Name not available"}</p>
-        <p>{pet.species || "Type not available"}</p>
-        <p>{pet.gender || "Gender"} , {pet.breed || "Breed not available"}</p>
-        <p>{pet.age ? `${pet.age} yrs` : "Age not available"}</p>
-      </div>
-    </div>
-  );
-};
+import PetsCard from './PetsCard';
 
 export default function Pets() {
   const [petsData, setPetsData] = useState([]);
-  const { userData } = useContext(AuthContext); // Get userData from AuthContext
+  const { userData } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -42,7 +18,7 @@ export default function Pets() {
     const fetchPets = async () => {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem('token'); // Retrieve token from localStorage
+      const token = localStorage.getItem('token');
 
       try {
         const response = await axios.get(`http://localhost:5000/user-pets/${userData?.user?.email}`, {
@@ -51,11 +27,8 @@ export default function Pets() {
             'Accept': 'application/json'
           }
         });
-
-        console.log('Data after Response:', response.data);
-        setPetsData(response.data.pets); // Update state with fetched data
+        setPetsData(response.data.pets);
       } catch (error) {
-        console.error('Error fetching user pets:', error.response?.data || error.message);
         setError(error.response?.data?.message || error.message);
       } finally {
         setLoading(false);
@@ -65,33 +38,18 @@ export default function Pets() {
     fetchPets();
   }, [userData]);
 
-  useEffect(() => {
-    console.log("Pets data after update:", petsData); // Log petsData after it updates
-  }, [petsData]);
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="bg-gray-400 w-screen p-5">
-      <div className="py-5 px-1 bg-blue-950 flex items-center justify-between">
-        <p className="font-semibold text-2xl">Pets</p>
-        <Link to='petform' state="pets">
-          <button className='bg-blue-400 flex text-xl items-center gap-3 p-1 rounded-md active:bg-blue-600'>
-            <p className='font-semibold'>Add</p>
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
-        </Link>
-      </div>
-
+    <div className="w-screen">
       {petsData.length > 0 ? (
-        <div className="bg-gray-300 flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14 p-3">
+        <div className="flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14 p-3">
           {petsData.map((pet, index) => (
-            <PetsCard 
-              key={index} 
-              pet={pet} 
-              index={index} 
-              onClick={() => navigate(`/petprofile/${encodeURIComponent(pet._id)}`, { state: pet })} // Handle navigation
+            <PetsCard
+              key={index}
+              pet={pet}
+              onClick={() => navigate(`/petprofile/${encodeURIComponent(pet._id)}`, { state: pet })}
             />
           ))}
         </div>

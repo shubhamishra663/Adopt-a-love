@@ -7,7 +7,7 @@ import Home from './components/Home';
 import Pets from './components/Pets';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AuthProvider, { AuthContext } from './context/authContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import PetForm from './components/PetForm';
 import Adopt from './components/Adopt';
 import PetProfile from './components/PetProfile';
@@ -26,13 +26,19 @@ function App() {
 const AppContent = () => {
   const { isAuthenticated, theme, userData } = useContext(AuthContext);
 
-  // Apply Tailwind classes based on the theme
-  const themeClasses = theme === 'dark'
-    ? 'bg-[#0d0d0d] text-white'
-    : 'bg-[#D9D9D9] text-black';
+  useEffect(() => {
+    // Apply the dark mode class to the HTML element
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
+
+ 
 
   return (
-    <div className={`min-h-screen ${themeClasses}`}>
+    <div className={`min-h-screen`}>
       <Navbar userData={userData} />
       <AppRoutes isAuthenticated={isAuthenticated} userData={userData} theme={theme} />
     </div>
@@ -50,6 +56,7 @@ const AppRoutes = ({ isAuthenticated, userData, theme }) => {
       <Route path="profile/:email/petform" element={isAuthenticated ? <PetForm /> : <Navigate to="/login" />} />
       <Route path="adopt" element={<Adopt />} />
       <Route path="petprofile/:petid" element={<PetProfile />} />
+      <Route path="lostpetprofile/:petid" element={<PetProfile />} />
     </Routes>
   );
 };

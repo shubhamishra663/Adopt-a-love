@@ -21,9 +21,23 @@ const mobileNumber = process.env.REACT_APP_MOBILE_NO || "+919060823275";
 
 const approachMessage=(name,petName)=>{return `Hi%20${name}!%20👋%20I%20saw%20${petName}%20on%20the%20adoption%20portal,%20and%20I’m%20really%20interested!%20They%20seem%20like%20such%20a%20great%20pet,%20and%20I'd%20love%20to%20know%20a%20bit%20more%20about%20them.%20Could%20we%20chat%20for%20a%20bit%20about%20their%20personality%20and%20any%20specific%20needs?%20Thanks%20so%20much!`}
 
+
+const Share=()=>{
+  return(
+    <div className="absolute bg-red-600 right-0 top-2/4">
+      <p>share</p>
+      <p>post</p>
+    </div>
+  )
+}
+
+
+
 export default function PetProfile() {
   const location = useLocation();
   const { petid } = useParams(); // Destructure petid from useParams
+
+  const petData = location.state;
   console.log(`useParams petid: ${petid}`); // Log the petid
 
   const { isAuthenticated } = useContext(AuthContext);
@@ -31,26 +45,33 @@ export default function PetProfile() {
   const [counter, setCounter] = useState(0);
   const [loadingComplete, setLoadingComplete] = useState(false);
 
-  useEffect(() => {
-    const fetchPetData = async () => {
-      try {
-        console.log("Fetching pet profile");
+// useEffect(() => {
+//   setPet(petData)
+// }, [])
 
-        const response = await axios.get(
-          `http://localhost:5000/petprofile/${petid}`
-        ); // Use petid in the request
-        setPet(response.data);
-        console.log(`Pet profile data:`, response.data);
-      } catch (error) {
-        console.error(
-          "Error fetching pet data:",
-          error.response?.data || error.message
-        );
-      }
-    };
+useEffect(() => {
+  const fetchPetData = async () => {
+    try {
+      const isLostPet = location.pathname.includes("lostpetprofile"); // Check if the route is for lost pets
+      const url = `http://localhost:5000/${
+        isLostPet ? "lostpetprofile" : "petprofile"
+      }/${petid}`;
+      
+      console.log(`Fetching ${isLostPet ? "lost pet" : "pet"} profile`);
+      const response = await axios.get(url);
+      setPet(response.data);
+      console.log(`Profile data:`, response.data);
+    } catch (error) {
+      console.error(
+        "Error fetching profile data:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
-    fetchPetData();
-  }, [petid]); // Fetch data when petid changes
+  fetchPetData();
+}, [petid, location.pathname]); // Refetch if petid or route changes
+
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -102,7 +123,7 @@ export default function PetProfile() {
   )}`;
 
   return (
-    <div className="bg-gray-800 flex flex-col text-white">
+    <div className="bg-[#f5f5f5] dark:bg-black flex flex-col dark:text-white">
       <header className="bg-purple-600 flex justify-between px-2 md:px-10 p-3">
         <p className="font-semibold text-2xl">
           Adopt {pet?.petName || "Kitty"}
@@ -111,9 +132,9 @@ export default function PetProfile() {
       </header>
 
       {/* Pet image */}
-      <section className="bg-black h-[60%] flex items-center justify-center p-5 md:p-14">
+      <section className="dark:bg-black h-[60%] flex items-center justify-center p-5 md:p-14">
         <div className="bg-gray-600 h-96 w-11/12 md:w-1/2 relative rounded-lg overflow-hidden shadow-lg">
-          <div className="loading-bar bg-[#121212] h-full w-full flex flex-col justify-center items-center absolute top-0 transition-all duration-700">
+          <div className="loading-bar bg-[#f5f5f5] dark:bg-[#121212] h-full w-full flex flex-col justify-center items-center absolute top-0 transition-all duration-700">
             <div
               className="loader absolute left-0 h-[4px] bg-green-500"
               style={{ width: `${counter}%` }}
@@ -130,7 +151,7 @@ export default function PetProfile() {
         </div>
       </section>
 
-      <section className="bg-black">
+      <section className="">
         <div className="">
           <div>
             <p className="font-bold text-3xl p-3">About Myself</p>
@@ -157,7 +178,7 @@ export default function PetProfile() {
       </section>
 
       {/* Quick Facts */}
-      <section className="bg-black">
+      <section className="">
         <p className="font-bold text-3xl p-3">Quick facts</p>
         <div className="flex justify-evenly p-1 md:p-3 flex-wrap gap-5">
           {facts.map(({ icon, additionalIcon, label, value }, index) => (
@@ -185,10 +206,22 @@ export default function PetProfile() {
         </div>
       </section>
 
+
+
+      {/* Message */}
+      <section>
+        <div className="p-3  md:p-5">
+          <p className="font-bold text-3xl">Message</p>
+          <p className="p-5 font-medium  text-lg">{pet?.description}</p>
+        </div>
+      </section>
+
+
+
       {/* Contact Info */}
-      <section className="p-3 md:p-5 bg-black">
-        <div className="bg-[#0d0d0d] border-2 border-gray-500 p-5 rounded-md">
-          <div>
+      <section className="p-3 md:p-5 ">
+        <div className="border-2 border-gray-500 p-5 rounded-md dark:text-white">
+          <div className="dark:text-white">
             <p className="text-3xl font-bold">Contact Info</p>
           </div>
           <div className="p-3 md:p-5 leading-5">
@@ -232,6 +265,7 @@ export default function PetProfile() {
               <p>Chat with {pet?.petName}'s owner</p>
             </a>
             <div>
+
               <Helmet>
                 <title>{pet?.name || "Pet Profile"}</title>
                 <meta
@@ -255,6 +289,8 @@ export default function PetProfile() {
           </div>
         </div>
       </section>
+
+      <Share/>
     </div>
   );
 }

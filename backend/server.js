@@ -5,7 +5,7 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const UserModel = require('./models/userModel');
 const PetModel=require('./models/petModels')
-const LostPetModel=require('./models/LostPetModels')
+const LostPetModel=require('./models/LostPetModel')
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
@@ -66,16 +66,17 @@ app.get('/',(req,res)=>{
   res.status(200).send("OK_OK")
 })
 
+
+
+
 // Signup Route
 app.post('/signup', async (req, res) => {
   const { name, email, password } = req.body;
 
-  // All fields should exist
   if (!(name && email && password)) {
     return res.status(400).send('All fields are required');
   }
 
-  // Check if user already exists
   const existingUser = await UserModel.findOne({ email });
   if (existingUser) {
     return res.status(401).send('User already exists');
@@ -103,6 +104,9 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+
+
+
 // Login Route
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -121,7 +125,7 @@ app.post('/login', async (req, res) => {
       { id: user._id ,email},
       'shhhh',
       {
-        expiresIn: '2h'
+        expiresIn: '5h'
       }
     );
     user.token = token;
@@ -140,6 +144,9 @@ app.post('/login', async (req, res) => {
 });
 
 
+
+
+//profile:email
 app.get('/profile/:email', verifyToken, async(req, res) => {
   if (!req.user) {
     return res.status(401).json({ error: 'Unauthorized' });
@@ -165,8 +172,6 @@ app.get('/profile/:email', verifyToken, async(req, res) => {
   }
   
 });
-
-
 
 
 
@@ -302,12 +307,6 @@ app.post('/petAdd', upload.single('image'), async (req, res) => {
 
 
 
-
-
-
-
-
-
 app.post('/lostPetAdd', upload.single('image'), async (req, res) => {
   const { email, petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy } = req.body;
 
@@ -391,12 +390,6 @@ app.post('/lostPetAdd', upload.single('image'), async (req, res) => {
 
 
 
-
-
-
-
-
-
 app.get('/adopt', async (req, res) => {
   try {
     const pets = await PetModel.find({});
@@ -408,7 +401,9 @@ app.get('/adopt', async (req, res) => {
 });
 
 
-// GET pet by ID
+
+
+// GET pet details by ID
 app.get('/petprofile/:id', async (req, res) => {
   const petId = req.params.id;
   console.log(petId);
@@ -427,6 +422,39 @@ app.get('/petprofile/:id', async (req, res) => {
       }
 
       res.status(200).json(pet);
+  } catch (error) {
+      console.error('Error fetching pet data:', error.message);
+      res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+
+
+
+
+// GET lostpet details by ID
+app.get('/lostpetprofile/:id', async (req, res) => {
+  const petId = req.params.id;
+  console.log(`lost pet id ${petId}`);
+  
+
+  // Validate the ID format
+  if (!mongoose.Types.ObjectId.isValid(petId)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+  }
+
+  try {
+      const lostPet = await LostPetModel.findById(petId);
+      
+
+      if (!lostPet) {
+          return res.status(404).json({ message: 'Pet not found' });
+      }
+
+      res.status(200).json(lostPet);
+
   } catch (error) {
       console.error('Error fetching pet data:', error.message);
       res.status(500).json({ message: 'Server error' });

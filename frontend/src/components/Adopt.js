@@ -2,28 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import petPlaceholderImage from '../utils/cat.jpg';
 import { useNavigate } from 'react-router-dom';
-
-const PetCard = ({ pet, onClick }) => (
-    <div
-        className="h-80 w-[45%] md:w-[20%] rounded-xl shadow-lg p-2 cursor-pointer bg-gray-900 hover:bg-gray-800 transition-colors duration-300"
-        onClick={onClick}
-    >
-        <div className="h-[50%] rounded-xl overflow-hidden relative">
-            <img
-                className="h-full w-full object-cover transition-transform duration-300 transform hover:scale-125"
-                src={pet.image || petPlaceholderImage}
-                alt={pet.petName || "Pet"}
-            />
-        </div>
-        <div className="h-[50%] w-full p-3 text-gray-200">
-            <p className="text-lg font-bold">{pet.petName || "Name not available"}</p>
-            <p className='leading-snug'>{pet.species || "Type not available"}</p>
-            <p className='leading-snug'>{pet.gender || "Gender not available"}, {pet.breed || "Breed not available"}</p>
-            <p className='leading-snug'>{pet.age ? `${pet.age} yrs` : "Age not available"}</p>
-            <p>by ~ <span className='font-medium'>{pet.email}</span></p>
-        </div>
-    </div>
-);
+import PetsCard from './PetsCard';
 
 export default function Adopt() {
     const [petsData, setPetsData] = useState([]);
@@ -93,17 +72,19 @@ export default function Adopt() {
         setSortOption(e.target.value);
     };
 
-    
     if (loading) return <p className="text-white">Loading...</p>;
     if (error) return <p className="text-red-400">Error: {error}</p>;
 
     return (
-        <div className="bg-black min-h-screen w-screen p-5 relative">
+        <div className="bg-[#f5f5f5] dark:bg-black min-h-screen w-full p-5 relative">
             {/* Filter and Sort */}
-            <div className="flex gap-4 mb-4">
+            <div className="flex gap-4 mb-4 sticky"> {/* Here is stickyyyyyyyyyyyyyyyyyyyyyyyyy */}
                 {/* Filter Section */}
                 <div className="bg-gray-800 rounded-lg p-4 shadow-md flex-1 transition-all duration-300">
-                    <div className="flex justify-between items-center cursor-pointer" onClick={() => setIsFilterOpen(!isFilterOpen)}>
+                    <div
+                        className="flex justify-between items-center cursor-pointer"
+                        onClick={() => setIsFilterOpen(!isFilterOpen)}
+                    >
                         <h2 className="text-xl text-white">Filter Pets</h2>
                         <span className="text-white">{isFilterOpen ? '▲' : '▼'}</span>
                     </div>
@@ -154,16 +135,19 @@ export default function Adopt() {
 
                 {/* Sort Section */}
                 <div className="bg-gray-800 rounded-lg p-4 shadow-md flex-1 transition-all duration-300">
-                    <div className="flex justify-between items-center cursor-pointer" onClick={() => setIsSortOpen(!isSortOpen)}>
+                    <div
+                        className="flex justify-between items-center cursor-pointer"
+                        onClick={() => setIsSortOpen(!isSortOpen)}
+                    >
                         <h2 className="text-xl text-white">Sort Pets</h2>
                         <span className="text-white">{isSortOpen ? '▲' : '▼'}</span>
                     </div>
                     {isSortOpen && (
                         <label className="flex flex-col text-gray-300 mt-4">
                             Sort by:
-                            <select 
-                                className="bg-gray-700 text-white border border-gray-600 rounded p-2 mt-1" 
-                                value={sortOption} 
+                            <select
+                                className="bg-gray-700 text-white border border-gray-600 rounded p-2 mt-1"
+                                value={sortOption}
                                 onChange={handleSortChange}
                             >
                                 <option value="">Select...</option>
@@ -176,13 +160,13 @@ export default function Adopt() {
             </div>
 
             {/* Pet Cards */}
-            <div className="mt-4 flex flex-wrap justify-evenly gap-5">
+            <div className="flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14 p-3 bg-white dark:bg-[#121212] rounded-t-lg">
                 {filteredPetData.length > 0 ? (
                     filteredPetData.map((pet) => (
-                        <PetCard 
-                            key={pet._id} 
-                            pet={pet} 
-                            onClick={() =>navigate(`/petprofile/${encodeURIComponent(pet._id)}`, { state: pet })}
+                        <PetsCard
+                            key={pet._id}
+                            pet={pet}
+                            onClick={() => navigate(`/petprofile/${encodeURIComponent(pet._id)}`, { state: pet })}
                         />
                     ))
                 ) : (

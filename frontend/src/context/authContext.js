@@ -6,14 +6,14 @@ export const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  // const [theme, setTheme] = useState('dark'); // Theme state
+  const [theme, setTheme] = useState('dark'); // Theme state
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Initialize theme from localStorage if present
-    // const savedTheme = localStorage.getItem('theme') || 'dark';
-    // setTheme(savedTheme);
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
 
     // Check for token in localStorage to set authentication status
     const token = localStorage.getItem('token');
@@ -47,6 +47,8 @@ const AuthProvider = ({ children }) => {
         loading,
         userData,
         setUserData,
+        setTheme,
+        theme,
       }}
     >
       {children}
