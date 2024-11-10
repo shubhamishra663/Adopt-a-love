@@ -6,6 +6,7 @@ function PetForm() {
   const { userData } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     petName: "",
+    ownerName: "",
     age: "",
     species: "",
     breed: "",
@@ -48,6 +49,7 @@ function PetForm() {
       const data = new FormData();
       data.append("image", formData.image); // Append the image file
       data.append("email", userData.user.email);
+      data.append("ownerName", userData.user.name);
       data.append("petName", formData.petName);
       data.append("age", formData.age);
       data.append("species", formData.species);
@@ -73,7 +75,7 @@ function PetForm() {
       const responseData = await res.json();
       if (res.ok) {
         console.log(responseData);
-        navigate(`/profile/${userData?.user?.email}`);
+        navigate(`/${userData?.user?.email}`);
       } else {
         console.error(
           `Request failed with status: ${res.status}`,

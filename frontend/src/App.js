@@ -11,6 +11,7 @@ import { useContext, useEffect } from 'react';
 import PetForm from './components/PetForm';
 import Adopt from './components/Adopt';
 import PetProfile from './components/PetProfile';
+import NotFound from './components/NotFound';
 
 function App() {
   return (
@@ -46,17 +47,21 @@ const AppContent = () => {
 };
 
 const AppRoutes = ({ isAuthenticated, userData, theme }) => {
+  const email=localStorage.getItem('user');
+
   return (
     <Routes>
       <Route index element={<Home />} />
       <Route path="signup" element={<Signup />} />
-      <Route path="login" element={isAuthenticated ? <Navigate to={`/profile/${userData?.user?.email}`} /> : <Login />} />
-      <Route path="profile/:email" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
+      <Route path="login" element={isAuthenticated ? <Navigate to={`/${email || userData?.user?.email}`} /> : <Login />} />
+      <Route path="/:email" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
       <Route path="pets" element={isAuthenticated ? <Pets /> : <Navigate to="/login" />} />
-      <Route path="profile/:email/petform" element={isAuthenticated ? <PetForm /> : <Navigate to="/login" />} />
+      <Route path="/:email/petform" element={isAuthenticated ? <PetForm /> : <Navigate to="/login" />} />
       <Route path="adopt" element={<Adopt />} />
       <Route path="petprofile/:petid" element={<PetProfile />} />
       <Route path="lostpetprofile/:petid" element={<PetProfile />} />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

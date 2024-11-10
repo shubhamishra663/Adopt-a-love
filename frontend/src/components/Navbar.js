@@ -120,7 +120,7 @@ export default function Navbar({ userData }) {
               </Link>
             </li>
             <li>
-              <Link to={`/profile/${userData?.user?.email}`} className={`block py-2 px-3 rounded ${getActiveClass(`/profile/${userData?.user?.email}`)}`}>
+              <Link to={`/${userData?.user?.email}`} className={`block py-2 px-3 rounded ${getActiveClass(`/${userData?.user?.email}`)}`}>
                 Profile
               </Link>
             </li>

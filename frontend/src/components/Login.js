@@ -58,14 +58,18 @@ export default function Login() {
       if (res.ok) {
         const responseData = await res.json();
         console.log(responseData);
+
   
         // Call login with token and user data
-        login(responseData.user.token, responseData.user); // Make sure to get user data from response
+        login(responseData?.user?.token); // Make sure to get user data from response
+        localStorage.setItem('user',responseData?.user?.email); // Store token in localStorage
+
   
         showNotification("Success", "Login successful", "success");
-        navigate(); // Redirect to profile with email
-
-        navigate(loct || `/profile/${responseData.user.email}`, { replace: true }); // Navigate back to the previous page
+        // navigate(); // Redirect to profile with email
+        
+        const email=localStorage.getItem('user');
+        navigate(loct || `/${email || responseData.user.email}`, { replace: true }); // Navigate back to the previous page
 
       } else {
         // Handle error

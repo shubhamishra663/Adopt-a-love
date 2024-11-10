@@ -33,6 +33,10 @@ export default function Profile() {
           throw new Error("Failed to fetch profile data");
         }
         const data = await response.json();
+        // localStorage.setItem('user',data?.user?.email); // Store token in localStorage
+
+        console.log(data);
+        
         setUserData(data);
       } catch (error) {
         setError(error.message);

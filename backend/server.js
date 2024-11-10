@@ -14,7 +14,8 @@ const cloudinary = require('cloudinary').v2;
 
 const app = express();
 const port = process.env.PORT || 5000;
-const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/UsersData';
+// const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/UsersData';
+const MONGODB_URL = process.env.MONGODB_URL ||"mongodb+srv://shubhamishra663:Shubham123@cluster0.6anog.mongodb.net/adopt-a-love?retryWrites=true&w=majority&appName=Cluster0";
 
 app.use(cors({
   origin: 'http://localhost:3000',
@@ -153,7 +154,7 @@ app.get('/profile/:email', verifyToken, async(req, res) => {
   }
   
   try {
-    const user = await UserModel.findById(req.user.id); // Assuming you're using Mongoose
+    const user = await UserModel.findById(req.user.id);
     
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -229,7 +230,7 @@ app.get('/user-lostPets/:email', verifyToken,async (req, res) => {
 
 
 app.post('/petAdd', upload.single('image'), async (req, res) => {
-  const { email, petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy } = req.body;
+  const { email,ownerName ,petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy } = req.body;
 
   try {
       // Ensure image is available before attempting to upload
@@ -261,6 +262,7 @@ app.post('/petAdd', upload.single('image'), async (req, res) => {
       // Create new pet entry in the database
       const newPet = new PetModel({
           email,
+          ownerName,
           petName,
           age,
           species,
@@ -308,7 +310,7 @@ app.post('/petAdd', upload.single('image'), async (req, res) => {
 
 
 app.post('/lostPetAdd', upload.single('image'), async (req, res) => {
-  const { email, petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy } = req.body;
+  const { email, ownerName,petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy } = req.body;
 
   try {
       // Ensure image is available before attempting to upload
@@ -340,6 +342,7 @@ app.post('/lostPetAdd', upload.single('image'), async (req, res) => {
       // Create new pet entry in the database
       const newPet = new LostPetModel({
           email,
+          ownerName,
           petName,
           age,
           species,
@@ -391,6 +394,8 @@ app.post('/lostPetAdd', upload.single('image'), async (req, res) => {
 
 
 app.get('/adopt', async (req, res) => {
+  console.log("/adopt");
+  
   try {
     const pets = await PetModel.find({});
     res.status(200).json(pets);

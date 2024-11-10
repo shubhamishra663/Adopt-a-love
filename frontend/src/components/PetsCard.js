@@ -32,5 +32,4 @@ const PetsCard = ({ pet, onClick }) => {
     </div>
   );
 };
-
 export default PetsCard;
