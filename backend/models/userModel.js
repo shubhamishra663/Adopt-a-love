@@ -4,13 +4,15 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    profile_img: { type: String, default: null },
+    cover_img: { type: String, default: null },
     token:{type:String,default:null},
     userType: { type: String, default: null },
     latitude: { type: Number, default: null },
     longitude: { type: Number, default: null },
     pets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pet' }] ,
     lostPets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LostPet' }] ,
-    MobileNo:{type:Number, default:null}
+    mobileNo:{type:Number, default:null}
     
 });
 

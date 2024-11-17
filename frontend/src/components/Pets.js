@@ -4,7 +4,7 @@ import { AuthContext } from '../context/authContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
-import shu from '../utils/pets.jpg'; // Update the path as necessary
+import shu from '../utils/pets.jpg';
 import PetsCard from './PetsCard';
 
 export default function Pets() {
@@ -38,23 +38,23 @@ export default function Pets() {
     fetchPets();
   }, [userData]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  // if (loading) return <p className="text-center my-5">Loading...</p>;
+  // if (error) return <p className="text-center my-5 text-red-500">Error: {error}</p>;
 
   return (
-    <div className="w-screen">
+    <div className="w-screen p-5">
       {petsData.length > 0 ? (
-        <div className="flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14 p-3">
+        <div className="flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14">
           {petsData.map((pet, index) => (
             <PetsCard
-              key={index}
+              key={pet._id || index} 
               pet={pet}
               onClick={() => navigate(`/petprofile/${encodeURIComponent(pet._id)}`, { state: pet })}
             />
           ))}
         </div>
       ) : (
-        <p>No pets found for this user.</p>
+        <p className="text-center text-gray-500">No pets found for this user.</p>
       )}
     </div>
   );

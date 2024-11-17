@@ -155,6 +155,8 @@ app.get('/profile/:email', verifyToken, async(req, res) => {
   
   try {
     const user = await UserModel.findById(req.user.id);
+    console.log(user);
+    
     
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -166,6 +168,9 @@ app.get('/profile/:email', verifyToken, async(req, res) => {
         id: user._id,
         email: user.email,
         name: user.name,
+        mobileNo:user.mobileNo,
+        cover_img:user.cover_img,
+        profile_img:user.profile_img
       }
     });
   } catch (err) {
@@ -230,7 +235,7 @@ app.get('/user-lostPets/:email', verifyToken,async (req, res) => {
 
 
 app.post('/petAdd', upload.single('image'), async (req, res) => {
-  const { email,ownerName ,petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy } = req.body;
+  const { email,ownerName ,petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy,type } = req.body;
 
   try {
       // Ensure image is available before attempting to upload
@@ -264,6 +269,7 @@ app.post('/petAdd', upload.single('image'), async (req, res) => {
           email,
           ownerName,
           petName,
+          type,
           age,
           species,
           breed,
@@ -310,7 +316,7 @@ app.post('/petAdd', upload.single('image'), async (req, res) => {
 
 
 app.post('/lostPetAdd', upload.single('image'), async (req, res) => {
-  const { email, ownerName,petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy } = req.body;
+  const { email, ownerName,petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy,type } = req.body;
 
   try {
       // Ensure image is available before attempting to upload
@@ -344,6 +350,7 @@ app.post('/lostPetAdd', upload.single('image'), async (req, res) => {
           email,
           ownerName,
           petName,
+          type,
           age,
           species,
           breed,
@@ -389,21 +396,114 @@ app.post('/lostPetAdd', upload.single('image'), async (req, res) => {
 
 
 
+// Profile Edit Route
+app.post("/profile-edit", verifyToken,
+  upload.fields([
+    { name: "profile_img", maxCount: 1 },
+    { name: "cover_img", maxCount: 1 },
+  ]),  
+  async (req, res) => {
+    console.log("profile Edit");
+
+    try {
+      const { name, mobileNo } = req.body;
+
+      // Find the user by email
+      const user = await UserModel.findById(req.user.id);
+    
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      // Helper function for Cloudinary upload
+      const uploadToCloudinary = async (fileBuffer, folderName, fileName) => {
+        return new Promise((resolve, reject) => {
+          cloudinary.uploader.upload_stream(
+            {
+              resource_type: "auto",
+              folder: folderName,
+              public_id: fileName,
+              use_filename: true,
+              overwrite: true,
+            },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result.secure_url);
+            }
+          ).end(fileBuffer);
+        });
+      };
+
+      // Upload profile image if provided
+      let profileImgUrl = user.profile_img; // Retain existing profile image
+      if (req.files.profile_img) {
+        const profileImgBuffer = req.files.profile_img[0].buffer;
+        profileImgUrl = await uploadToCloudinary(
+          profileImgBuffer,
+          "user_profiles",
+          `profile_${user._id}`
+        );
+      }
+
+      // Upload cover image if provided
+      let coverImgUrl = user.cover_img; // Retain existing cover image
+      if (req.files.cover_img) {
+        const coverImgBuffer = req.files.cover_img[0].buffer;
+        coverImgUrl = await uploadToCloudinary(
+          coverImgBuffer,
+          "user_covers",
+          `cover_${user._id}`
+        );
+      }
+
+      // Update user details in the database
+      user.name = name || user.name;
+      user.mobileNo = mobileNo || user.mobileNo;
+      user.profile_img = profileImgUrl;
+      user.cover_img = coverImgUrl;
+
+      const updatedUser = await user.save();
+
+      res.status(200).json({
+        message: "Profile updated successfully",
+        user: updatedUser,
+      });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+
+
+
 
 
 
 
 app.get('/adopt', async (req, res) => {
-  console.log("/adopt");
-  
   try {
-    const pets = await PetModel.find({});
-    res.status(200).json(pets);
+    // Fetch data from both models concurrently
+    const [pets, lostPets] = await Promise.all([
+      PetModel.find({}),
+      LostPetModel.find({}),
+    ]);
+
+    // Combine the results
+    const combinedData = {
+      pets,
+      lostPets,
+    };
+
+    res.status(200).json(combinedData);
   } catch (error) {
-    console.error('Error fetching pets:', error);
+    console.error('Error fetching data:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+
 
 
 
@@ -457,6 +557,8 @@ app.get('/lostpetprofile/:id', async (req, res) => {
       if (!lostPet) {
           return res.status(404).json({ message: 'Pet not found' });
       }
+      console.log(lostPet);
+      
 
       res.status(200).json(lostPet);
 

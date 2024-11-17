@@ -61,11 +61,9 @@ export default function Signup() {
         const responseData = await res.json();
         console.log(responseData);
   
-        // Add success notification
         showNotification("Success", "Signup successful", "success");
         navigate('/login')
       } else {
-        // Fetch the error message text if available
         const errorMessage = await res.text();
         showNotification("Error", errorMessage || "Signup failed", "danger");
         console.log(`Request failed with status: ${res.status}`);
@@ -86,14 +84,13 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen relative flex justify-center items-center bg-gray-100">
-      {/* Include React Notifications */}
       <ReactNotifications />
 
       <div className="w-full max-w-lg bg-white shadow-lg py-10 px-14 rounded-lg mx-4 md:mx-0 relative z-10">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-10">Sign Up</h2>
 
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-          {/* Name Input */}
+
           <div className="relative">
             <input
               type="text"
@@ -112,7 +109,6 @@ export default function Signup() {
             </label>
           </div>
 
-          {/* Email Input */}
           <div className="relative">
             <input
               type="email"
@@ -131,7 +127,6 @@ export default function Signup() {
             </label>
           </div>
 
-          {/* Password Input */}
           <div className="relative">
             <input
               type="password"
@@ -150,7 +145,6 @@ export default function Signup() {
             </label>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out"

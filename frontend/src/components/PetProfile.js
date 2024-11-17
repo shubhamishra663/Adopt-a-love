@@ -16,28 +16,27 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import axios from "axios";
+import SocialShare from "./SocialShare";
 
 const mobileNumber = process.env.REACT_APP_MOBILE_NO || "+919060823275";
 
-const approachMessage=(name,petName)=>{return `Hi%20${name}!%20👋%20I%20saw%20${petName}%20on%20the%20adoption%20portal,%20and%20I’m%20really%20interested!%20They%20seem%20like%20such%20a%20great%20pet,%20and%20I'd%20love%20to%20know%20a%20bit%20more%20about%20them.%20Could%20we%20chat%20for%20a%20bit%20about%20their%20personality%20and%20any%20specific%20needs?%20Thanks%20so%20much!`}
+const approachMessage = (name, petName) => {
+  return `Hi%20${name}!%20👋%20I%20saw%20${petName}%20on%20the%20adoption%20portal,%20and%20I’m%20really%20interested!%20They%20seem%20like%20such%20a%20great%20pet,%20and%20I'd%20love%20to%20know%20a%20bit%20more%20about%20them.%20Could%20we%20chat%20for%20a%20bit%20about%20their%20personality%20and%20any%20specific%20needs?%20Thanks%20so%20much!`;
+};
 
-
-const Share=()=>{
-  return(
-    <div className="absolute bg-red-600 right-0 top-2/4">
-      <p>share</p>
-      <p>post</p>
+const Share = ({ pet }) => {
+  return (
+    <div className="absolute p-2 right-0 top-1/4">
+      <SocialShare pet={pet} />
     </div>
-  )
-}
-
-
+  );
+};
 
 export default function PetProfile() {
   const location = useLocation();
   const { petid } = useParams(); // Destructure petid from useParams
 
-  const petData = location.state;
+  // const petData = location.state;
   console.log(`useParams petid: ${petid}`); // Log the petid
 
   const { isAuthenticated } = useContext(AuthContext);
@@ -45,33 +44,34 @@ export default function PetProfile() {
   const [counter, setCounter] = useState(0);
   const [loadingComplete, setLoadingComplete] = useState(false);
 
-// useEffect(() => {
-//   setPet(petData)
-// }, [])
+  // useEffect(() => {
+  //   setPet(petData)
+  // }, [])
 
-useEffect(() => {
-  const fetchPetData = async () => {
-    try {
-      const isLostPet = location.pathname.includes("lostpetprofile"); // Check if the route is for lost pets
-      const url = `http://localhost:5000/${
-        isLostPet ? "lostpetprofile" : "petprofile"
-      }/${petid}`;
-      
-      console.log(`Fetching ${isLostPet ? "lost pet" : "pet"} profile`);
-      const response = await axios.get(url);
-      setPet(response.data);
-      console.log(`Profile data:`, response.data);
-    } catch (error) {
-      console.error(
-        "Error fetching profile data:",
-        error.response?.data || error.message
-      );
-    }
-  };
+  useEffect(() => {
+    const fetchPetData = async () => {
+      try {
+        console.log("fetching");
 
-  fetchPetData();
-}, [petid, location.pathname]); // Refetch if petid or route changes
+        const isLostPet = location.pathname.includes("lostpetprofile"); // Check if the route is for lost pets
+        const url = `http://localhost:5000/${
+          isLostPet ? "lostpetprofile" : "petprofile"
+        }/${petid}`;
 
+        console.log(`Fetching ${isLostPet ? "lost pet" : "pet"} profile`);
+        const response = await axios.get(url);
+        setPet(response.data);
+        console.log(`Profile data:`, response.data);
+      } catch (error) {
+        console.error(
+          "Error fetching profile data:",
+          error.response?.data || error.message
+        );
+      }
+    };
+
+    fetchPetData();
+  }, [petid, location.pathname]); // Refetch if petid or route changes
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -122,13 +122,33 @@ useEffect(() => {
     currentURL
   )}`;
 
+  const date = pet?.updatedAt;
+  let formattedDate;
+  if (date) {
+    formattedDate = new Date(date).toLocaleString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
+    });
+
+    console.log(formattedDate);
+  } else {
+    console.log("Date not available.");
+  }
+
   return (
     <div className="bg-[#f5f5f5] dark:bg-black flex flex-col dark:text-white">
       <header className="bg-purple-600 flex justify-between px-2 md:px-10 p-3">
         <p className="font-semibold text-2xl">
-          Adopt {pet?.petName || "Kitty"}
+          {!pet ? "Loading..." : pet?.type === "pet" ? "Adopt" : "Help"}{" "}
+          {pet?.petName}{" "}
         </p>
-        <p className="text-blue-400 text-sm">{pet?.updatedAt}</p>
+        <p className="text-blue-400 text-sm w-2/4 md:w-fit">{formattedDate}</p>
       </header>
 
       {/* Pet image */}
@@ -184,7 +204,7 @@ useEffect(() => {
           {facts.map(({ icon, additionalIcon, label, value }, index) => (
             <div
               key={index}
-              className="flex items-center bg-gray-500 h-28 w-40 md:h-32 md:w-60 gap-3 rounded-lg shadow-xl p-3"
+              className="flex items-center bg-gray-500 h-28 w-[170px] md:h-32 md:w-60 gap-3 rounded-lg shadow-xl p-3"
             >
               <div className="flex flex-col items-center w-16 md:w-24">
                 <div className="bg-gray-400 h-12 w-12 md:w-16 md:h-16 rounded-full flex items-center justify-center">
@@ -206,17 +226,13 @@ useEffect(() => {
         </div>
       </section>
 
-
-
       {/* Message */}
       <section>
         <div className="p-3  md:p-5">
           <p className="font-bold text-3xl">Message</p>
-          <p className="p-5 font-medium  text-lg">{pet?.description}</p>
+          <p className="p-5 font-light  text-lg">{pet?.description}</p>
         </div>
       </section>
-
-
 
       {/* Contact Info */}
       <section className="p-3 md:p-5 ">
@@ -255,7 +271,10 @@ useEffect(() => {
             </div>
             <a
               aria-label="Chat on WhatsApp"
-              href={`https://wa.me/${pet?.mobileNo}/?text=${approachMessage(pet?.name,pet?.petName)}`}
+              href={`https://wa.me/${pet?.mobileNo}/?text=${approachMessage(
+                pet?.name,
+                pet?.petName
+              )}`}
               className="flex  items-center gap-3"
             >
               <FontAwesomeIcon
@@ -264,8 +283,8 @@ useEffect(() => {
               />
               <p>Chat with {pet?.petName}'s owner</p>
             </a>
-            <div>
 
+            {/* <div>
               <Helmet>
                 <title>{pet?.name || "Pet Profile"}</title>
                 <meta
@@ -285,12 +304,12 @@ useEffect(() => {
                 <meta property="og:url" content={window.location.href} />
                 <meta property="og:type" content="website" />
               </Helmet>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
 
-      <Share/>
+      <Share pet={pet} />
     </div>
   );
 }

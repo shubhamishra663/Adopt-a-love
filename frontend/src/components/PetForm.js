@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 function PetForm() {
   const { userData } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     petName: "",
     ownerName: "",
@@ -25,9 +26,10 @@ function PetForm() {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const petView  = location.state || {};
+  const petView = location.state || {};
   console.log(`Petview : ${petView}`);
-  
+
+  const type = petView === "pets" ? "pet" : "lostpet";
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -43,14 +45,16 @@ function PetForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     console.log(formData);
 
     try {
       const data = new FormData();
-      data.append("image", formData.image); // Append the image file
+      data.append("image", formData.image); 
       data.append("email", userData.user.email);
       data.append("ownerName", userData.user.name);
       data.append("petName", formData.petName);
+      data.append("type",type);
       data.append("age", formData.age);
       data.append("species", formData.species);
       data.append("breed", formData.breed);
@@ -67,14 +71,22 @@ function PetForm() {
 
       console.log(`New Formdata: ${formData}`);
 
-      const res = await fetch(`${petView === "pets" ?"http://localhost:5000/petAdd" : "http://localhost:5000/lostPetAdd"}`, {
-        method: "POST",
-        body: data, // Send FormData directly
-      });
+      const res = await fetch(
+        `${
+          petView === "pets"
+            ? "http://localhost:5000/petAdd"
+            : "http://localhost:5000/lostPetAdd"
+        }`,
+        {
+          method: "POST",
+          body: data, 
+        }
+      );
 
       const responseData = await res.json();
       if (res.ok) {
         console.log(responseData);
+        setLoading(false);
         navigate(`/${userData?.user?.email}`);
       } else {
         console.error(
@@ -133,7 +145,9 @@ function PetForm() {
   return (
     <div className="w-screen bg-black md:p-20">
       <div className="w-full sm:w-[70%] lg:w-[50%] mx-auto p-6 bg-gray-500 shadow-md rounded-md">
-        <h2 className="text-2xl font-bold mb-4">{petView==="pets" ? "Add Pet for Adoption" : "Add Lost Pet"}</h2>
+        <h2 className="text-2xl font-bold mb-4">
+          {petView === "pets" ? "Add Pet for Adoption" : "Add Lost Pet"}
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {renderInputField("Pet Name", "petName")}
           {renderInputField("Age (in years)", "age", "number")}
@@ -160,7 +174,9 @@ function PetForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium">{petView ==="pets"?"Description" :"Last seen"}</label>
+            <label className="block text-sm font-medium">
+              {petView === "pets" ? "Description" : "Last seen"}
+            </label>
             <textarea
               name="description"
               value={formData.description}
@@ -182,9 +198,11 @@ function PetForm() {
 
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+            disabled={loading}
+            className={`w-full px-4 py-2 rounded ${ loading ? "cursor-no-drop opacity-50 pointer-events-none" : "cursor-pointer"
+            } bg-blue-500 text-white font-semibold hover:bg-blue-600 `}
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </button>
         </form>
       </div>
