@@ -7,85 +7,87 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProfileEdit from "./EditProfile";
-import Loader from "./Loader";
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { userData, setUserData, theme, setTheme, logout } = useContext(AuthContext);
+  const { userData, setUserData, theme, setTheme,logout } = useContext(AuthContext);
   const [activeComponent, setActiveComponent] = useState("pets");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const fetchProfile = async () => {
+    console.log("fetching");
+    
+    setLoading(true);
+    setError(null);
 
-  useEffect(() => {
-    const localstorageUser=localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Authorization token is missing. Please log in.");
+      logout();
+      return;
+    }
 
-    const fetchProfile = async () => {
-      setLoading(true);
-      setError(null);
+    console.log("fetching profile");
+    
+    try {
+      const response = await fetch(
+        `https://adopt-a-love-backend.vercel.app/profile/${userData?.user?.email}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setError("Authorization token is missing. Please log in.");
+      
+
+      if (response.status === 401) {
+        setError("Unauthorized. Please log in again.");
         logout();
         return;
       }
 
-      try {
-        const response = await fetch(
-          `https://adopt-a-love-backend.vercel.app/profile/${userData?.user?.email}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: "application/json",
-            },
-          }
-        );
+      if (!response.ok) {
+        throw new Error(`Failed to fetch profile data: ${response.statusText}`);
+        logout();
 
-        if (response.status === 401) {
-          setError("Unauthorized. Please log in again.");
-          logout();
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch profile data: ${response.statusText}`);
-          logout();
-        }
-
-        const data = await response.json();
-        setUserData(data); 
-      } catch (error) {
-        console.error("Error fetching profile data:", error.message);
-        setError(error.message || "An unexpected error occurred.");
-        // logout();
-      } finally {
-        setLoading(false);
       }
-    };
 
-    if (userData?.user?.email  || localstorageUser) {
+      const data = await response.json();
+      setUserData(data);
+    } catch (error) {
+      console.error("Error fetching profile data:", error.message);
+      logout();
+      setError(error.message || "An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    console.log("profile")
+    console.log(userData?.user?.email)
+
+    const localhostUser=localStorage.getItem("user");
+    if (userData?.user?.email  || localhostUser) {
       fetchProfile();
-    } else {
-      setLoading(false); 
     }
   }, [userData?.user?.email, setUserData, logout]);
+  
 
-  // Loader
   if (loading) {
-    return <Loader />;
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <div className="text-red-500 text-lg">{error}</div>
-      </div>
-    );
+    return <div>Error: {error}</div>;
   }
 
-  return (
+  return ( 
     <div className="h-auto w-full bg-[#f5f5f5] dark:bg-black overflow-hidden dark:text-white">
+      {/* Banner and profile pic */}
       <div className="bg-white h-fit">
         <div
           className="h-[300px] md:h-[300px] w-full bg-gray-800 flex justify-between"
@@ -118,7 +120,9 @@ export default function Profile() {
           <p className="font-semibold text-2xl">
             {userData?.user?.name || "Name not available"}
           </p>
-          <p className="text-xs">{userData?.user?.email || "Email not available"}</p>
+          <p className="text-xs">
+            {userData?.user?.email || "Email not available"}
+          </p>
         </div>
         <div>
           <button
