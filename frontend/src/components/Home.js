@@ -10,6 +10,7 @@ import HowItWorks from './Dashboard/HowItWorks';
 import FAQ from './Dashboard/FAQ';
 import Review from './Dashboard/Review';
 import Donation from './Dashboard/Donation';
+import Loader from './Loader';
 
 gsap.registerPlugin(ScrollTrigger);
 
