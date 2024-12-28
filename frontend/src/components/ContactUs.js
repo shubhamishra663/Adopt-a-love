@@ -29,8 +29,8 @@ const ContactUs = () => {
         }
       );
 
+      const responseData = await res.json();
       if (res.ok) {
-        const responseData = await res.json();
         showNotification(
           "Success",
           "Contact details submitted successful",
