@@ -22,6 +22,7 @@ function PetForm() {
     city: "",
     mobileNo: "",
     energy: "",
+    status:false
   });
   const navigate = useNavigate();
 
@@ -68,14 +69,15 @@ function PetForm() {
       data.append("city", formData.city);
       data.append("mobileNo", formData.mobileNo);
       data.append("energy", formData.energy);
+      data.append("status", formData.status);
 
       console.log(`New Formdata: ${formData}`);
 
       const res = await fetch(
         `${
           petView === "pets"
-            ? "http://localhost:5000/petAdd"
-            : "http://localhost:5000/lostPetAdd"
+            ? "https://adopt-a-love-backend.vercel.app/petAdd"
+            : "https://adopt-a-love-backend.vercel.app/lostPetAdd"
         }`,
         {
           method: "POST",
