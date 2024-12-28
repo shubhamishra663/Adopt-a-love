@@ -9,6 +9,7 @@ import Cat from '../utils/cat.jpg';
 import HowItWorks from './Dashboard/HowItWorks';
 import FAQ from './Dashboard/FAQ';
 import Review from './Dashboard/Review';
+import Donation from './Dashboard/Donation';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -91,6 +92,7 @@ function Home() {
             <HomeCarousel />
             <WhyChooseUs />
             {/* <HowItWorks /> */}
+            <Donation/>
             <FAQ />
             <Review />
             <div className="h-screen bg-blue-950"></div>

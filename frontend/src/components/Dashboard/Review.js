@@ -5,7 +5,7 @@ import Cat from "../../utils/cat.jpg"; // Replace with your actual image path
 
 // Card Component
 const Card = ({ name, location, message }) => (
-  <div className="relative bg-white shadow-lg h-80 w-72 flex flex-col items-center p-6 rounded-2xl   transform transition-transform hover:scale-105 hover:bg-transparent hover:border-t-4 hover:border-b-4 hover:border-red-600">
+  <div className="relative bg-white dark:bg-gray-200 shadow-lg h-80 w-72 flex flex-col items-center p-6 rounded-2xl   transform transition-transform hover:scale-105 hover:dark:bg-transparent hover:border-t-4 hover:border-b-4 hover:border-red-600">
     {/* Profile Image */}
     <div className="absolute -top-7">
       <img
@@ -77,7 +77,7 @@ export default function Review() {
   };
 
   return (
-    <div className="w-full py-12 bg-black flex justify-center">
+    <div className="w-full py-12 bg-[#f5f5f5] dark:bg-black flex justify-center">
       <div className="w-11/12 lg:w-4/5">
         <AliceCarousel
           mouseTracking

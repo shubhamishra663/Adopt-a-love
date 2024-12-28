@@ -7,6 +7,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProfileEdit from "./EditProfile";
+import Loader from "./Loader";
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
@@ -56,12 +57,15 @@ export default function Profile() {
   
         if (!response.ok) {
           throw new Error(`Failed to fetch profile data: ${response.statusText}`);
+          logout();
+
         }
   
         const data = await response.json();
         setUserData(data);
       } catch (error) {
         console.error("Error fetching profile data:", error.message);
+        logout();
         setError(error.message || "An unexpected error occurred.");
       } finally {
         setLoading(false);
@@ -75,15 +79,15 @@ export default function Profile() {
   }, [userData?.user?.email, setUserData, logout]);
   
 
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
+  if (loading) {
+    return <Loader/>
+  }
 
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  return (
+  return ( 
     <div className="h-auto w-full bg-[#f5f5f5] dark:bg-black overflow-hidden dark:text-white">
       {/* Banner and profile pic */}
       <div className="bg-white h-fit">
