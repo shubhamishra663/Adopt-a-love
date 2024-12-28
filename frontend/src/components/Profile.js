@@ -7,6 +7,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProfileEdit from "./EditProfile";
+import Loader from "./Loader";
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
@@ -78,7 +79,7 @@ export default function Profile() {
   
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader/>;
   }
 
   if (error) {
