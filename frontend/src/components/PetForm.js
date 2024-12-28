@@ -1,9 +1,10 @@
 import React, { useContext, useState, useCallback, useMemo } from "react";
 import { AuthContext } from "../context/authContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ReactNotifications, Store } from 'react-notifications-component';
 
 function PetForm() {
-  const { userData ,showNotification} = useContext(AuthContext);
+  const { userData, showNotification } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     petName: "",
@@ -22,7 +23,7 @@ function PetForm() {
     city: "",
     mobileNo: "",
     energy: "",
-    status:false
+    status: false,
   });
   const navigate = useNavigate();
 
@@ -51,11 +52,11 @@ function PetForm() {
 
     try {
       const data = new FormData();
-      data.append("image", formData.image); 
+      data.append("image", formData.image);
       data.append("email", userData.user.email);
       data.append("ownerName", userData.user.name);
       data.append("petName", formData.petName);
-      data.append("type",type);
+      data.append("type", type);
       data.append("age", formData.age);
       data.append("species", formData.species);
       data.append("breed", formData.breed);
@@ -81,7 +82,7 @@ function PetForm() {
         }`,
         {
           method: "POST",
-          body: data, 
+          body: data,
         }
       );
 
@@ -96,10 +97,21 @@ function PetForm() {
           `Request failed with status: ${res.status}`,
           responseData.message
         );
-        showNotification("Error", responseData.message || "Failed to add pet. Please try again later.", "danger");      }
+        showNotification(
+          "Error",
+          responseData.message || "Failed to add pet. Please try again later.",
+          "danger"
+        );
+      }
     } catch (error) {
       console.error("Error updating Pets:", error);
-      showNotification("Error", error.message || "An error occurred while adding the pet. Please try again later.", "danger");    }
+      showNotification(
+        "Error",
+        error.message ||
+          "An error occurred while adding the pet. Please try again later.",
+        "danger"
+      );
+    }
   };
 
   // Options for select fields, memoized for optimization
@@ -147,6 +159,8 @@ function PetForm() {
 
   return (
     <div className="w-screen bg-black md:p-20">
+      <ReactNotifications />
+
       <div className="w-full sm:w-[70%] lg:w-[50%] mx-auto p-6 bg-gray-500 shadow-md rounded-md">
         <h2 className="text-2xl font-bold mb-4">
           {petView === "pets" ? "Add Pet for Adoption" : "Add Lost Pet"}
@@ -202,7 +216,10 @@ function PetForm() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full px-4 py-2 rounded ${ loading ? "cursor-no-drop opacity-50 pointer-events-none" : "cursor-pointer"
+            className={`w-full px-4 py-2 rounded ${
+              loading
+                ? "cursor-no-drop opacity-50 pointer-events-none"
+                : "cursor-pointer"
             } bg-blue-500 text-white font-semibold hover:bg-blue-600 `}
           >
             {loading ? "Submitting..." : "Submit"}

@@ -1,5 +1,6 @@
-import React, { useState,useContext } from "react";
-import { AuthContext } from '../context/authContext';
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../context/authContext";
+import { ReactNotifications, } from 'react-notifications-component';
 
 const ContactUs = () => {
   const { login, isAuthenticated, value, userData, showNotification } =
@@ -30,7 +31,11 @@ const ContactUs = () => {
 
       if (res.ok) {
         const responseData = await res.json();
-        showNotification("Success", "Login successful", "success");
+        showNotification(
+          "Success",
+          "Contact details submitted successful",
+          "success"
+        );
         setFormData({
           name: "",
           email: "",
@@ -44,7 +49,7 @@ const ContactUs = () => {
         console.log(`Request failed with status: ${res.status}`);
         showNotification(
           "Error",
-          error.message ||
+          responseData.message ||
             "An error occurred while submitting contact details.",
           "danger"
         );
@@ -81,6 +86,7 @@ const ContactUs = () => {
 
   return (
     <div className="bg-gray-100 dark:bg-black min-h-screen flex flex-col items-center py-4">
+      <ReactNotifications />
       <div className="text-center">
         <h1 className="text-3xl font-bold dark:text-gray-400 py-8">
           Contact us

@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import Profile from './Profile';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
+import { ReactNotifications, Store } from 'react-notifications-component';
+
 
 export default function Login() {
   const navigate = useNavigate();
@@ -75,8 +77,6 @@ export default function Login() {
   return (
     (isAuthenticated?<Profile/>:(
     <div className="min-h-screen relative flex justify-center items-center bg-gray-100">
-      {/* <p>Authenticated : {isAuthenticated ? 'True' : 'false'},{value}</p> */}
-      {/* Include React Notifications */}
       <ReactNotifications />
 
       <div className="w-full max-w-lg bg-white shadow-lg py-10 px-14 rounded-lg mx-4 md:mx-0 relative z-10">
