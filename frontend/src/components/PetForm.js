@@ -89,15 +89,18 @@ function PetForm() {
       if (res.ok) {
         console.log(responseData);
         setLoading(false);
+        showNotification("Success", "Login successful", "success");
         navigate(`/${userData?.user?.email}`);
       } else {
         console.error(
           `Request failed with status: ${res.status}`,
           responseData.message
         );
+        showNotification("Error", error.message || "Login failed. Please try again later.", "danger");
       }
     } catch (error) {
       console.error("Error updating Pets:", error);
+      showNotification("Error", error.message || "Login failed. Please try again later.", "danger");
     }
   };
 
