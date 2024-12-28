@@ -42,7 +42,7 @@ export default function Login() {
 
   const loginHandle = async () => {
     try {
-      const res = await fetch('http://localhost:5000/login', {
+      const res = await fetch('https://adopt-a-love-backend.vercel.app/login', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -51,35 +51,34 @@ export default function Login() {
         credentials: 'include',
         body: JSON.stringify({
           email: user.email,
-          password: user.password
+          password: user.password,
         }),
       });
   
-      if (res.ok) {
-        const responseData = await res.json();
-        console.log(responseData);
-
-  
-        login(responseData?.user?.token); 
-        localStorage.setItem('user',responseData?.user?.email);
-
-  
-        showNotification("Success", "Login successful", "success");
-        // navigate(); 
-        
-        const email=localStorage.getItem('user');
-        navigate(loct || `/${email || responseData.user.email}`, { replace: true }); 
-
-      } else {
-        const errorMessage = await res.text();
-        showNotification("Error", errorMessage || "Login failed", "danger");
-        console.log(`Request failed with status: ${res.status}`);
+      if (!res.ok) {
+        const errorMessage = await res.text(); // Extract error from response
+        throw new Error(errorMessage || `Request failed with status: ${res.status}`);
       }
+  
+      const responseData = await res.json(); // Parse JSON response
+      console.log(responseData);
+  
+      // Simulating a login action in context
+      login(responseData?.user?.token);
+      localStorage.setItem('user', responseData?.user?.email);
+  
+      // Success notification
+      showNotification("Success", "Login successful", "success");
+  
+      // Redirecting to the appropriate page
+      const email = localStorage.getItem('user');
+      navigate(loct || `/${email || responseData.user.email}`, { replace: true });
     } catch (error) {
-      console.log('Error during fetch:', error);
-      showNotification("Error", "Login failed. Please try again later.", "danger");
+      console.error('Error during fetch:', error.message);
+      showNotification("Error", error.message || "Login failed. Please try again later.", "danger");
     }
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
