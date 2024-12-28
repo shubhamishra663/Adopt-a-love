@@ -11,19 +11,25 @@ import ProfileEdit from "./EditProfile";
 export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { logout, userData, setUserData, theme, setTheme } =
-    useContext(AuthContext);
+  const { userData, setUserData, theme, setTheme,logout } = useContext(AuthContext);
   const [activeComponent, setActiveComponent] = useState("pets");
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true);
       setError(null);
+  
       const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Authorization token is missing. Please log in.");
+        logout();
+        return;
+      }
+  
       try {
         const response = await fetch(
-          `http://localhost:5000/profile/${userData?.user?.email}`,
+          `https://adopt-a-love-backend.vercel.app/profile/${userData?.user?.email}`,
           {
             method: "GET",
             headers: {
@@ -32,45 +38,47 @@ export default function Profile() {
             },
           }
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch profile data");
+  
+        if (response.status === 401) {
+          setError("Unauthorized. Please log in again.");
+          logout();
+          return;
         }
+  
+        if (!response.ok) {
+          throw new Error(`Failed to fetch profile data: ${response.statusText}`);
+        }
+  
         const data = await response.json();
-        console.log(data);
-
-        // localStorage.setItem('user',data?.user?.email); // Store token in localStorage
-
         setUserData(data);
-        console.log(`UserData : ${userData}`);
       } catch (error) {
-        setError(error.message);
+        console.error("Error fetching profile data:", error.message);
+        setError(error.message || "An unexpected error occurred.");
       } finally {
         setLoading(false);
       }
     };
-    fetchProfile();
-  }, []);
+  
+    if (userData?.user?.email) {
+      fetchProfile();
+    }
+  }, [userData?.user?.email, setUserData, logout]);
+  
 
-  const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (error) {
-  //   return <div>Error: {error}</div>;
-  // }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="h-auto w-full bg-[#f5f5f5] dark:bg-black overflow-hidden dark:text-white">
       {/* Banner and profile pic */}
       <div className="bg-white h-fit">
         <div
-          className="h-[300px] md:h-[300px] w-full bg-gray-800 flex justify-between "
+          className="h-[300px] md:h-[300px] w-full bg-gray-800 flex justify-between"
           style={{
             backgroundImage: `url(${
               userData?.user?.cover_img || "default-image-path.jpg"
@@ -82,7 +90,7 @@ export default function Profile() {
         >
           <div className="flex px-3 md:px-5 gap-2">
             <div className="relative top-[12%] flex justify-center items-end">
-              <div className="border-2  h-20 w-20 dark:bg-black rounded-full overflow-hidden">
+              <div className="border-2 h-20 w-20 dark:bg-black rounded-full overflow-hidden">
                 <img
                   src={userData?.user?.profile_img || defaultAvatar}
                   alt="Profile"
@@ -115,22 +123,21 @@ export default function Profile() {
       </div>
 
       {/* Profile Edit Modal */}
-      <ProfileEdit
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-      />
+      {isEditModalOpen && (
+        <ProfileEdit isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
+      )}
 
       {/* Sections */}
       <div className="w-full h-28 md:h-32 flex md:gap-10 p-3 md:p-5 justify-between md:justify-normal dark:bg-black dark:text-white">
         <button
           onClick={() => setActiveComponent("pets")}
-          className="h-full w-[45%] md:w-40 bg-blue-200 rounded-md flex justify-center items-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="h-full w-[45%] md:w-40 bg-blue-200 rounded-md flex justify-center items-center focus:ring-2 focus:ring-blue-500"
         >
           <p className="font-semibold text-xl">Pets</p>
         </button>
         <button
           onClick={() => setActiveComponent("lostPets")}
-          className="h-full w-[45%] md:w-40 bg-blue-200 rounded-md flex justify-center items-center focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="h-full w-[45%] md:w-40 bg-blue-200 rounded-md flex justify-center items-center focus:ring-2 focus:ring-blue-500"
         >
           <p className="font-semibold text-xl">Lost Pets</p>
         </button>
