@@ -74,7 +74,7 @@ export default function Profile() {
     if (userData?.user?.email  || localhostUser) {
       fetchProfile();
     }
-  }, [userData?.user?.email, setUserData, logout]);
+  }, []);
   
 
   if (loading) {
