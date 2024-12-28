@@ -12,29 +12,24 @@ import Loader from "./Loader";
 export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { userData, setUserData, theme, setTheme,logout } = useContext(AuthContext);
+  const { userData, setUserData, theme, setTheme, logout } = useContext(AuthContext);
   const [activeComponent, setActiveComponent] = useState("pets");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
-    console.log("profile")
-    console.log(userData?.user?.email)
+    const localstorageUser=localStorage.getItem("user");
 
     const fetchProfile = async () => {
-      console.log("fetching");
-      
       setLoading(true);
       setError(null);
-  
+
       const token = localStorage.getItem("token");
       if (!token) {
         setError("Authorization token is missing. Please log in.");
         logout();
         return;
       }
-  
-      console.log("fetching profile");
-      
+
       try {
         const response = await fetch(
           `https://adopt-a-love-backend.vercel.app/profile/${userData?.user?.email}`,
@@ -47,49 +42,50 @@ export default function Profile() {
           }
         );
 
-        
-  
         if (response.status === 401) {
           setError("Unauthorized. Please log in again.");
           logout();
           return;
         }
-  
+
         if (!response.ok) {
           throw new Error(`Failed to fetch profile data: ${response.statusText}`);
           logout();
-
         }
-  
+
         const data = await response.json();
-        setUserData(data);
+        setUserData(data); 
       } catch (error) {
         console.error("Error fetching profile data:", error.message);
-        logout();
         setError(error.message || "An unexpected error occurred.");
+        // logout();
       } finally {
         setLoading(false);
       }
     };
-  
-    const localhostUser=localStorage.getItem("user");
-    if (userData?.user?.email  || localhostUser) {
+
+    if (userData?.user?.email  || localstorageUser) {
       fetchProfile();
+    } else {
+      setLoading(false); 
     }
   }, [userData?.user?.email, setUserData, logout]);
-  
 
+  // Loader
   if (loading) {
-    return <Loader/>
+    return <Loader />;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="text-red-500 text-lg">{error}</div>
+      </div>
+    );
   }
 
-  return ( 
+  return (
     <div className="h-auto w-full bg-[#f5f5f5] dark:bg-black overflow-hidden dark:text-white">
-      {/* Banner and profile pic */}
       <div className="bg-white h-fit">
         <div
           className="h-[300px] md:h-[300px] w-full bg-gray-800 flex justify-between"
@@ -122,9 +118,7 @@ export default function Profile() {
           <p className="font-semibold text-2xl">
             {userData?.user?.name || "Name not available"}
           </p>
-          <p className="text-xs">
-            {userData?.user?.email || "Email not available"}
-          </p>
+          <p className="text-xs">{userData?.user?.email || "Email not available"}</p>
         </div>
         <div>
           <button
