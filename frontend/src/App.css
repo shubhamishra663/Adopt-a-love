@@ -1,0 +1,13 @@
+.floating-object {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    from {
+      transform: translateY(-10px);
+    }
+    to {
+      transform: translateY(10px);
+    }
+  }
+  

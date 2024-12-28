@@ -24,7 +24,7 @@ export default function LostPets() {
 
       try {
         const response = await axios.get(
-          `http://localhost:5000/user-lostPets/${userData?.user?.email}`,
+          `https://adopt-a-love-backend.vercel.app/user-lostPets/${userData?.user?.email}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

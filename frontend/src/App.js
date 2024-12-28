@@ -13,7 +13,7 @@ import Adopt from './components/Adopt';
 import PetProfile from './components/PetProfile';
 import NotFound from './components/NotFound';
 import About from './components/About';
-import Contact from './components/Contact';
+import ContactUs from './components/ContactUs';
 
 function App() {
   return (
@@ -60,8 +60,8 @@ const AppRoutes = ({ isAuthenticated, userData, theme }) => {
       <Route path="pets" element={isAuthenticated ? <Pets /> : <Navigate to="/login" />} />
       <Route path="/:email/petform" element={isAuthenticated ? <PetForm /> : <Navigate to="/login" />} />
       <Route path="adopt" element={<Adopt />} />
+      <Route path="contactus" element={<ContactUs/>} />
       <Route path="about" element={<About />} />
-      <Route path="contact" element={<Contact />} />
       {/* <Route path="/:email/edit" element={<ProfileEdit />} /> */}
       <Route path="petprofile/:petid" element={<PetProfile />} />
       <Route path="lostpetprofile/:petid" element={<PetProfile />} />

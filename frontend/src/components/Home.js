@@ -90,7 +90,7 @@ function Home() {
         <div className="relative overflow-hidden">
             <HomeCarousel />
             <WhyChooseUs />
-            <HowItWorks />
+            {/* <HowItWorks /> */}
             <FAQ />
             <Review />
             <div className="h-screen bg-blue-950"></div>

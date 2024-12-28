@@ -195,7 +195,7 @@ export default function Navbar({ userData }) {
             </li>
             <li>
               <Link
-                to="/contact"
+                to="/contactus"
                 className={`block py-2 px-3 rounded ${getActiveClass(
                   "/contact"
                 )}`}

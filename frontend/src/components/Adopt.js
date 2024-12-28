@@ -1,11 +1,118 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import PetsCard from "./PetsCard";
 
-export default function Adopt() {
+const PetsCard = ({ pet, onClick }) => {
+  return (
+    <div 
+      className={`h-72 w-[48%] md:w-[20%] rounded-xl shadow-lg p-2 cursor-pointer ${pet.type === 'lostpet' ? 'bg-red-400' : 'bg-white dark:bg-black'}`}      
+      onClick={() => {
+        console.log("Card clicked", pet);
+        onClick(); 
+      }} 
+    >
+      <div className="h-[60%] rounded-xl overflow-hidden">
+        <img
+          className="h-full w-full object-cover transition-transform duration-300 transform hover:scale-125"
+          src={pet.image || '/placeholder.svg'}
+          alt={pet.petName || "Pet"}
+        />
+      </div>
+
+      <div className="h-[40%] w-full p-3 dark:text-white">
+        <p className="text-lg font-bold">{pet.petName || "Name not available"}</p>
+        <p className='text-sm md:text-base'>{pet.species || "Type not available"}</p>
+        <p className='text-sm md:text-base'>{pet.gender || "Gender"}, {pet.age ? `${pet.age} yrs` : "Age not available"}</p>
+        <p className='text-sm md:text-base'>{pet.breed || "Breed not available"}</p>
+      </div>
+    </div>
+  );
+};
+
+const Spinner = () => {
+  return (
+    <div className="flex justify-center items-center h-32">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-gray-100"></div>
+    </div>
+  );
+};
+
+const ErrorMessage = ({ message }) => {
+  return (
+    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+      <strong className="font-bold">Error: </strong>
+      <span className="block sm:inline">{message}</span>
+    </div>
+  );
+};
+
+const FilterSection = ({ isOpen, setIsOpen, selectedFilters, handleFilterChange, getUniqueValues }) => {
+  return (
+    <div className="bg-gray-800 rounded-lg p-4 shadow-md flex-1 transition-all duration-300">
+      <button
+        className="flex justify-between items-center w-full text-left"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+      >
+        <h2 className="text-xl text-white">Filter Pets</h2>
+        <span className="text-white" aria-hidden="true">{isOpen ? "▲" : "▼"}</span>
+      </button>
+      {isOpen && (
+        <div className="grid grid-cols-1 gap-4 mt-4">
+          {["species", "breed", "color"].map((filterKey) => (
+            <label key={filterKey} className="flex flex-col text-gray-300">
+              {filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}:
+              <select
+                className="bg-gray-700 text-white border border-gray-600 rounded p-2 mt-1"
+                value={selectedFilters[filterKey]}
+                onChange={(e) => handleFilterChange(filterKey, e.target.value)}
+              >
+                <option value="">All</option>
+                {getUniqueValues(filterKey).map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const SortSection = ({ isOpen, setIsOpen, sortOption, handleSortChange }) => {
+  return (
+    <div className="bg-gray-800 rounded-lg p-4 shadow-md flex-1 transition-all duration-300">
+      <button
+        className="flex justify-between items-center w-full text-left"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+      >
+        <h2 className="text-xl text-white">Sort Pets</h2>
+        <span className="text-white" aria-hidden="true">{isOpen ? "▲" : "▼"}</span>
+      </button>
+      {isOpen && (
+        <label className="flex flex-col text-gray-300 mt-4">
+          Sort by:
+          <select
+            className="bg-gray-700 text-white border border-gray-600 rounded p-2 mt-1"
+            value={sortOption}
+            onChange={handleSortChange}
+          >
+            <option value="">Select...</option>
+            <option value="name">Name</option>
+            <option value="age">Age</option>
+          </select>
+        </label>
+      )}
+    </div>
+  );
+};
+
+function Adopt() {
   const [petsData, setPetsData] = useState([]);
-  const [filteredPetData, setFilteredPetData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
@@ -18,52 +125,41 @@ export default function Adopt() {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchPets = async () => {
-      setLoading(true);
-      setError(null);
+  const fetchPets = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        const response = await axios.get("http://localhost:5000/adopt");
-        console.log("Full Response Data:", response.data);
+    try {
+      const response = await axios.get("http://localhost:5000/adopt");
+      const pets = response.data.pets || [];
+      const lostPets = response.data.lostPets || [];
 
-        const pets = response.data.pets || [];
-        const lostPets = response.data.lostPets || [];
-        console.log("Pets:", pets);
-        console.log("Lost Pets:", lostPets);
+      const combinedData = [
+        ...pets.map((pet) => ({ ...pet, type: "pet" })),
+        ...lostPets.map((pet) => ({ ...pet, type: "lostpet" })),
+      ];
 
-        const combinedData = [
-          ...pets.map((pet) => ({ ...pet, type: "pet" })),
-          ...lostPets.map((pet) => ({ ...pet, type: "lostpet" })),
-        ];
-        console.log("Combined Data:", combinedData);
-
-        setPetsData(combinedData);
-        setFilteredPetData(combinedData);
-      } catch (error) {
-        console.error(
-          "Error fetching pets:",
-          error.response?.data || error.message
-        );
-        setError(error.response?.data?.message || error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPets();
+      setPetsData(combinedData);
+    } catch (error) {
+      console.error("Error fetching pets:", error.response?.data || error.message);
+      setError(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const getUniqueValues = (key) => {
-    return [...new Set(petsData.map((pet) => pet[key]).filter(Boolean))];
-  };
-
   useEffect(() => {
+    fetchPets();
+  }, [fetchPets]);
+
+  const getUniqueValues = useCallback((key) => {
+    return [...new Set(petsData.map((pet) => pet[key]).filter(Boolean))];
+  }, [petsData]);
+
+  const filteredPetData = useMemo(() => {
     let updatedData = petsData.filter((pet) => {
       return (
-        (selectedFilters.species
-          ? pet.species === selectedFilters.species
-          : true) &&
+        (selectedFilters.species ? pet.species === selectedFilters.species : true) &&
         (selectedFilters.breed ? pet.breed === selectedFilters.breed : true) &&
         (selectedFilters.color ? pet.color === selectedFilters.color : true)
       );
@@ -75,139 +171,67 @@ export default function Adopt() {
       updatedData.sort((a, b) => a.age - b.age);
     }
 
-    setFilteredPetData(updatedData);
+    return updatedData;
   }, [selectedFilters, sortOption, petsData]);
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = useCallback((key, value) => {
     setSelectedFilters((prevFilters) => ({
       ...prevFilters,
       [key]: value,
     }));
-  };
+  }, []);
 
-  const handleSortChange = (e) => {
+  const handleSortChange = useCallback((e) => {
     setSortOption(e.target.value);
-  };
+  }, []);
 
-  // // Loading and error handling
-  // if (loading) return <p className="text-white">Loading...</p>;
-  // if (error) return <p className="text-red-400">Error: {error}</p>;
+  const handlePetClick = useCallback((pet) => {
+    if (pet.type === "pet") {
+      navigate(`/petprofile/${encodeURIComponent(pet._id)}`);
+    } else if (pet.type === "lostpet") {
+      navigate(`/lostpetprofile/${encodeURIComponent(pet._id)}`);
+    }
+  }, [navigate]);
 
   return (
     <div className="bg-[#f5f5f5] dark:bg-black min-h-screen w-full p-3 md:p-5 relative">
-      {/* Filter and Sort */}
-      <div className="flex gap-4 mb-4 sticky">
-        {/* Filter Section */}
-        <div className="bg-gray-800 rounded-lg p-4 shadow-md flex-1 transition-all duration-300">
-          <div
-            className="flex justify-between items-center cursor-pointer"
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-          >
-            <h2 className="text-xl text-white">Filter Pets</h2>
-            <span className="text-white">{isFilterOpen ? "▲" : "▼"}</span>
-          </div>
-          {isFilterOpen && (
-            <div className="grid grid-cols-1 gap-4 mt-4">
-              <label className="flex flex-col text-gray-300">
-                Species:
-                <select
-                  className="bg-gray-700 text-white border border-gray-600 rounded p-2 mt-1"
-                  value={selectedFilters.species}
-                  onChange={(e) =>
-                    handleFilterChange("species", e.target.value)
-                  }
-                >
-                  <option value="">All</option>
-                  {getUniqueValues("species").map((species) => (
-                    <option key={species} value={species}>
-                      {species}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="flex flex-col text-gray-300">
-                Breed:
-                <select
-                  className="bg-gray-700 text-white border border-gray-600 rounded p-2 mt-1"
-                  value={selectedFilters.breed}
-                  onChange={(e) => handleFilterChange("breed", e.target.value)}
-                >
-                  <option value="">All</option>
-                  {getUniqueValues("breed").map((breed) => (
-                    <option key={breed} value={breed}>
-                      {breed}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="flex flex-col text-gray-300">
-                Color:
-                <select
-                  className="bg-gray-700 text-white border border-gray-600 rounded p-2 mt-1"
-                  value={selectedFilters.color}
-                  onChange={(e) => handleFilterChange("color", e.target.value)}
-                >
-                  <option value="">All</option>
-                  {getUniqueValues("color").map((color) => (
-                    <option key={color} value={color}>
-                      {color}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          )}
-        </div>
-
-        {/* Sort Section */}
-        <div className="bg-gray-800 rounded-lg p-4 shadow-md flex-1 transition-all duration-300">
-          <div
-            className="flex justify-between items-center cursor-pointer"
-            onClick={() => setIsSortOpen(!isSortOpen)}
-          >
-            <h2 className="text-xl text-white">Sort Pets</h2>
-            <span className="text-white">{isSortOpen ? "▲" : "▼"}</span>
-          </div>
-          {isSortOpen && (
-            <label className="flex flex-col text-gray-300 mt-4">
-              Sort by:
-              <select
-                className="bg-gray-700 text-white border border-gray-600 rounded p-2 mt-1"
-                value={sortOption}
-                onChange={handleSortChange}
-              >
-                <option value="">Select...</option>
-                <option value="name">Name</option>
-                <option value="age">Age</option>
-              </select>
-            </label>
-          )}
-        </div>
+      <div className="flex gap-4 mb-4 sticky top-0 z-10">
+        <FilterSection
+          isOpen={isFilterOpen}
+          setIsOpen={setIsFilterOpen}
+          selectedFilters={selectedFilters}
+          handleFilterChange={handleFilterChange}
+          getUniqueValues={getUniqueValues}
+        />
+        <SortSection
+          isOpen={isSortOpen}
+          setIsOpen={setIsSortOpen}
+          sortOption={sortOption}
+          handleSortChange={handleSortChange}
+        />
       </div>
 
-      <div className="flex flex-wrap justify-between md:justify-evenly gap-2 md:gap-14 p-1 md:p-3 bg-white dark:bg-[#121212] rounded-t-lg">
-        {filteredPetData.length > 0 ? (
-          filteredPetData.map((pet) => (
-            <PetsCard
-              key={pet._id}
-              pet={pet}
-              onClick={() => {
-                if (pet.type === "pet") {
-                  navigate(`/petprofile/${encodeURIComponent(pet._id)}`, {
-                    state: pet,
-                  });
-                } else if (pet.type === "lostpet") {
-                  navigate(`/lostpetprofile/${encodeURIComponent(pet._id)}`, {
-                    state: pet,
-                  });
-                }
-              }}
-            />
-          ))
-        ) : (
-          <p className="text-white">No pets found.</p>
-        )}
-      </div>
+      {loading && <Spinner />}
+      {error && <ErrorMessage message={error} />}
+
+      {!loading && !error && (
+        <div className="flex flex-wrap justify-between md:justify-evenly gap-2 md:gap-14 p-1 md:p-3 bg-white dark:bg-[#121212] rounded-t-lg">
+          {filteredPetData.length > 0 ? (
+            filteredPetData.map((pet) => (
+              <PetsCard
+                key={pet._id}
+                pet={pet}
+                onClick={() => handlePetClick(pet)}
+              />
+            ))
+          ) : (
+            <p className="text-gray-700 dark:text-gray-300">No pets found.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
+
+export default Adopt;
+

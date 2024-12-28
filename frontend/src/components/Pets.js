@@ -21,7 +21,7 @@ export default function Pets() {
       const token = localStorage.getItem('token');
 
       try {
-        const response = await axios.get(`http://localhost:5000/user-pets/${userData?.user?.email}`, {
+        const response = await axios.get(`https://adopt-a-love-backend.vercel.app/user-pets/${userData?.user?.email}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'

@@ -43,7 +43,7 @@ export default function Signup() {
 
   const signup = async () => {
     try {
-      const res = await fetch('http://localhost:5000/signup', {
+      const res = await fetch('https://adopt-a-love-backend.vercel.app/signup', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
