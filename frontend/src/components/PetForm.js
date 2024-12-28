@@ -3,7 +3,7 @@ import { AuthContext } from "../context/authContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function PetForm() {
-  const { userData } = useContext(AuthContext);
+  const { userData ,showNotification} = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     petName: "",
@@ -89,19 +89,17 @@ function PetForm() {
       if (res.ok) {
         console.log(responseData);
         setLoading(false);
-        showNotification("Success", "Login successful", "success");
+        showNotification("Success", "Pet added successful", "success");
         navigate(`/${userData?.user?.email}`);
       } else {
         console.error(
           `Request failed with status: ${res.status}`,
           responseData.message
         );
-        showNotification("Error", error.message || "Login failed. Please try again later.", "danger");
-      }
+        showNotification("Error", responseData.message || "Failed to add pet. Please try again later.", "danger");      }
     } catch (error) {
       console.error("Error updating Pets:", error);
-      showNotification("Error", error.message || "Login failed. Please try again later.", "danger");
-    }
+      showNotification("Error", error.message || "An error occurred while adding the pet. Please try again later.", "danger");    }
   };
 
   // Options for select fields, memoized for optimization
