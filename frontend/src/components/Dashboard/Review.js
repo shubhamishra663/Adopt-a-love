@@ -77,7 +77,10 @@ export default function Review() {
   };
 
   return (
-    <div className="w-full py-12 bg-[#f5f5f5] dark:bg-black flex justify-center">
+    <div className="w-full py-12 bg-[#f5f0ff] dark:bg-black flex flex-col items-center justify-center">
+      <div className="p-5 pb-8">
+        <p className="text-xl md:text-3xl font-bold">Heartfelt Success Stories from Our Happy Pet Adopters</p>
+      </div>
       <div className="w-11/12 lg:w-4/5">
         <AliceCarousel
           mouseTracking

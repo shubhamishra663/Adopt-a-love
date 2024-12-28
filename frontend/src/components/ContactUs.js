@@ -85,7 +85,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="bg-gray-100 dark:bg-black min-h-screen flex flex-col items-center py-4">
+    <div className="bg-[#f5f0ff] dark:bg-black min-h-screen flex flex-col items-center py-4">
       <ReactNotifications />
       <div className="text-center">
         <h1 className="text-3xl font-bold dark:text-gray-400 py-8">

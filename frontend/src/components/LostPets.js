@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import Cookies from "js-cookie"; 
 import { AuthContext } from "../context/authContext";
 import petPlaceholderImage from "../utils/cat.jpg";
 import shu from "../utils/pets.jpg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+
+import {useNavigate } from "react-router-dom";
 import PetsCard from "./PetsCard"; 
 
 export default function LostPets() {

@@ -1,11 +1,9 @@
 // PetsCard.js
 import React from 'react';
 import shu from '../utils/pets.jpg';
-import { useNavigate } from 'react-router-dom';
 
 
 const PetsCard = ({ pet, onClick }) => {
-  const navigate = useNavigate();
   // console.log(`pet?.image : ${pet?.image}`);
 
   const type=pet?.type;

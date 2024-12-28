@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import Loader from "./Loader.js"
 const PetsCard = ({ pet, onClick }) => {
   return (
     <div 
@@ -29,13 +29,7 @@ const PetsCard = ({ pet, onClick }) => {
   );
 };
 
-const Spinner = () => {
-  return (
-    <div className="flex justify-center items-center h-32">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-gray-100"></div>
-    </div>
-  );
-};
+
 
 const ErrorMessage = ({ message }) => {
   return (
@@ -211,7 +205,7 @@ function Adopt() {
         />
       </div>
 
-      {loading && <Spinner />}
+      {loading && <Loader/>}
       {error && <ErrorMessage message={error} />}
 
       {!loading && !error && (

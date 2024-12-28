@@ -12,7 +12,7 @@ import Loader from "./Loader";
 export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { userData, setUserData, theme, setTheme,logout } = useContext(AuthContext);
+  const { userData, setUserData,logout } = useContext(AuthContext);
   const [activeComponent, setActiveComponent] = useState("pets");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const fetchProfile = async () => {
