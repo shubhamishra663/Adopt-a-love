@@ -56,7 +56,7 @@ export default function PetProfile() {
         console.log("fetching");
 
         const isLostPet = location.pathname.includes("lostpetprofile"); // Check if the route is for lost pets
-        const url = `http://localhost:5000/${
+        const url = `https://adopt-a-love-backend.vercel.app/${
           isLostPet ? "lostpetprofile" : "petprofile"
         }/${petid}`;
 

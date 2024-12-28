@@ -53,7 +53,7 @@ export default function ProfileEdit({ isOpen, onClose }) {
     data.append("cover_img", formData.cover_img);
 
     try {
-      const response = await fetch("http://localhost:5000/profile-edit", {
+      const response = await fetch("https://adopt-a-love-backend.vercel.app/profile-edit", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`, 

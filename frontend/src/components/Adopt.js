@@ -130,7 +130,7 @@ function Adopt() {
     setError(null);
 
     try {
-      const response = await axios.get("http://localhost:5000/adopt");
+      const response = await axios.get("https://adopt-a-love-backend.vercel.app/adopt");
       const pets = response.data.pets || [];
       const lostPets = response.data.lostPets || [];
 
