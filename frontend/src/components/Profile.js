@@ -16,7 +16,12 @@ export default function Profile() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
+    console.log("profile")
+    console.log(userData?.user?.email)
+
     const fetchProfile = async () => {
+      console.log("fetching");
+      
       setLoading(true);
       setError(null);
   
@@ -27,6 +32,8 @@ export default function Profile() {
         return;
       }
   
+      console.log("fetching profile");
+      
       try {
         const response = await fetch(
           `https://adopt-a-love-backend.vercel.app/profile/${userData?.user?.email}`,
@@ -38,6 +45,8 @@ export default function Profile() {
             },
           }
         );
+
+        
   
         if (response.status === 401) {
           setError("Unauthorized. Please log in again.");
@@ -59,15 +68,16 @@ export default function Profile() {
       }
     };
   
-    if (userData?.user?.email) {
+    const localhostUser=localStorage.getItem("user");
+    if (userData?.user?.email  || localhostUser) {
       fetchProfile();
     }
   }, [userData?.user?.email, setUserData, logout]);
   
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   if (error) {
     return <div>Error: {error}</div>;
