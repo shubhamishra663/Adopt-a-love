@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ReactNotifications, Store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
 import Profile from './Profile';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';

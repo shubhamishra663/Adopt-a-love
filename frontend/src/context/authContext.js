@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { ReactNotifications, Store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
