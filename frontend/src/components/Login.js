@@ -76,11 +76,11 @@ export default function Login() {
   
   return (
     (isAuthenticated?<Profile/>:(
-    <div className="min-h-screen relative flex justify-center items-center bg-gray-100">
+    <div className="min-h-screen relative flex justify-center items-center bg-[#f5f0ff] dark:bg-black">
       <ReactNotifications />
 
-      <div className="w-full max-w-lg bg-white shadow-lg py-10 px-14 rounded-lg mx-4 md:mx-0 relative z-10">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-10">Login</h2>
+      <div className="w-full max-w-lg bg-white dark:bg-[#333] border-2 dark:border-[#444] shadow-lg py-10 px-14 rounded-lg mx-4 md:mx-0 relative z-10">
+        <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-[#f5f5f5] mb-10">Login</h2>
 
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
 
@@ -91,13 +91,13 @@ export default function Login() {
               id="email"
               value={user.email}
               onChange={handleChange}
-              className="block px-3 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-transparent rounded-md border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
+              className="block px-3 pb-2.5 pt-5 w-full text-sm text-gray-900 dark:text-[#f5f5f5] bg-transparent rounded-md border-2 dark:border-[#444] border-gray-300 appearance-none focus:outline-none focus:ring-0 dark:focus:border-blue-600 focus:border-blue-600 peer"
+              placeholder=" " 
               required
             />
             <label
               htmlFor="email"
-              className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] bg-transparent px-3 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-5 peer-focus:top-4 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+              className="absolute text-sm text-gray-500 dark:text-[#f5f5f5] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] bg-transparent px-3 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-5 peer-focus:top-4 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
             >
               Email
             </label>
@@ -110,13 +110,13 @@ export default function Login() {
               id="password"
               value={user.password}
               onChange={handleChange}
-              className="block px-3 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-transparent rounded-md border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              className="block px-3 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-transparent rounded-md border-2 dark:border-[#444] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 dark:focus:border-blue-600 peer"
               placeholder=" "
               required
             />
             <label
               htmlFor="password"
-              className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] bg-transparent px-3 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-5 peer-focus:top-4 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+              className="absolute text-sm text-gray-500 dark:text-[#f5f5f5] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] bg-transparent px-3 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-5 peer-focus:top-4 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
             >
               Password
             </label>
@@ -129,7 +129,7 @@ export default function Login() {
           >
             Submit
           </button>
-          <p className='text-black'>Don't have an account? <Link className='text-blue-600' to='/signup'>Create an account</Link></p>
+          <p className='text-black dark:text-[#f5f5f5]'>Don't have an account? <Link className='text-blue-600' to='/signup'>Create an account</Link></p>
 
         </form>
       </div>

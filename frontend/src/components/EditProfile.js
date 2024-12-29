@@ -12,6 +12,7 @@ export default function ProfileEdit({ isOpen, onClose }) {
   const [profilePreview, setProfilePreview] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const [errors, setErrors] = useState({});
+  const [loading,setLoading]=useState(false)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -53,6 +54,7 @@ export default function ProfileEdit({ isOpen, onClose }) {
     data.append("cover_img", formData.cover_img);
 
     try {
+      setLoading(true)
       const response = await fetch("https://adopt-a-love-backend.vercel.app/profile-edit", {
         method: "POST",
         headers: {
@@ -78,6 +80,8 @@ export default function ProfileEdit({ isOpen, onClose }) {
       }
     } catch (error) {
       console.error("Error:", error);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -153,7 +157,7 @@ export default function ProfileEdit({ isOpen, onClose }) {
           <input
             type="text"
             name="fullName"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Full Name"
             value={formData.fullName}
             onChange={handleInputChange}
@@ -163,7 +167,7 @@ export default function ProfileEdit({ isOpen, onClose }) {
           <input
             type="text"
             name="mobileNo"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Mobile No"
             value={formData.mobileNo}
             onChange={handleInputChange}
@@ -173,9 +177,12 @@ export default function ProfileEdit({ isOpen, onClose }) {
 
         <button
           onClick={handleSubmit}
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
-        >
-          Submit
+          className={`w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 ${
+            loading
+              ? "cursor-no-drop opacity-50 pointer-events-none"
+              : "cursor-pointer"
+          }`}
+        >{loading?"Submitting...":"Submit"}
         </button>
       </div>
     </div>

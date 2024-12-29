@@ -8,7 +8,7 @@ export default function Navbar({ userData }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const location = useLocation();
-  const { theme, logout, setTheme } = useContext(AuthContext);
+  const { theme, logout, setTheme,navUserData } = useContext(AuthContext);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -54,7 +54,7 @@ export default function Navbar({ userData }) {
             <span className="sr-only">Open user menu</span>
             <img
               className="w-8 h-8 rounded-full object-cover"
-              src={userData?.user?.profile_img || defaultAvatar}
+              src={navUserData?.profile_img || defaultAvatar}
               alt="user photo"
             />
           </button>
@@ -64,10 +64,10 @@ export default function Navbar({ userData }) {
             <div className="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 absolute right-4 mt-80">
               <div className="px-4 py-3">
                 <span className="block text-sm text-gray-900 dark:text-white">
-                  {userData?.user?.name || "User Name"}
+                  {navUserData?.name || "Guest"}
                 </span>
                 <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                  {userData?.user?.email || "user@example.com"}
+                  {navUserData?.email || "guest@example.com"}
                 </span>
               </div>
               <ul className="py-2" aria-labelledby="user-menu-button">
