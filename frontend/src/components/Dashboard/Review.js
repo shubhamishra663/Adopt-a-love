@@ -5,7 +5,7 @@ import Cat from "../../utils/cat.jpg"; // Replace with your actual image path
 
 // Card Component
 const Card = ({ name, location, message }) => (
-  <div className="relative bg-white dark:bg-gray-200 shadow-lg h-80 w-72 flex flex-col items-center p-6 rounded-2xl   transform transition-transform hover:scale-105 hover:dark:bg-transparent hover:border-t-4 hover:border-b-4 hover:border-red-600">
+  <div className="relative bg-white dark:bg-gray-200 shadow-lg h-80 md:w-72  flex flex-col items-center p-6 rounded-2xl   transform transition-transform hover:scale-105 hover:dark:bg-transparent hover:border-t-4 hover:border-b-4 hover:border-red-600">
     {/* Profile Image */}
     <div className="absolute -top-7">
       <img
@@ -71,9 +71,9 @@ export default function Review() {
   ));
 
   const responsive = {
-    0: { items: 1 }, // 1 card on small screens
-    768: { items: 2 }, // 2 cards on medium screens
-    1024: { items: 3 }, // 3 cards on larger screens
+    0: { items: 1 }, 
+    768: { items: 2 }, 
+    1024: { items: 3 }, 
   };
 
   return (
@@ -91,7 +91,7 @@ export default function Review() {
           autoPlayInterval={3000}
           animationDuration={1000}
           disableButtonsControls
-          disableDotsControls={true} // Set to `true` if you want to hide dots
+          disableDotsControls={false} 
         />
       </div>
     </div>

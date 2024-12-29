@@ -79,7 +79,7 @@ export default function Profile() {
   
 
   if (loading) {
-    return <div><Loader/></div>;
+    return <Loader/>;
   }
 
   if (error) {

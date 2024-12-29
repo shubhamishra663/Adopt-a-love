@@ -31,7 +31,7 @@ export default function Navbar({ userData }) {
   };
 
   return (
-    <nav className="bg-white border-gray-200 dark:bg-black shadow-xl">
+    <nav className="bg-white border-gray-200 dark:bg-black shadow-xl border-b-[1px] dark:border-[#565656]">
       <div className="max-w-screen-2xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link
           to="/"
