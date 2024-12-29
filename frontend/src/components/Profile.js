@@ -87,9 +87,9 @@ export default function Profile() {
   }
 
   return ( 
-    <div className="h-auto w-full bg-[#f5f5f5] dark:bg-black overflow-hidden dark:text-white">
+    <div className="h-auto w-full bg-[#f5f0ff] dark:bg-black overflow-hidden dark:text-white">
       {/* Banner and profile pic */}
-      <div className="bg-white h-fit">
+      <div className="bg-[#f5f0ff] h-fit">
         <div
           className="h-[300px] md:h-[300px] w-full bg-gray-800 flex justify-between"
           style={{
@@ -116,7 +116,7 @@ export default function Profile() {
       </div>
 
       {/* User Details */}
-      <div className="bg-[#f5f5f5] dark:bg-black p-3 pt-16 md:pt-10 flex justify-between">
+      <div className="dark:bg-black p-3 pt-16 md:pt-10 flex justify-between">
         <div className="dark:text-white">
           <p className="font-semibold text-2xl">
             {userData?.user?.name || "Name not available"}

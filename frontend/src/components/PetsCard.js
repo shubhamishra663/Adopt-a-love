@@ -13,7 +13,7 @@ const PetsCard = ({ pet, onClick }) => {
 
   return (
     <div 
-    className={`h-72 w-[48%] md:w-[20%] rounded-xl shadow-lg p-2 cursor-pointer ${type === 'lostpet' ? 'bg-red-400' : 'bg-white dark:bg-black'}`}      
+    className={`h-72 w-[47%] md:w-[20%] rounded-xl shadow-lg p-2 cursor-pointer ${type === 'lostpet' ? 'bg-red-400' : 'bg-white dark:bg-black'}`}      
     onClick={() => {
         console.log("Card clicked", pet);
         onClick(); 

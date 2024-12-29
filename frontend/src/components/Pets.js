@@ -40,7 +40,7 @@ export default function Pets() {
   // if (error) return <p className="text-center my-5 text-red-500">Error: {error}</p>;
 
   return (
-    <div className="w-screen p-5">
+    <div className="w-screen p-2 md:p-5">
       {petsData.length > 0 ? (
         <div className="flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14">
           {petsData.map((pet, index) => (

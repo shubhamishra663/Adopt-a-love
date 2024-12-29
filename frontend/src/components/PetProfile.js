@@ -144,7 +144,7 @@ export default function PetProfile() {
   }
 
   return (
-    <div className="bg-[#f5f5f5] dark:bg-black flex flex-col dark:text-white">
+    <div className="bg-[#f5f0ff] dark:bg-black flex flex-col dark:text-white">
       <header className="bg-purple-600 flex justify-between px-2 md:px-10 p-3">
         <p className="font-semibold text-2xl">
           {!pet ? "Loading..." : pet?.type === "pet" ? "Adopt" : "Help"}{" "}
@@ -154,8 +154,8 @@ export default function PetProfile() {
       </header>
 
       {/* Pet image */}
-      <section className="dark:bg-black h-[60%] flex items-center justify-center p-5 md:p-14">
-        <div className="bg-gray-600 h-96 w-11/12 md:w-1/2 relative rounded-lg overflow-hidden shadow-lg">
+      <section className="dark:bg-black w-full h-[60%] flex items-center justify-center p-1 md:p-14">
+        <div className="bg-gray-600 h-96 w-full md:w-1/2 relative rounded-lg overflow-hidden shadow-lg">
           <div className="loading-bar bg-[#f5f5f5] dark:bg-[#121212] h-full w-full flex flex-col justify-center items-center absolute top-0 transition-all duration-700">
             <div
               className="loader absolute left-0 h-[4px] bg-green-500"
