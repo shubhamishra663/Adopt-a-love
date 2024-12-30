@@ -10,7 +10,7 @@ export default function Navbar({ userData }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const location = useLocation();
-  const { theme, logout, setTheme,navUserData } = useContext(AuthContext);
+  const { isAuthenticated,theme, logout, setTheme,navUserData } = useContext(AuthContext);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -81,7 +81,9 @@ export default function Navbar({ userData }) {
                     Dashboard
                   </Link>
                 </li>
-                <li>
+                
+                {isAuthenticated &&
+                  <li>
                   <Link
                     to="/usertype"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
@@ -89,6 +91,7 @@ export default function Navbar({ userData }) {
                     Account Settings
                   </Link>
                 </li>
+                }
 
                 <li>
                   {/* Toggle Theme Button */}

@@ -62,10 +62,10 @@ const AppRoutes = ({ isAuthenticated, userData, theme }) => {
       <Route path="pets" element={isAuthenticated ? <Pets /> : <Navigate to="/login" />} />
       <Route path="/:email/petform" element={isAuthenticated ? <PetForm /> : <Navigate to="/login" />} />
       <Route path="adopt" element={<Adopt />} />
-      <Route path="usertype" element={<UserType />} />
+      <Route path="usertype" element={isAuthenticated ? <UserType /> : <Navigate to="/login" />}  />
       <Route path="contactus" element={<ContactUs/>} />
       <Route path="about" element={<About />} />
-      <Route path="clocation" element={<CLocation />} />
+      <Route path="clocation" element={isAuthenticated ? <CLocation/> : <Navigate to="/login" />} />
       {/* <Route path="/:email/edit" element={<ProfileEdit />} /> */}
       <Route path="petprofile/:petid" element={<PetProfile />} />
       <Route path="lostpetprofile/:petid" element={<PetProfile />} />
