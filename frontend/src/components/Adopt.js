@@ -1,15 +1,18 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Loader from "./Loader.js"
+import Loader from "./Loader.js";
+
 const PetsCard = ({ pet, onClick }) => {
   return (
-    <div 
-      className={`h-72 w-[48%] md:w-[20%] rounded-xl shadow-lg p-2 cursor-pointer ${pet.type === 'lostpet' ? 'bg-red-400' : 'bg-white dark:bg-black'}`}      
+    <div
+      className={`h-72 w-full  rounded-xl shadow-lg p-2 cursor-pointer ${
+        pet.type === 'lostpet' ? 'bg-red-400' : 'bg-white dark:bg-black'
+      }`}
       onClick={() => {
         console.log("Card clicked", pet);
-        onClick(); 
-      }} 
+        onClick();
+      }}
     >
       <div className="h-[60%] rounded-xl overflow-hidden">
         <img
@@ -28,8 +31,6 @@ const PetsCard = ({ pet, onClick }) => {
     </div>
   );
 };
-
-
 
 const ErrorMessage = ({ message }) => {
   return (
@@ -205,11 +206,11 @@ function Adopt() {
         />
       </div>
 
-      {loading && <Loader/>}
+      {loading && <Loader />}
       {error && <ErrorMessage message={error} />}
 
       {!loading && !error && (
-        <div className="flex flex-wrap justify-between md:justify-evenly gap-2 md:gap-14 p-1 md:p-3 bg-white dark:bg-[#121212] rounded-t-lg">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-1 md:p-3 bg-white dark:bg-[#121212] rounded-t-lg">
           {filteredPetData.length > 0 ? (
             filteredPetData.map((pet) => (
               <PetsCard
@@ -228,4 +229,3 @@ function Adopt() {
 }
 
 export default Adopt;
-

@@ -7,7 +7,7 @@ const UserType = () => {
   const [selectedUserType, setSelectedUserType] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { isAuthenticated, showNotification, userData } =useContext(AuthContext);
+  const { isAuthenticated, showNotification, userData,navUserData } =useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSelection = (userType) => {
@@ -19,10 +19,11 @@ const UserType = () => {
         showNotification("Warning", "Please select a user type.", "warning");
         return;
       }
-      updateUser(userData?.user?.email, selectedUserType);
+      updateUser(userData?.user?.email || navUserData?.email, selectedUserType);
   };
 
   const updateUser = async (email, uType) => {
+    
     try {
       setLoading(true);
       const res = await fetch(
@@ -50,6 +51,7 @@ const UserType = () => {
         );
 
         console.log("Showonboard is setting true");
+        navigate("/clocation")
       } else {
         console.log(`Request failed with status: ${res.status}`);
         showNotification("Error", "Failed to update user type.", "danger");
