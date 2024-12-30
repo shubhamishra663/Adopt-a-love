@@ -235,162 +235,177 @@ app.get('/user-lostPets/:email', verifyToken,async (req, res) => {
 
 
 app.post('/petAdd', upload.single('image'), async (req, res) => {
-  const { email,ownerName ,petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy,type } = req.body;
+  const {
+    email, ownerName, petName, age, species, breed, gender, weight, color,
+    size, vaccinated, description, state, city, mobileNo, energy, type
+  } = req.body;
 
   try {
-      // Ensure image is available before attempting to upload
-      if (!req.file) {
-          return res.status(400).json({ message: 'No image uploaded' });
-      }
+    // Ensure image is available before attempting to upload
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image uploaded' });
+    }
 
-      // Create a promise to handle the Cloudinary upload
-      const uploadImage = () => {
-          return new Promise((resolve, reject) => {
-              cloudinary.uploader.upload_stream({
-                  resource_type: 'auto',
-                  use_filename: true,
-                  unique_filename: false,
-                  overwrite: true,
-              }, (error, result) => {
-                  if (error) {
-                      reject(error);
-                  } else {
-                      resolve(result);
-                  }
-              }).end(req.file.buffer);  // Use the buffer instead of stream
-          });
-      };
-
-      // Wait for the upload to complete
-      const uploadResult = await uploadImage();
-
-      // Create new pet entry in the database
-      const newPet = new PetModel({
-          email,
-          ownerName,
-          petName,
-          type,
-          age,
-          species,
-          breed,
-          gender,
-          weight,
-          color,
-          size,
-          vaccinated,
-          description,
-          image: uploadResult.secure_url, // Use the secure URL from Cloudinary
-          state,
-          city,
-          mobileNo,
-          energy,
+    // Create a promise to handle the Cloudinary upload
+    const uploadImage = () => {
+      return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          {
+            resource_type: 'auto',
+            folder: 'Pets', // Specify the folder name
+            use_filename: true,
+            unique_filename: false,
+            overwrite: true,
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        ).end(req.file.buffer); // Use the buffer instead of stream
       });
+    };
 
-      const savedPet = await newPet.save();
+    // Wait for the upload to complete
+    const uploadResult = await uploadImage();
 
-      // Update user with the new pet reference
-      const user = await UserModel.findOneAndUpdate(
-          { email },
-          { $push: { pets: savedPet._id } },
-          { new: true }
-      );
+    // Create new pet entry in the database
+    const newPet = new PetModel({
+      email,
+      ownerName,
+      petName,
+      type,
+      age,
+      species,
+      breed,
+      gender,
+      weight,
+      color,
+      size,
+      vaccinated,
+      description,
+      image: uploadResult.secure_url, // Use the secure URL from Cloudinary
+      state,
+      city,
+      mobileNo,
+      energy,
+    });
 
-      if (!user) {
-          return res.status(404).json({ message: 'User not found' });
-      }
+    const savedPet = await newPet.save();
 
-      res.status(200).json({
-          message: 'Pet added successfully and user updated',
-          pet: savedPet,
-          // user,
-      });
+    // Update user with the new pet reference
+    const user = await UserModel.findOneAndUpdate(
+      { email },
+      { $push: { pets: savedPet._id } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'Pet added successfully and user updated',
+      pet: savedPet,
+      // user,
+    });
 
   } catch (error) {
-      console.error('Error adding pet:', error);
-      res.status(500).json({ message: 'Internal server error' });
+    console.error('Error adding pet:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 
 
 
 
 app.post('/lostPetAdd', upload.single('image'), async (req, res) => {
-  const { email, ownerName,petName, age, species, breed, gender, weight, color, size, vaccinated, description, state, city, mobileNo, energy,type } = req.body;
+  const {
+    email, ownerName, petName, age, species, breed, gender, weight, color,
+    size, vaccinated, description, state, city, mobileNo, energy, type
+  } = req.body;
 
   try {
-      // Ensure image is available before attempting to upload
-      if (!req.file) {
-          return res.status(400).json({ message: 'No image uploaded' });
-      }
+    // Ensure image is available before attempting to upload
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image uploaded' });
+    }
 
-      // Create a promise to handle the Cloudinary upload
-      const uploadImage = () => {
-          return new Promise((resolve, reject) => {
-              cloudinary.uploader.upload_stream({
-                  resource_type: 'auto',
-                  use_filename: true,
-                  unique_filename: false,
-                  overwrite: true,
-              }, (error, result) => {
-                  if (error) {
-                      reject(error);
-                  } else {
-                      resolve(result);
-                  }
-              }).end(req.file.buffer);  // Use the buffer instead of stream
-          });
-      };
-
-      // Wait for the upload to complete
-      const uploadResult = await uploadImage();
-
-      // Create new pet entry in the database
-      const newPet = new LostPetModel({
-          email,
-          ownerName,
-          petName,
-          type,
-          age,
-          species,
-          breed,
-          gender,
-          weight,
-          color,
-          size,
-          vaccinated,
-          description,
-          image: uploadResult.secure_url, // Use the secure URL from Cloudinary
-          state,
-          city,
-          mobileNo,
-          energy,
+    // Create a promise to handle the Cloudinary upload
+    const uploadImage = () => {
+      return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          {
+            resource_type: 'auto',
+            folder: 'LostPets', // Specify the folder name
+            use_filename: true,
+            unique_filename: false,
+            overwrite: true,
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        ).end(req.file.buffer); // Use the buffer instead of stream
       });
+    };
 
-      const savedPet = await newPet.save();
+    // Wait for the upload to complete
+    const uploadResult = await uploadImage();
 
-      // Update user with the new pet reference
-      const user = await UserModel.findOneAndUpdate(
-          { email },
-          { $push: { lostPets: savedPet._id } },
-          { new: true }
-      );
+    // Create new pet entry in the database
+    const newPet = new LostPetModel({
+      email,
+      ownerName,
+      petName,
+      type,
+      age,
+      species,
+      breed,
+      gender,
+      weight,
+      color,
+      size,
+      vaccinated,
+      description,
+      image: uploadResult.secure_url, // Use the secure URL from Cloudinary
+      state,
+      city,
+      mobileNo,
+      energy,
+    });
 
-      if (!user) {
-          return res.status(404).json({ message: 'User not found' });
-      }
+    const savedPet = await newPet.save();
 
-      res.status(200).json({
-          message: 'Pet added successfully and user updated',
-          lostPet: savedPet,
-          // user,
-      });
+    // Update user with the new pet reference
+    const user = await UserModel.findOneAndUpdate(
+      { email },
+      { $push: { lostPets: savedPet._id } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'Lost pet added successfully and user updated',
+      lostPet: savedPet,
+    });
 
   } catch (error) {
-      console.error('Error adding pet:', error);
-      res.status(500).json({ message: 'Internal server error' });
+    console.error('Error adding lost pet:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 
 

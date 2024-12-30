@@ -41,7 +41,7 @@ function Header() {
                 <h1 style={{fontFamily:"Playfair Display"}} className=' font-Poppins font-[700] md:text-5xl text-[24px] text-green-800 pl-[50px]' ref={textRef1}>ADOPT A LOVE</h1>
             </div>
             <div className='h-[15%] flex items-start md:justify-end justify-center'>
-                <p className='font-Poppins font-[400] md:text-l text-sm md:pr-[40px] md:pt-4 md:pl-0 pl-1'>Our mission is to connect loving<br />
+                <p className='font-Poppins dark:text-[#ccc] font-[400] md:text-l text-sm md:pr-[40px] md:pt-4 md:pl-0 pl-1'>Our mission is to connect loving<br />
                   pets with caring families, creating lifelong bonds.</p>
             </div>
             <div className='h-[30%] flex items-center justify-center'>
