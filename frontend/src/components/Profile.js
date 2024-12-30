@@ -57,6 +57,8 @@ export default function Profile() {
       }
 
       const data = await response.json();
+      console.log(data);
+      
       setUserData(data);
     } catch (error) {
       console.error("Error fetching profile data:", error.message);
@@ -123,6 +125,9 @@ export default function Profile() {
           </p>
           <p className="text-xs">
             {userData?.user?.email || "Email not available"}
+          </p>
+          <p className="text-xs">
+            {userData?.user?.userType}
           </p>
         </div>
         <div>
