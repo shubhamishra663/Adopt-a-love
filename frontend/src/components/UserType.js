@@ -48,8 +48,8 @@ const UserType = () => {
           "User type updated successfully!",
           "success"
         );
-        navigate("/clocation")
 
+        console.log("Showonboard is setting true");
       } else {
         console.log(`Request failed with status: ${res.status}`);
         showNotification("Error", "Failed to update user type.", "danger");

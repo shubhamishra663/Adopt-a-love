@@ -15,7 +15,6 @@ import NotFound from './components/NotFound';
 import About from './components/About';
 import ContactUs from './components/ContactUs';
 import UserType from './components/UserType';
-import CLocation from './components/CLocation';
 
 function App() {
   return (
@@ -43,7 +42,7 @@ const AppContent = () => {
  
 
   return (
-    <div className={`min-h-screen bg-[#f5f0ff] dark:bg-black`}>
+    <div className={`min-h-screen`}>
       <Navbar userData={userData} />
       <AppRoutes isAuthenticated={isAuthenticated} userData={userData} theme={theme} />
     </div>
@@ -62,10 +61,9 @@ const AppRoutes = ({ isAuthenticated, userData, theme }) => {
       <Route path="pets" element={isAuthenticated ? <Pets /> : <Navigate to="/login" />} />
       <Route path="/:email/petform" element={isAuthenticated ? <PetForm /> : <Navigate to="/login" />} />
       <Route path="adopt" element={<Adopt />} />
-      <Route path="usertype" element={ <UserType /> }  />
+      <Route path="usertype" element={<UserType />} />
       <Route path="contactus" element={<ContactUs/>} />
       <Route path="about" element={<About />} />
-      <Route path="clocation" element={ <CLocation/> } />
       {/* <Route path="/:email/edit" element={<ProfileEdit />} /> */}
       <Route path="petprofile/:petid" element={<PetProfile />} />
       <Route path="lostpetprofile/:petid" element={<PetProfile />} />

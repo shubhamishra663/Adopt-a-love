@@ -10,7 +10,7 @@ export default function Navbar({ userData }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const location = useLocation();
-  const { isAuthenticated,theme, logout, setTheme,navUserData } = useContext(AuthContext);
+  const { theme, logout, setTheme,navUserData } = useContext(AuthContext);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -28,7 +28,7 @@ export default function Navbar({ userData }) {
 
   const getActiveClass = (path) => {
     return location.pathname === path
-      ? "dark:text-white md:text-blue-700 text-blue-500"
+      ? "text-white md:text-blue-700 dark:md:text-blue-500"
       : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent";
   };
 
@@ -46,7 +46,7 @@ export default function Navbar({ userData }) {
         </Link>
 
         {/* Profile and menu button */}
-        <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse z-50 relative">
+        <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <button
             type="button"
             className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-blue-600 dark:focus:ring-blue-600"
@@ -81,17 +81,14 @@ export default function Navbar({ userData }) {
                     Dashboard
                   </Link>
                 </li>
-                
-                {isAuthenticated &&
-                  <li>
+                <li>
                   <Link
                     to="/usertype"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
-                    Account Settings
+                    Settings
                   </Link>
                 </li>
-                }
 
                 <li>
                   {/* Toggle Theme Button */}
@@ -170,7 +167,7 @@ export default function Navbar({ userData }) {
             </li>
             <li>
               <Link
-                to={`/${userData?.user?.email ||navUserData?.email}`}
+                to={`/${userData?.user?.email}`}
                 className={`block py-2 px-3 rounded ${getActiveClass(
                   `/${userData?.user?.email}`
                 )}`}
