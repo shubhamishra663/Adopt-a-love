@@ -10,7 +10,7 @@ export default function Navbar({ userData }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const location = useLocation();
-  const { theme, logout, setTheme,navUserData } = useContext(AuthContext);
+  const { theme, logout, setTheme,navUserData,isAuthenticated} = useContext(AuthContext);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -75,20 +75,24 @@ export default function Navbar({ userData }) {
               <ul className="py-2" aria-labelledby="user-menu-button">
                 <li>
                   <Link
-                    to="/dashboard"
+                    to= {`/${userData?.user?.email || navUserData?.email}`}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     Dashboard
                   </Link>
                 </li>
+
+                {isAuthenticated && 
                 <li>
-                  <Link
-                    to="/usertype"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Settings
-                  </Link>
-                </li>
+                <Link
+                  to="/usertype"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                >
+                 Account Settings
+                </Link>
+              </li>}
+
+                
 
                 <li>
                   {/* Toggle Theme Button */}
