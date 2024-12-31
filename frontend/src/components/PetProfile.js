@@ -100,7 +100,6 @@ export default function PetProfile() {
     },
     {
       icon: faRulerCombined,
-      additionalIcon: faDog,
       label: "Size",
       value: pet?.size || "Unknown",
     },
@@ -196,20 +195,15 @@ export default function PetProfile() {
       <section className="">
         <p className="font-bold text-3xl p-3">Quick facts</p>
         <div className="flex justify-between p-1 md:p-3 flex-wrap gap-5">
-          {facts.map(({ icon, additionalIcon, label, value }, index) => (
+          {facts.map(({ icon, label, value }, index) => (
             <div
               key={index}
-              className="flex items-center bg-gray-500 h-28 w-[170px] md:h-32 md:w-60 gap-3 rounded-lg shadow-xl p-3"
+              className="flex items-center bg-gray-500 h-28 w-[47%] md:h-32 md:w-60 gap-3 rounded-lg shadow-xl p-3"
             >
               <div className="flex flex-col items-center w-16 md:w-24">
                 <div className="bg-gray-400 h-12 w-12 md:w-16 md:h-16 rounded-full flex items-center justify-center">
                   <FontAwesomeIcon icon={icon} className="h-6 text-gray-800" />
-                  {additionalIcon && (
-                    <FontAwesomeIcon
-                      icon={additionalIcon}
-                      className="h-5 text-gray-800"
-                    />
-                  )}
+                 
                 </div>
                 <p className="text-center text-sm md:text-base mt-1">{label}</p>
               </div>
