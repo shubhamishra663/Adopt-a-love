@@ -124,6 +124,9 @@ export default function Profile() {
           <p className="text-xs">
             {userData?.user?.email || "Email not available"}
           </p>
+          <p className="text-xs">
+            {userData?.user?.userType}
+          </p>
         </div>
         <div>
           <button

@@ -1,24 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { AuthContext } from "../context/authContext";
-import petPlaceholderImage from "../utils/cat.jpg";
-import shu from "../utils/pets.jpg";
-
-import {useNavigate } from "react-router-dom";
-import PetsCard from "./PetsCard"; 
+import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { AuthContext } from '../context/authContext';
+import { useNavigate } from 'react-router-dom';
+import UserPetsCard from './UserPetsCard';
 
 export default function LostPets() {
   const [lostPetsData, setLostPetsData] = useState([]);
   const { userData } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedPetId, setSelectedPetId] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    const fetchPets = async () => {
+    const fetchLostPets = async () => {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("token");
 
       try {
         const response = await axios.get(
@@ -26,7 +24,7 @@ export default function LostPets() {
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              Accept: "application/json",
+              Accept: 'application/json',
             },
           }
         );
@@ -38,30 +36,63 @@ export default function LostPets() {
       }
     };
 
-    fetchPets();
+    fetchLostPets();
   }, [userData]);
 
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error}</p>;
+  const handleUpdateLostPet = (pet) => {
+    navigate(`/update-pet/${encodeURIComponent(pet._id)}`, { state: pet });
+  };
+
+  const handleViewLostPet = (pet) => {
+    navigate(`/lostpetprofile/${encodeURIComponent(pet._id)}`, { state: pet });
+  };
+
+  const handleDeleteLostPet = async (petId) => {
+    try {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        console.error('No token found. Please log in.');
+        return;
+      }
+
+      await axios.delete(
+        `https://adopt-a-love-backend.vercel.app/delete-lostPet/${petId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setLostPetsData((prev) => prev.filter((pet) => pet._id !== petId));
+      setSelectedPetId(null);
+      console.log('Lost pet deleted successfully.');
+    } catch (error) {
+      console.error('Error deleting pet:', error.response?.data?.error || error.message);
+    }
+  };
 
   return (
-    <div className="w-screen">
-      {lostPetsData.length > 0 ? (
-        <div className="flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14 p-3">
+    <div className="w-screen p-2 md:p-5">
+      {loading ? (
+        <p className="text-center text-gray-500">Loading...</p>
+      ) : lostPetsData.length > 0 ? (
+        <div className="flex flex-wrap justify-between md:justify-evenly gap-5 md:gap-14">
           {lostPetsData.map((pet, index) => (
-            <PetsCard
+            <UserPetsCard
+              key={pet._id || index}
               pet={pet}
-              key={index}
-              onClick={() =>
-                navigate(`/lostpetprofile/${encodeURIComponent(pet._id)}`, {
-                  state: pet,
-                })
-              }
+              isSelected={selectedPetId === pet._id}
+              onClick={() => setSelectedPetId((prev) => (prev === pet._id ? null : pet._id))}
+              onUpdate={() => handleUpdateLostPet(pet)}
+              onView={() => handleViewLostPet(pet)}
+              onDelete={() => handleDeleteLostPet(pet._id)}
             />
           ))}
         </div>
       ) : (
-        <p>No pets found for this user.</p>
+        <p className="text-center text-gray-500">No lost pets found for this user.</p>
       )}
     </div>
   );

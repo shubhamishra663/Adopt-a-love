@@ -18,10 +18,9 @@ import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import axios from "axios";
 import SocialShare from "./SocialShare";
 
-const mobileNumber = process.env.REACT_APP_MOBILE_NO || "+919060823275";
+const mobileNumber = process.env.REACT_APP_MOBILE_NO;
 
 const approachMessage = (name, petName) => {
-  console.log(`name: ${name}`);
   
   return `Hi%20${name}!%20👋%20I%20saw%20${petName}%20on%20the%20adoption%20portal,%20and%20I’m%20really%20interested!%20They%20seem%20like%20such%20a%20great%20pet,%20and%20I'd%20love%20to%20know%20a%20bit%20more%20about%20them.%20Could%20we%20chat%20for%20a%20bit%20about%20their%20personality%20and%20any%20specific%20needs?%20Thanks%20so%20much!`;
 };
@@ -36,10 +35,7 @@ const Share = ({ pet }) => {
 
 export default function PetProfile() {
   const location = useLocation();
-  const { petid } = useParams(); // Destructure petid from useParams
-
-  // const petData = location.state;
-  console.log(`useParams petid: ${petid}`); // Log the petid
+  const { petid } = useParams(); 
 
   const { isAuthenticated } = useContext(AuthContext);
   const [pet, setPet] = useState();
@@ -53,17 +49,14 @@ export default function PetProfile() {
   useEffect(() => {
     const fetchPetData = async () => {
       try {
-        console.log("fetching");
 
-        const isLostPet = location.pathname.includes("lostpetprofile"); // Check if the route is for lost pets
+        const isLostPet = location.pathname.includes("lostpetprofile"); 
         const url = `https://adopt-a-love-backend.vercel.app/${
           isLostPet ? "lostpetprofile" : "petprofile"
         }/${petid}`;
 
-        console.log(`Fetching ${isLostPet ? "lost pet" : "pet"} profile`);
         const response = await axios.get(url);
         setPet(response.data);
-        console.log(`Profile data:`, response.data);
       } catch (error) {
         console.error(
           "Error fetching profile data:",
@@ -73,7 +66,7 @@ export default function PetProfile() {
     };
 
     fetchPetData();
-  }, [petid, location.pathname]); // Refetch if petid or route changes
+  }, [petid, location.pathname]); 
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -138,7 +131,6 @@ export default function PetProfile() {
       hour12: true,
     });
 
-    console.log(formattedDate);
   } else {
     console.log("Date not available.");
   }
@@ -147,6 +139,7 @@ export default function PetProfile() {
     <div className="bg-[#f5f0ff] dark:bg-black flex flex-col dark:text-white">
       <header className="bg-purple-600 flex justify-between px-2 md:px-10 p-3">
         <p className="font-semibold text-2xl">
+          
           {!pet ? "Loading..." : pet?.type === "pet" ? "Adopt" : "Help"}{" "}
           {pet?.petName}{" "}
         </p>
@@ -178,7 +171,7 @@ export default function PetProfile() {
           <div>
             <p className="font-bold text-3xl p-3">About Myself</p>
           </div>
-          <div className="py-3 px-8 text-lg ">
+          <div className="py-3 px-3 md:px-8 text-lg ">
             <p className="font-xl font-bold">
               {pet?.petName} ({pet?.breed})
             </p>
@@ -202,7 +195,7 @@ export default function PetProfile() {
       {/* Quick Facts */}
       <section className="">
         <p className="font-bold text-3xl p-3">Quick facts</p>
-        <div className="flex justify-evenly p-1 md:p-3 flex-wrap gap-5">
+        <div className="flex justify-between p-1 md:p-3 flex-wrap gap-5">
           {facts.map(({ icon, additionalIcon, label, value }, index) => (
             <div
               key={index}

@@ -1,9 +1,10 @@
-import React, { useContext, useState, useCallback, useMemo } from "react";
+import React, { useContext, useState, useEffect, useMemo } from "react";
 import { AuthContext } from "../context/authContext";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ReactNotifications, Store } from 'react-notifications-component';
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { ReactNotifications, Store } from "react-notifications-component";
 
-function PetForm() {
+function PetUpdate() {
+  const { petid } = useParams();
   const { userData, showNotification } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,14 +26,36 @@ function PetForm() {
     energy: "",
     status: false,
   });
+
   const navigate = useNavigate();
-
   const location = useLocation();
-  const petView = location.state || {};
-  
-  console.log(`Petview : ${petView}`);
+  const petView = location.state || {}; // pet data passed via location state
 
-  const type = petView === "pets" ? "pet" : "lostpet";
+  const type = petView?.type === "pet" ? "pet" : "lostpet"; // set the type (pet or lostpet)
+
+  useEffect(() => {
+    if (petView) {
+      setFormData({
+        petName: petView.petName || "",
+        ownerName: petView.ownerName || "",
+        age: petView.age || "",
+        species: petView.species || "",
+        breed: petView.breed || "",
+        gender: petView.gender || "",
+        weight: petView.weight || "",
+        color: petView.color || "",
+        size: petView.size || "",
+        vaccinated: petView.vaccinated || false,
+        description: petView.description || "",
+        image: null,
+        state: petView.state || "",
+        city: petView.city || "",
+        mobileNo: petView.mobileNo || "",
+        energy: petView.energy || "",
+        status: petView.status || false,
+      });
+    }
+  }, [petView]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -49,13 +72,12 @@ function PetForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(formData);
 
     try {
       const data = new FormData();
       data.append("image", formData.image);
-      data.append("email", userData.user.email);
-      data.append("ownerName", userData.user.name);
+      data.append("email", userData?.user?.email);
+      data.append("ownerName", userData?.user?.name);
       data.append("petName", formData.petName);
       data.append("type", type);
       data.append("age", formData.age);
@@ -73,99 +95,79 @@ function PetForm() {
       data.append("energy", formData.energy);
       data.append("status", formData.status);
 
-      console.log(`New Formdata: ${formData}`);
+      const token = localStorage.getItem("token");
 
       const res = await fetch(
         `${
-          petView === "pets"
-            ? "https://adopt-a-love-backend.vercel.app/petAdd"
-            : "https://adopt-a-love-backend.vercel.app/lostPetAdd"
+          type === "pet"
+            ? `https://adopt-a-love-backend.vercel.app/petUpdate/${petid}`
+            : `https://adopt-a-love-backend.vercel.app/lostPetUpdate/${petid}`
         }`,
         {
-          method: "POST",
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
           body: data,
         }
       );
 
       const responseData = await res.json();
       if (res.ok) {
-        console.log(responseData);
         setLoading(false);
-        showNotification("Success", "Pet added successful", "success");
+        showNotification("Success", "Pet details updated successfully", "success");
         navigate(`/${userData?.user?.email}`);
       } else {
-        console.error(
-          `Request failed with status: ${res.status}`,
-          responseData.message
-        );
-        showNotification(
-          "Error",
-          responseData.message || "Failed to add pet. Please try again later.",
-          "danger"
-        );
+        setLoading(false);
+        showNotification("Error", responseData.message || "Failed to update pet.", "danger");
       }
     } catch (error) {
-      console.error("Error updating Pets:", error);
-      showNotification(
-        "Error",
-        error.message ||
-          "An error occurred while adding the pet. Please try again later.",
-        "danger"
-      );
+      setLoading(false);
+      showNotification("Error", error.message || "An error occurred. Please try again later.", "danger");
     }
   };
 
-  // Options for select fields, memoized for optimization
   const speciesOptions = useMemo(() => ["Dog", "Cat", "Bird", "Other"], []);
   const genderOptions = useMemo(() => ["Male", "Female"], []);
   const sizeOptions = useMemo(() => ["Small", "Medium", "Large"], []);
   const energyOptions = useMemo(() => ["Calm", "Medium", "Active"], []);
 
-  // Helper function for input rendering to reduce repetition
-  const renderInputField = useCallback(
-    (label, name, type = "text", options) => (
-      <div>
-        <label className="block text-sm font-medium">{label}</label>
-        {type === "select" ? (
-          <select
-            name={name}
-            value={formData[name]}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
-            required
-          >
-            <option value="">Select {label}</option>
-            {options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <input
-            type={type}
-            name={name}
-            value={formData[name]}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
-            required={
-              name !== "breed" && name !== "color" && name !== "description"
-            }
-          />
-        )}
-      </div>
-    ),
-    [formData, handleChange]
+  const renderInputField = (label, name, type = "text", options) => (
+    <div>
+      <label className="block text-sm font-medium">{label}</label>
+      {type === "select" ? (
+        <select
+          name={name}
+          value={formData[name]}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded"
+          required
+        >
+          <option value="">Select {label}</option>
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type={type}
+          name={name}
+          value={formData[name]}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded"
+          required
+        />
+      )}
+    </div>
   );
 
   return (
     <div className="w-screen bg-black md:p-20">
       <ReactNotifications />
-
       <div className="w-full sm:w-[70%] lg:w-[50%] mx-auto p-6 bg-gray-500 shadow-md rounded-md">
-        <h2 className="text-2xl font-bold mb-4">
-          {petView === "pets" ? "Add Pet for Adoption" : "Add Lost Pet"}
-        </h2>
+        <h2 className="text-2xl font-bold mb-4">{type === "pet" ? "Update Pet for Adoption" : "Update Lost Pet"}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {renderInputField("Pet Name", "petName")}
           {renderInputField("Age (in years)", "age", "number")}
@@ -191,10 +193,19 @@ function PetForm() {
             <label className="text-sm">Vaccinated</label>
           </div>
 
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              name="status"
+              checked={formData.status}
+              onChange={handleChange}
+              className="mr-2"
+            />
+            <label className="text-sm">{type === "pet" ? "Pet Adopted" : "Pet Found"}</label>
+          </div>
+
           <div>
-            <label className="block text-sm font-medium">
-              {petView === "pets" ? "Description" : "Last seen"}
-            </label>
+            <label className="block text-sm font-medium">{type === "pet" ? "Description" : "Last seen"}</label>
             <textarea
               name="description"
               value={formData.description}
@@ -210,20 +221,15 @@ function PetForm() {
               type="file"
               onChange={handleImageUpload}
               className="w-full p-2 border border-gray-300 rounded"
-              required
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full px-4 py-2 rounded ${
-              loading
-                ? "cursor-no-drop opacity-50 pointer-events-none"
-                : "cursor-pointer"
-            } bg-blue-500 text-white font-semibold hover:bg-blue-600 `}
+            className={`w-full px-4 py-2 rounded ${loading ? "cursor-no-drop opacity-50 pointer-events-none" : "cursor-pointer"} bg-blue-500 text-white font-semibold hover:bg-blue-600 `}
           >
-            {loading ? "Submitting..." : "Submit"}
+            {loading ? "Updating..." : "Update"}
           </button>
         </form>
       </div>
@@ -231,4 +237,4 @@ function PetForm() {
   );
 }
 
-export default PetForm;
+export default PetUpdate;
