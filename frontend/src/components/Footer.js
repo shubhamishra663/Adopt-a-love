@@ -102,11 +102,17 @@ function Footer() {
             size="lg"
             className="text-white hover:text-[#E4405F]"
           />
-          <FontAwesomeIcon
-            icon={faFacebook}
-            size="lg"
-            className="text-white hover:text-[#1877F2]"
-          />
+          <a
+            href="https://www.facebook.com/shubhamishra663"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FontAwesomeIcon
+              icon={faFacebook}
+              size="lg"
+              className="text-white hover:text-[#1877F2]"
+            />
+          </a>
         </div>
       </div>
     </div>

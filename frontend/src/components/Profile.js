@@ -3,7 +3,7 @@ import defaultAvatar from "../utils/defaultAvatar.jpg";
 import { AuthContext } from "../context/authContext";
 import Pets from "./Pets";
 import LostPets from "./LostPets";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus,faPen } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProfileEdit from "./EditProfile";
@@ -129,12 +129,13 @@ export default function Profile() {
           </p>
         </div>
         <div>
-          <button
-            onClick={() => setIsEditModalOpen(true)}
-            className="bg-blue-500 p-2 rounded-md flex justify-center items-center"
-          >
-            Edit
-          </button>
+        <button
+  onClick={() => setIsEditModalOpen(true)}
+  className="bg-[#e2e5e9] dark:bg-gray-800 text-black dark:text-white py-2 px-4 rounded-lg flex items-center hover:bg-gray-700"
+>
+  <FontAwesomeIcon icon={faPen} className="mr-2" /> {/* FontAwesome Icon */}
+  Edit Profile
+</button>
         </div>
       </div>
 
@@ -143,21 +144,30 @@ export default function Profile() {
         <ProfileEdit isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
       )}
 
-      {/* Sections */}
-      <div className="w-full h-28 md:h-32 flex md:gap-10 p-3 md:p-5 justify-between md:justify-normal dark:bg-black dark:text-white">
-        <button
-          onClick={() => setActiveComponent("pets")}
-          className="h-full w-[45%] md:w-40 bg-blue-200 rounded-md flex justify-center items-center focus:ring-2 focus:ring-blue-500"
-        >
-          <p className="font-semibold text-xl">Pets</p>
-        </button>
-        <button
-          onClick={() => setActiveComponent("lostPets")}
-          className="h-full w-[45%] md:w-40 bg-blue-200 rounded-md flex justify-center items-center focus:ring-2 focus:ring-blue-500"
-        >
-          <p className="font-semibold text-xl">Lost Pets</p>
-        </button>
-      </div>
+{/* Sections */}
+<div className="w-full h-20 flex gap-5 pl-5 dark:bg-black dark:text-white">
+  <button
+    onClick={() => setActiveComponent("pets")}
+    className={`text-lg font-semibold px-5 py-2 rounded-t-md hover:bg-[#e2e5e9] ${
+      activeComponent === "pets"
+        ? "text-blue-600 border-b-4 border-blue-600"
+        : "text-gray-500"
+    }`}
+  >
+    Pets
+  </button>
+  <button
+    onClick={() => setActiveComponent("lostPets")}
+    className={`text-lg font-semibold px-5 py-2 rounded-t-md hover:bg-[#e2e5e9] ${
+      activeComponent === "lostPets"
+        ? "text-blue-600 border-b-4 border-blue-600"
+        : "text-gray-500"
+    }`}
+  >
+    Lost Pets
+  </button>
+</div>
+
 
       {/* UserPets */}
       <section>
