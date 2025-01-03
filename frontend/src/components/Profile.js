@@ -144,11 +144,20 @@ export default function Profile() {
         <ProfileEdit isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
       )}
 
+
+{/* Section */}
+<div className="p-2">
+  <Link to={"./create-post"}>
+      <button className="bg-blue-400 w-full p-2 rounded-md font-semibold hover:bg-blue-500">Add a post</button>
+  </Link>
+</div>
+
+
 {/* Sections */}
-<div className="w-full h-20 flex gap-5 pl-5 dark:bg-black dark:text-white">
+<div className="w-full h-20 flex items-end gap-5 pl-5 dark:bg-black-300 dark:text-white">
   <button
     onClick={() => setActiveComponent("pets")}
-    className={`text-lg font-semibold px-5 py-2 rounded-t-md hover:bg-[#e2e5e9] ${
+    className={`h-14 text-lg font-semibold px-5 py-2 rounded-t-md hover:bg-[#e2e5e9] dark:hover:bg-gray-800 ${
       activeComponent === "pets"
         ? "text-blue-600 border-b-4 border-blue-600"
         : "text-gray-500"
@@ -158,7 +167,7 @@ export default function Profile() {
   </button>
   <button
     onClick={() => setActiveComponent("lostPets")}
-    className={`text-lg font-semibold px-5 py-2 rounded-t-md hover:bg-[#e2e5e9] ${
+    className={`h-14 text-lg font-semibold px-5 py-2 rounded-t-md hover:bg-[#e2e5e9] dark:hover:bg-gray-800 ${
       activeComponent === "lostPets"
         ? "text-blue-600 border-b-4 border-blue-600"
         : "text-gray-500"

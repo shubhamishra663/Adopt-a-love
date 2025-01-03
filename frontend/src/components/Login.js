@@ -79,7 +79,7 @@ export default function Login() {
     <div className="min-h-screen relative flex justify-center items-center bg-[#f5f0ff] dark:bg-black">
       <ReactNotifications />
 
-      <div className="w-full max-w-lg bg-white dark:bg-[#1e1e1e] border-2 dark:border-[#333] shadow-lg py-10 px-14 rounded-lg mx-4 md:mx-0">
+      <div className="w-full max-w-lg bg-white dark:bg-[#1e1e1e] dark:border-2 dark:border-[#333] shadow-lg py-10 px-14 rounded-lg mx-4 md:mx-0">
         <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-[#f5f5f5] mb-10">Login</h2>
 
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>

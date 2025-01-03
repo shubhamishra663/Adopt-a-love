@@ -17,6 +17,7 @@ import ContactUs from './components/ContactUs';
 import UserType from './components/UserType';
 import CLocation from './components/CLocation'
 import PetUpdate from './components/PetUpdate';
+import CreatePost from './components/CreatePost';
 
 function App() {
   return (
@@ -44,7 +45,7 @@ const AppContent = () => {
  
 
   return (
-    <div className={`min-h-screen bg-[#f5f0ff]`}>
+    <div className={`min-h-screen bg-[#f5f0ff] dark:bg-black`}>
       <Navbar userData={userData} />
       <AppRoutes isAuthenticated={isAuthenticated} userData={userData} theme={theme} />
     </div>
@@ -68,6 +69,7 @@ const AppRoutes = ({ isAuthenticated, userData, theme }) => {
       <Route path="update-pet/:petid" element={<PetUpdate/>} />
       <Route path="clocation" element={<CLocation/>} />
       <Route path="about" element={<About />} />
+      <Route path="/:email/create-post" element={isAuthenticated ? <CreatePost />:<Login/>} />
       {/* <Route path="/:email/edit" element={<ProfileEdit />} /> */}
       <Route path="petprofile/:petid" element={<PetProfile />} />
       <Route path="lostpetprofile/:petid" element={<PetProfile />} />

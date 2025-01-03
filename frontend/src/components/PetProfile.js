@@ -146,8 +146,8 @@ export default function PetProfile() {
       </header>
 
       {/* Pet image */}
-      <section className="dark:bg-black w-full h-[60%] flex items-center justify-center p-1 md:p-14">
-        <div className="bg-gray-600 h-96 w-full md:w-1/2 relative rounded-lg overflow-hidden shadow-lg">
+      <section className="dark:bg-black w-full h-[60%] flex items-center justify-center  md:p-14">
+        <div className="bg-gray-600 h-96 w-full md:w-1/2 relative rounded-b-lg md:rounded-lg overflow-hidden shadow-lg">
           <div className="loading-bar bg-[#f5f5f5] dark:bg-[#121212] h-full w-full flex flex-col justify-center items-center absolute top-0 transition-all duration-700">
             <div
               className="loader absolute left-0 h-[4px] bg-green-500"
@@ -159,7 +159,7 @@ export default function PetProfile() {
             <img
               src={pet?.image || petPlaceholderImage}
               alt="Pet"
-              className="rounded-lg w-full h-full object-center"
+              className="rounded-b-xl md:rounded-lg w-full h-full object-center"
             />
           </div>
         </div>

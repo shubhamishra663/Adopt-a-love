@@ -1,3 +1,4 @@
+
 import React, { useContext, useState, useCallback, useMemo } from "react";
 import { AuthContext } from "../context/authContext";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -30,7 +31,6 @@ function PetForm() {
   const location = useLocation();
   const petView = location.state || {};
   
-  console.log(`Petview : ${petView}`);
 
   const type = petView === "pets" ? "pet" : "lostpet";
 

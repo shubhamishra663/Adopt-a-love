@@ -12,15 +12,16 @@ export default function Pets() {
   const [error, setError] = useState(null);
   const [selectedPetId, setSelectedPetId] = useState(null);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
+  
   useEffect(() => {
     const fetchPets = async () => {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem('token');
-
+      
       try {
+        console.log("getting pets");
+        
+        const token = localStorage.getItem("token");
         const response = await axios.get(
           `https://adopt-a-love-backend.vercel.app/user-pets/${userData?.user?.email}`,
           {
@@ -30,7 +31,11 @@ export default function Pets() {
             },
           }
         );
+        console.log(response);
+
         setPetsData(response.data.pets);
+        console.log(response.data.pets);
+        
       } catch (error) {
         setError(error.response?.data?.message || error.message);
       } finally {

@@ -28,7 +28,7 @@ export default function Navbar({ userData }) {
 
   const getActiveClass = (path) => {
     return location.pathname === path
-      ? "text-white md:text-blue-700 dark:md:text-blue-500"
+      ? "text-blue-700 dark:md:text-blue-500"
       : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent";
   };
 
@@ -203,7 +203,7 @@ export default function Navbar({ userData }) {
               <Link
                 to="/contactus"
                 className={`block py-2 px-3 rounded ${getActiveClass(
-                  "/contact"
+                  "/contactus"
                 )}`}
               >
                 Contact Us

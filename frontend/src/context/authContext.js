@@ -75,6 +75,8 @@ const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     if (!token) {
       logout();
+      console.log("no token found logging out");
+      
       return;
     }
 
