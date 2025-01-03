@@ -9,6 +9,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AuthContext } from "../context/authContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePost() {
   const { userData, navUserData } = useContext(AuthContext);
@@ -17,6 +18,8 @@ export default function CreatePost() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [postText, setPostText] = useState("");
   const textareaRef = useRef(null);
+  const [loading,setLoading]=useState(false)
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -52,18 +55,26 @@ export default function CreatePost() {
 
   
     try {
-      console.log("posting");
-      
+      setLoading(true)      
       const response = await axios.post('https://adopt-a-love-backend.vercel.app/createPost', formData, {
         headers: {
-          Authorization: `Bearer ${token}`,  // Include token if necessary
-          "Content-Type": "multipart/form-data",  // Ensure correct content type
+          Authorization: `Bearer ${token}`,  
+          "Content-Type": "multipart/form-data",  
         },
       });
-  
-      console.log("Post created successfully", response.data);
+
+
+      
+      if (response.status === 200) {
+        console.log("Successfully posted:", response.data);
+        navigate(`/${userData?.user?.email}`);
+      } else {
+        console.error("Unexpected response status:", response.status);
+      }
     } catch (error) {
       console.error('Error creating post:', error.response?.data || error.message);
+    }finally{
+      setLoading(false)
     }
   };
   
@@ -176,9 +187,9 @@ export default function CreatePost() {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-200"
+            className={`w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-200 ${loading?"cursor-no-drop opacity-50 pointer-events-none": "cursor-pointer"} `}
           >
-            Post
+             {loading ? "Posting..." : "Post"}
           </button>
         </form>
       </div>
