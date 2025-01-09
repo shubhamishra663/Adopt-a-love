@@ -88,13 +88,13 @@ const ContactUs = () => {
     <div className="bg-[#f5f0ff] dark:bg-black min-h-screen flex flex-col items-center py-4">
       <ReactNotifications />
       <div className="text-center">
-        <h1 className="text-3xl font-bold dark:text-gray-400 py-8">
+        <h1 className="text-3xl font-bold dark:text-gray-300 py-8">
           Contact us
         </h1>
         <p className="text-gray-600 dark:text-white py-4 ">
-          With lots of unique blocks, you can easily build a page without
-          coding. <br />
-          Build your next consultancy website within a few minutes.
+          We're here to help! <br />
+          Feel free to reach out to us for any queries, support, or assistance regarding pet adoption.<br/>
+          You can call us or email us at the details below.
         </p>
       </div>
       <div className="flex flex-wrap justify-center gap-8 mb-20 py-5">

@@ -18,6 +18,7 @@ import UserType from './components/UserType';
 import CLocation from './components/CLocation'
 import PetUpdate from './components/PetUpdate';
 import CreatePost from './components/CreatePost';
+import Feed from './components/Feed';
 
 function App() {
   return (
@@ -69,6 +70,7 @@ const AppRoutes = ({ isAuthenticated, userData, theme }) => {
       <Route path="update-pet/:petid" element={<PetUpdate/>} />
       <Route path="clocation" element={<CLocation/>} />
       <Route path="about" element={<About />} />
+      <Route path="feed" element={<Feed />} />
       <Route path="/:email/create-post" element={isAuthenticated ? <CreatePost />:<Login/>} />
       {/* <Route path="/:email/edit" element={<ProfileEdit />} /> */}
       <Route path="petprofile/:petid" element={<PetProfile />} />

@@ -189,21 +189,23 @@ function Adopt() {
   }, [navigate]);
 
   return (
-    <div className="bg-[#f5f5f5] dark:bg-black min-h-screen w-full p-3 md:p-5 relative">
-      <div className="flex gap-4 mb-4 sticky top-0 z-10">
-        <FilterSection
-          isOpen={isFilterOpen}
-          setIsOpen={setIsFilterOpen}
-          selectedFilters={selectedFilters}
-          handleFilterChange={handleFilterChange}
-          getUniqueValues={getUniqueValues}
-        />
-        <SortSection
-          isOpen={isSortOpen}
-          setIsOpen={setIsSortOpen}
-          sortOption={sortOption}
-          handleSortChange={handleSortChange}
-        />
+    <div className="bg-[#f5f5f5] dark:bg-black min-h-screen w-full">
+      <div className="sticky top-0 z-50 bg-white dark:bg-black">
+        <div className="flex gap-4 p-4 border-b-[1px] dark:border-[#565656]">
+          <FilterSection
+            isOpen={isFilterOpen}
+            setIsOpen={setIsFilterOpen}
+            selectedFilters={selectedFilters}
+            handleFilterChange={handleFilterChange}
+            getUniqueValues={getUniqueValues}
+          />
+          <SortSection
+            isOpen={isSortOpen}
+            setIsOpen={setIsSortOpen}
+            sortOption={sortOption}
+            handleSortChange={handleSortChange}
+          />
+        </div>
       </div>
 
       {loading && <Loader />}
