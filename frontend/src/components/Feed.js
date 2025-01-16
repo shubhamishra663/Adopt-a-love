@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp, faComment, faShare } from "@fortawesome/free-solid-svg-icons";
+import defaultAvatar from "../utils/defaultAvatar.jpg";
+
 
 const Feed = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
@@ -12,7 +14,7 @@ const Feed = ({ navigation }) => {
   // Fetch posts from the API
   const fetchPosts = useCallback(async () => {
     try {
-      const response = await fetch("https://adopt-a-love-backend.vercel.app/posts");
+      const response = await fetch("http://localhost:5000/posts");
       console.log(response.data);
 
       if (!response.ok) {
@@ -46,22 +48,22 @@ const Feed = ({ navigation }) => {
   };
 
   const renderPost = (item) => (
-    <div className="bg-gray-800 p-4 rounded-lg shadow-md mb-4">
+    <div className="bg-white dark:bg-[#252728] p-4 md:rounded-lg shadow-md mb-4">
       {/* Header */}
       <div className="flex items-center mb-4">
         <img
-          src={item.profileImage || "https://via.placeholder.com/50"}
+          src={item.user.profile_img || defaultAvatar}
           alt="Profile"
-          className="w-12 h-12 rounded-full mr-4"
+          className="w-10 h-10 rounded-full  object-cover"
         />
-        <div>
-          <p className="text-white font-bold">{item.email}</p>
-          <p className="text-gray-400 text-sm">{item.createdAt}</p>
+        <div className="ml-4">
+          <p className="text-black dark:text-white  font-bold">{item.email}</p>
+          <p className="text-gray-400 text-xs">{item.createdAt}</p>
         </div>
       </div>
 
       {/* Post Body */}
-      <pre className="text-gray-300 mb-4 text-wrap">{item.text}</pre>
+      <pre className="text-black dark:text-gray-300 mb-4 text-wrap">{item.text}</pre>
       {item.image && (
         <div className="mb-4 cursor-pointer" onClick={() => openPet(item._id)}>
           <img src={item.image} alt="Post" className="w-full h-80 object-cover rounded-lg" />
@@ -87,8 +89,8 @@ const Feed = ({ navigation }) => {
   );
 
   return (
-    <div className="bg-black min-h-screen flex justify-center">
-      <div className="max-w-2xl w-full px-4">
+    <div className="bg-[#f5f0ff] dark:bg-black min-h-screen flex justify-center">
+      <div className="max-w-2xl w-full py-4">
         {loading ? (
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-white text-lg">Loading...</div>

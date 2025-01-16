@@ -12,12 +12,12 @@ function Footer() {
         </h1>
         <ul>
           <li>
-            <a href="#home" className="hover:underline">
+            <a href="/" className="hover:underline">
               Home
             </a>
           </li>
           <li>
-            <a href="#adopt" className="hover:underline">
+            <a href="/adopt" className="hover:underline">
               Adopt a Pet
             </a>
           </li>
@@ -32,7 +32,7 @@ function Footer() {
             </a>
           </li>
           <li>
-            <a href="#faqs" className="hover:underline">
+            <a href="/faq" className="hover:underline">
               FAQs
             </a>
           </li>
@@ -46,10 +46,10 @@ function Footer() {
           <li>
             Email:{" "}
             <a
-              href="mailto:sanjeetsingh80@gmail.com"
+              href="mailto:adoptalove@yahoo.com"
               className="hover:underline"
             >
-              sanjeetsingh80@gmail.com
+              adoptalove@yahoo.com
             </a>
           </li>
           <li>

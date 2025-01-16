@@ -27,7 +27,7 @@ export default function FAQ() {
         };
     }, []);
   return (
-<div ref={containerRef} className="h-screen overflow-hidden">
+<div ref={containerRef} className="faq h-screen overflow-hidden">
             <div className="flex h-full" ref={sectionsRef}>
                 <div className="flex-shrink-0 w-full h-full flex flex-col justify-center items-center bg-purple-500 text-white">
                     <h2 className="text-4xl">FAQ 1</h2>

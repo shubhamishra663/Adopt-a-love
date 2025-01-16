@@ -1,22 +1,24 @@
-import React, { useState } from 'react';
-import { ReactNotifications, Store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { ReactNotifications, Store } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCheckCircle,
+  faCircleXmark,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Signup() {
-  const [user, setUser] = useState({
-    name: '',
-    email: '',
-    password: '',
-  });
+  const [user, setUser] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [emailExists, setEmailExists] = useState(null);
+
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [id]: value,
-    }));
+  const handleChange = ({ target: { id, value } }) => {
+    setUser((prev) => ({ ...prev, [id]: value }));
+    if (id === "email") checkEmailExists(value);
   };
 
   const showNotification = (title, message, type) => {
@@ -24,50 +26,65 @@ export default function Signup() {
       title,
       message,
       type,
-      insert: 'top',
-      container: 'top-right',
-      animationIn: ['animate__animated', 'animate__fadeIn'],
-      animationOut: ['animate__animated', 'animate__fadeOut'],
-      dismiss: {
-        duration: 5000,
-        onScreen: true,
-      },
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: { duration: 5000, onScreen: true },
     });
   };
 
-  const signup = async () => {
+  const checkEmailExists = async (email) => {
+    if (!email.trim()) {
+      setEmailExists(null); // Set to null when the email is empty
+      return;
+    }
     try {
-      const res = await fetch('https://adopt-a-love-backend.vercel.app/signup', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(user),
-      });
+      const { data, status } = await axios.post(
+        "https://adopt-a-love-backend.vercel.app/check-email",
+        { email }
+      );
+      if (status === 200) setEmailExists(data.exists);
+    } catch (error) {
+      console.error("Email check error:", error.message);
+    }
+  };
 
-      if (res.ok) {
-        const responseData = await res.json();
-        console.log(responseData);
-
-        showNotification('Success', 'Signup successful', 'success');
-        navigate('/login');
+  const signup = async () => {
+    setLoading(true);
+    try {
+      const { data, status } = await axios.post(
+        "https://adopt-a-love-backend.vercel.app/signup",
+        user,
+        { withCredentials: true }
+      );
+      if (status === 200) {
+        showNotification("Success", "Signup successful", "success");
+        navigate("/login");
       } else {
-        const errorMessage = await res.text();
-        showNotification('Error', errorMessage || 'Signup failed', 'danger');
-        console.log(`Request failed with status: ${res.status}`);
+        showNotification("Error", data.message || "Signup failed", "danger");
       }
     } catch (error) {
-      console.log('Error during fetch:', error);
-      showNotification('Error', 'Signup failed. Please try again later.', 'danger');
+      showNotification(
+        "Error",
+        "Signup failed. Please try again later.",
+        "danger"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (emailExists) {
+      showNotification("Error", "Email is already taken", "danger");
+      return;
+    }
     signup();
   };
+
+  const inputFields = ["name", "email", "password"];
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-[#f5f0ff] dark:bg-black transition-colors duration-300">
@@ -77,10 +94,10 @@ export default function Signup() {
           Sign Up
         </h2>
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-          {['name', 'email', 'password'].map((field) => (
+          {inputFields.map((field) => (
             <div className="relative" key={field}>
               <input
-                type={field === 'password' ? 'password' : 'text'}
+                type={field === "password" ? "password" : "text"}
                 id={field}
                 value={user[field]}
                 onChange={handleChange}
@@ -94,17 +111,36 @@ export default function Signup() {
               >
                 {field.charAt(0).toUpperCase() + field.slice(1)}
               </label>
+              {field === "email" && emailExists !== null && (
+                <FontAwesomeIcon
+                  icon={emailExists === false ? faCheckCircle : faCircleXmark}
+                  className={`absolute top-1/2 right-4 transform -translate-y-1/2 ${
+                    emailExists === false ? "text-green-500" : "text-red-500"
+                  }`}
+                  title={
+                    emailExists === false
+                      ? "Email is available"
+                      : "Email is taken"
+                  }
+                />
+              )}
             </div>
           ))}
           <button
             type="submit"
-            className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md transition duration-300"
+            className={`w-full py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md transition duration-300 ${
+              loading ? "cursor-no-drop opacity-50" : "cursor-pointer"
+            }`}
+            disabled={loading}
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </button>
           <p className="text-gray-800 dark:text-[#f5f5f5] text-center">
-            Already have an account?{' '}
-            <Link className="text-blue-500 hover:text-blue-400 transition hover:underline" to="/login">
+            Already have an account?{" "}
+            <Link
+              className="text-blue-500 hover:text-blue-400 transition hover:underline"
+              to="/login"
+            >
               Login
             </Link>
           </p>

@@ -74,7 +74,7 @@ const UserType = () => {
 
       <h1 className="text-xl md:text-4xl font-semibold mb-6">
         Are You a{" "}
-        <div className="inline-block px-4 py-1 min-w-48 md:min-w-52 border-b-2 border-gray-500 dark:border-gray-300">
+        <div className="inline-block px-4 py-1 flex-1 border-b-2 border-gray-500 dark:border-gray-300">
           <p className="inline-block text-sm md:text-2xl text-red-600">
             {selectedUserType}
           </p>

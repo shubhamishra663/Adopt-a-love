@@ -91,7 +91,7 @@ export default function Profile() {
       {/* Banner and profile pic */}
       <div className="bg-[#f5f0ff] h-fit">
         <div
-          className="h-[300px] md:h-[300px] w-full bg-gray-800 flex justify-between"
+          className="h-[200px] md:h-[300px] w-full bg-gray-800 flex justify-between"
           style={{
             backgroundImage: `url(${
               userData?.user?.cover_img || "default-image-path.jpg"
@@ -102,7 +102,7 @@ export default function Profile() {
           }}
         >
           <div className="flex px-3 md:px-5 gap-2">
-            <div className="relative top-[12%] flex justify-center items-end">
+            <div className="relative top-[16%] md:top-[12%] flex justify-center items-end">
               <div className="border-2 h-20 w-20 dark:bg-black rounded-full overflow-hidden">
                 <img
                   src={userData?.user?.profile_img || defaultAvatar}

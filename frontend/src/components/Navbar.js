@@ -10,7 +10,8 @@ export default function Navbar({ userData }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const location = useLocation();
-  const { theme, logout, setTheme, navUserData, isAuthenticated } = useContext(AuthContext);
+  const { theme, logout, setTheme, navUserData, isAuthenticated } =
+    useContext(AuthContext);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -35,7 +36,10 @@ export default function Navbar({ userData }) {
   return (
     <nav className="bg-white border-gray-200 dark:bg-black shadow-xl border-b-[1px] dark:border-[#565656] sticky top-0 z-50">
       <div className="max-w-screen-2xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+        <Link
+          to="/"
+          className="flex items-center space-x-3 rtl:space-x-reverse"
+        >
           <img src={logo} className="h-8" alt="Logo" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             Adopt a Love
@@ -73,21 +77,24 @@ export default function Navbar({ userData }) {
                 <li>
                   <Link
                     to={`/${userData?.user?.email || navUserData?.email}`}
+                    onClick={toggleProfileMenu}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     Dashboard
                   </Link>
                 </li>
 
-                {isAuthenticated && 
-                <li>
-                <Link
-                  to="/usertype"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                >
-                 Account Settings
-                </Link>
-              </li>}
+                {isAuthenticated && (
+                  <li>
+                    <Link
+                      onClick={toggleProfileMenu}
+                      to="/usertype"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
+                      Account Settings
+                    </Link>
+                  </li>
+                )}
 
                 <li>
                   {/* Toggle Theme Button */}
@@ -95,7 +102,9 @@ export default function Navbar({ userData }) {
                     onClick={toggleTheme}
                     className="px-4 py-2 text-white rounded-md flex items-center gap-2"
                   >
-                    <span className="text-sm text-gray-700 dark:text-gray-200">Set Theme</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-200">
+                      Set Theme
+                    </span>
                     <div
                       className={`w-10 h-6 rounded-full p-1 bg-gray-300 relative transition-all duration-300 ease-in-out ${
                         theme === "dark" ? "bg-gray-800" : "bg-yellow-400"
@@ -112,7 +121,10 @@ export default function Navbar({ userData }) {
 
                 <li>
                   <button
-                    onClick={logout}
+                    onClick={() => {
+                      logout();
+                      toggleProfileMenu();
+                    }}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white w-full text-left"
                   >
                     Sign out
@@ -150,40 +162,65 @@ export default function Navbar({ userData }) {
 
         {/* Navigation Links */}
         <div
-          className={`items-center justify-between ${isMenuOpen ? "block" : "hidden"} w-full md:flex md:w-auto md:order-1`}
+          className={`items-center justify-between ${
+            isMenuOpen ? "block" : "hidden"
+          } w-full md:flex md:w-auto md:order-1`}
           id="navbar-user"
         >
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-black md:dark:bg-black dark:border-gray-700">
             <li>
-              <Link to="/" className={`block py-2 px-3 rounded ${getActiveClass("/")}`}>
+              <Link
+                to="/"
+                className={`block py-2 px-3 rounded ${getActiveClass("/")}`}
+              >
                 Home
               </Link>
             </li>
             <li>
               <Link
                 to={`/${userData?.user?.email}`}
-                className={`block py-2 px-3 rounded ${getActiveClass(`/${userData?.user?.email}`)}`}
+                className={`block py-2 px-3 rounded ${getActiveClass(
+                  `/${userData?.user?.email}`
+                )}`}
               >
                 Profile
               </Link>
             </li>
             <li>
-              <Link to="/feed" className={`block py-2 px-3 rounded ${getActiveClass("/feed")}`}>
+              <Link
+                to="/feed"
+                className={`block py-2 px-3 rounded ${getActiveClass("/feed")}`}
+              >
                 Feed
               </Link>
             </li>
             <li>
-              <Link to="/about" className={`block py-2 px-3 rounded ${getActiveClass("/about")}`}>
+              <Link
+                to="/about"
+                className={`block py-2 px-3 rounded ${getActiveClass(
+                  "/about"
+                )}`}
+              >
                 About Us
               </Link>
             </li>
             <li>
-              <Link to="/adopt" className={`block py-2 px-3 rounded ${getActiveClass("/adopt")}`}>
+              <Link
+                to="/adopt"
+                className={`block py-2 px-3 rounded ${getActiveClass(
+                  "/adopt"
+                )}`}
+              >
                 Adopt
               </Link>
             </li>
             <li>
-              <Link to="/contactus" className={`block py-2 px-3 rounded ${getActiveClass("/contactus")}`}>
+              <Link
+                to="/contactus"
+                className={`block py-2 px-3 rounded ${getActiveClass(
+                  "/contactus"
+                )}`}
+              >
                 Contact Us
               </Link>
             </li>

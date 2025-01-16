@@ -88,7 +88,7 @@ export default function ProfileEdit({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="relative w-full max-w-lg bg-white rounded-lg shadow-lg p-8">
         <button
           onClick={onClose}

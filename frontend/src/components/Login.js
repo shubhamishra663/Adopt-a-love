@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Profile from './Profile';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
-import { ReactNotifications, Store } from 'react-notifications-component';
+import { ReactNotifications} from 'react-notifications-component';
 
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login, isAuthenticated ,value ,userData,showNotification} = useContext(AuthContext); 
+  const { login, isAuthenticated ,value ,showNotification} = useContext(AuthContext); 
   const location = useLocation();
   const loct = location.state?.from?.pathname ;
 
@@ -15,6 +15,7 @@ export default function Login() {
     email: '',
     password: '',
   });
+  const [loading,setLoading]=useState(false)
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -28,6 +29,7 @@ export default function Login() {
 
   const loginHandle = async () => {
     try {
+      setLoading(true)
       const res = await fetch('https://adopt-a-love-backend.vercel.app/login', {
         method: 'POST',
         headers: {
@@ -62,6 +64,8 @@ export default function Login() {
     } catch (error) {
       console.error('Error during fetch:', error.message);
       showNotification("Error", error.message || "Login failed. Please try again later.", "danger");
+    }finally{
+      setLoading(false)
     }
   };
   
@@ -125,9 +129,13 @@ export default function Login() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out"
+            className={`w-full py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out  ${
+              loading
+                ? "cursor-no-drop opacity-50 pointer-events-none"
+                : "cursor-pointer"
+            }`}
           >
-            Submit
+            {loading?"Submitting...":"Submit"}
           </button>
           <p className='text-black dark:text-[#f5f5f5]'>Don't have an account? <Link className='text-blue-600 hover:underline' to='/signup'>Create an account</Link></p>
 

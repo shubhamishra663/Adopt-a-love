@@ -76,7 +76,7 @@ export default function PetProfile() {
         setLoadingComplete(true);
         return 100;
       });
-    }, 25);
+    }, 10);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -85,7 +85,7 @@ export default function PetProfile() {
     if (loadingComplete) {
       gsap
         .timeline()
-        .to(".loader", { height: "100%", duration: 1.2, ease: Expo.easeInOut })
+        .to(".loader", { height: "100%", duration: 0.8, ease: Expo.easeInOut })
         .to(".count", { display: "none" })
         .to(".content", { opacity: 1, duration: 0 });
     }
@@ -147,7 +147,7 @@ export default function PetProfile() {
 
       {/* Pet image */}
       <section className="dark:bg-black w-full h-[60%] flex items-center justify-center  md:p-14">
-        <div className="bg-gray-600 h-96 w-full md:w-1/2 relative rounded-b-lg md:rounded-lg overflow-hidden shadow-lg">
+        <div className="bg-gray-600 h-96 w-full md:w-1/2 relative rounded-b-xl md:rounded-lg overflow-hidden shadow-lg">
           <div className="loading-bar bg-[#f5f5f5] dark:bg-[#121212] h-full w-full flex flex-col justify-center items-center absolute top-0 transition-all duration-700">
             <div
               className="loader absolute left-0 h-[4px] bg-green-500"
@@ -157,7 +157,7 @@ export default function PetProfile() {
           </div>
           <div className="content absolute top-0 left-0 w-full h-full flex justify-center items-center opacity-0 transition-opacity duration-700">
             <img
-              src={pet?.image || petPlaceholderImage}
+              src={pet?.image}
               alt="Pet"
               className="rounded-b-xl md:rounded-lg w-full h-full object-center"
             />
