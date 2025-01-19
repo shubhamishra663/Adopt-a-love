@@ -14,7 +14,7 @@ const Feed = ({ navigation }) => {
   // Fetch posts from the API
   const fetchPosts = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:5000/posts");
+      const response = await fetch("https://adopt-a-love-backend.vercel.app/posts");
       console.log(response.data);
 
       if (!response.ok) {
