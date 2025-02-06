@@ -74,6 +74,7 @@ function PetForm() {
       data.append("status", formData.status);
 
       console.log(`New Formdata: ${formData}`);
+      const token = localStorage.getItem("token");
 
       const res = await fetch(
         `${
@@ -83,6 +84,9 @@ function PetForm() {
         }`,
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           body: data,
         }
       );
@@ -112,6 +116,8 @@ function PetForm() {
           "An error occurred while adding the pet. Please try again later.",
         "danger"
       );
+    }finally{
+      setLoading(false)
     }
   };
 

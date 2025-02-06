@@ -7,6 +7,7 @@ import FAQs from './Dashboard/FAQs';
 import Footer from './Footer';
 import WhyChooseUs from './Dashboard/WhyChooseUs';
 import Header from './Dashboard/Header';
+import NeedVeterinarian from './Dashboard/NeedVeterinarian';
 
 
 
@@ -14,6 +15,7 @@ function Home() {
     return (
         <div className="relative overflow-hidden">
             <Header/>
+            <NeedVeterinarian/>
             <WhyChooseUs/>
             <Review />
             <Donation/>

@@ -120,12 +120,13 @@ const ContactUs = () => {
           <p className="text-gray-800 font-medium dark:text-gray-400">
             Email us
           </p>
-          <p className="text-gray-600 dark:text-white">
-            shubhamishra663@gmail.com
-          </p>
-          <p className="text-gray-600 dark:text-white">
-            singhhsanjeetaryan@gmail.com
-          </p>
+          
+          <a
+              href="mailto:adoptalove@yahoo.com"
+              className="hover:underline text-gray-600 dark:text-white"
+            >
+              adoptalove@yahoo.com
+            </a>
         </div>
         <div className="flex flex-col items-center">
           <div className="bg-blue-100 p-4 rounded-full mb-4">

@@ -56,7 +56,6 @@ export default function Pets() {
 
   const handleDeletePet = async (petId) => {
     try {
-      // Retrieve the token from localStorage or another secure storage
       const token = localStorage.getItem('token');
   
       if (!token) {
@@ -64,9 +63,8 @@ export default function Pets() {
         return;
       }
   
-      // Make the DELETE request with the Authorization header
       await axios.delete(
-        `https://adopt-a-love-backend.vercel.app/delete-pet/${petId}`,
+        `http://localhost:5000/delete-pet/${petId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -74,7 +72,6 @@ export default function Pets() {
         }
       );
   
-      // Update the state to remove the deleted pet
       setPetsData((prev) => prev.filter((pet) => pet._id !== petId));
       setSelectedPetId(null); // Reset the selected pet ID if applicable
       console.log("Pet deleted successfully.");

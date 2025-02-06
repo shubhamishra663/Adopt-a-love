@@ -104,7 +104,7 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-200 p-4">
+    <div className="flex justify-center items-center min-h-screen dark:bg-black bg-gray-200 p-4">
       <div className="bg-white w-full max-w-lg rounded-lg shadow-lg overflow-hidden max-h-screen">
         <div className="p-6 border-b border-gray-300">
           <h1 className="text-2xl font-bold text-center">Create Post</h1>

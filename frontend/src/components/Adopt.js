@@ -190,7 +190,7 @@ function Adopt() {
 
   return (
     <div className="bg-[#f5f5f5] dark:bg-black min-h-screen w-full">
-      <div className="sticky top-0 z-50 bg-white dark:bg-black">
+      <div className="z-50 bg-white dark:bg-black">
         <div className="flex gap-4 p-4 border-b-[1px] dark:border-[#565656]">
           <FilterSection
             isOpen={isFilterOpen}

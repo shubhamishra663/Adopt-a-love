@@ -13,12 +13,15 @@ export default function Signup() {
   const [user, setUser] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [emailExists, setEmailExists] = useState(null);
+  const [nameError, setNameError] = useState("");
+
 
   const navigate = useNavigate();
 
   const handleChange = ({ target: { id, value } }) => {
     setUser((prev) => ({ ...prev, [id]: value }));
     if (id === "email") checkEmailExists(value);
+    if (id === "name") validateName(value);
   };
 
   const showNotification = (title, message, type) => {
@@ -34,9 +37,23 @@ export default function Signup() {
     });
   };
 
+  const validateName = (name) => {
+    if (name==="")
+      setNameError("");
+    else if (!/^[A-Za-z]/.test(name)) {
+      setNameError("Name must start with a letter");
+    } else {
+      setNameError("");
+    }
+  };
+
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+  
   const checkEmailExists = async (email) => {
-    if (!email.trim()) {
-      setEmailExists(null); // Set to null when the email is empty
+    if (!email.trim() || !isValidEmail(email)) {
+      setEmailExists(null); // Reset if invalid email
       return;
     }
     try {
@@ -97,7 +114,7 @@ export default function Signup() {
           {inputFields.map((field) => (
             <div className="relative" key={field}>
               <input
-                type={field === "password" ? "password" : "text"}
+                type={field === "password" ? "password" : field === "email" ? "email" : "text"}
                 id={field}
                 value={user[field]}
                 onChange={handleChange}
@@ -123,6 +140,9 @@ export default function Signup() {
                       : "Email is taken"
                   }
                 />
+              )}
+               {field === "name" && nameError && (
+                <p className="text-red-500 text-sm mt-1">{nameError}</p>
               )}
             </div>
           ))}

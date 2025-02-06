@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp, faComment, faShare } from "@fortawesome/free-solid-svg-icons";
 import defaultAvatar from "../utils/defaultAvatar.jpg";
+import Loader from "./Loader";
 
 
 const Feed = ({ navigation }) => {
@@ -14,7 +15,7 @@ const Feed = ({ navigation }) => {
   // Fetch posts from the API
   const fetchPosts = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:5000/posts");
+      const response = await fetch("https://adopt-a-love-backend.vercel.app/posts");
       console.log(response.data);
 
       if (!response.ok) {
@@ -92,8 +93,8 @@ const Feed = ({ navigation }) => {
     <div className="bg-[#f5f0ff] dark:bg-black min-h-screen flex justify-center">
       <div className="max-w-2xl w-full py-4">
         {loading ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="text-white text-lg">Loading...</div>
+          <div className="flex items-center justify-center min-h-screen overflow-hidden">
+            <Loader/>
           </div>
         ) : posts.length > 0 ? (
           <div>
