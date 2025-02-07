@@ -5,39 +5,76 @@ import { AuthContext } from "../context/authContext";
 
 const UserType = () => {
   const [selectedUserType, setSelectedUserType] = useState("");
+  const [clinicName, setClinicName] = useState("");
+  const [licenseNumber, setLicenseNumber] = useState("");
+  const [clinicTimings, setClinicTimings] = useState("");
+  const [specialization, setSpecialization] = useState("");
+  const [university, setUniversity] = useState("");
+  const [experience, setExperience] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { isAuthenticated, showNotification, userData,navUserData } =useContext(AuthContext);
+  const { isAuthenticated, showNotification, userData, navUserData } =
+    useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSelection = (userType) => {
-    setSelectedUserType(userType); // Update the selected text
+    setSelectedUserType(userType);
   };
 
   const userSubmit = () => {
     if (!selectedUserType) {
-        showNotification("Warning", "Please select a user type.", "warning");
-        return;
-      }
-      updateUser(userData?.user?.email || navUserData?.email, selectedUserType);
+      showNotification("Warning", "Please select a user type.", "warning");
+      return;
+    }
+
+    // If the user is a veterinarian, ensure they have filled in additional details
+    if (
+      selectedUserType === "Veterinarian" &&
+      (!clinicName.trim() ||
+        !licenseNumber.trim() ||
+        !clinicTimings.trim() ||
+        !specialization.trim() ||
+        !university.trim() ||
+        !experience.trim())
+    ) {
+      showNotification(
+        "Warning",
+        "Please fill in all veterinarian details.",
+        "warning"
+      );
+      return;
+    }
+
+    updateUser(userData?.user?.email || navUserData?.email, selectedUserType);
   };
 
   const updateUser = async (email, uType) => {
-    
     try {
       setLoading(true);
+      const requestBody = {
+        email: email,
+        userType: uType,
+      };
+
+      // Include additional details if the user is a veterinarian
+      if (uType === "Veterinarian") {
+        requestBody.clinicName = clinicName;
+        requestBody.licenseNumber = licenseNumber;
+        requestBody.clinicTimings = clinicTimings;
+        requestBody.specialization = specialization;
+        requestBody.university = university;
+        requestBody.experience = experience;
+      }
+
       const res = await fetch(
-        "https://adopt-a-love-backend.vercel.app/userType",
+        "http://localhost:5000/userType",
         {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            email: email,
-            userType: uType,
-          }),
+          body: JSON.stringify(requestBody),
         }
       );
 
@@ -49,9 +86,7 @@ const UserType = () => {
           "User type updated successfully!",
           "success"
         );
-
-        console.log("Showonboard is setting true");
-        navigate("/clocation")
+        navigate("/clocation", { state: uType });
       } else {
         console.log(`Request failed with status: ${res.status}`);
         showNotification("Error", "Failed to update user type.", "danger");
@@ -81,6 +116,7 @@ const UserType = () => {
         </div>
         ?
       </h1>
+
       <div className="flex flex-col gap-4 w-full max-w-sm">
         <button
           onClick={() => handleSelection("Pet Owner / Personal User")}
@@ -100,6 +136,54 @@ const UserType = () => {
         >
           Veterinarian
         </button>
+
+        {/* Additional form for veterinarians */}
+        {selectedUserType === "Veterinarian" && (
+          <div className="flex flex-col gap-4 p-4 border rounded-md bg-gray-100 dark:bg-gray-800">
+            <input
+              type="text"
+              placeholder="Clinic Name"
+              value={clinicName}
+              onChange={(e) => setClinicName(e.target.value)}
+              className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            />
+            <input
+              type="text"
+              placeholder="License Number"
+              value={licenseNumber}
+              onChange={(e) => setLicenseNumber(e.target.value)}
+              className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            />
+            <input
+              type="text"
+              placeholder="Clinic Timings (e.g. 9 AM - 5 PM)"
+              value={clinicTimings}
+              onChange={(e) => setClinicTimings(e.target.value)}
+              className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            />
+            <input
+              type="text"
+              placeholder="Specialization (e.g. Surgery, Dentistry)"
+              value={specialization}
+              onChange={(e) => setSpecialization(e.target.value)}
+              className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            />
+            <input
+              type="text"
+              placeholder="University Studied At"
+              value={university}
+              onChange={(e) => setUniversity(e.target.value)}
+              className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            />
+            <input
+              type="number"
+              placeholder="Years of Experience"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+              className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            />
+          </div>
+        )}
 
         <button
           onClick={userSubmit}

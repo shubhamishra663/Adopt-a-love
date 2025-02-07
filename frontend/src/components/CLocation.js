@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // Fix for Leaflet's default icon URLs
 delete L.Icon.Default.prototype._getIconUrl;
@@ -35,6 +35,8 @@ const LocationComponent = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [pincode, setPincode] = useState("");
   const [inputPincode, setInputPincode] = useState("");
+  const loc = useLocation();
+  const userType = loc.state || "";
 
   const navigate = useNavigate();
 
@@ -157,6 +159,7 @@ const LocationComponent = () => {
             email: email,
             latitude: latitude,
             longitude: longitude,
+            pincode: pincode,
           }),
         }
       );
@@ -174,7 +177,9 @@ const LocationComponent = () => {
 
   return (
     <div className="bg-[#f5f0ff] dark:bg-black" style={{ padding: "20px" }}>
-      <p className="text-xl md:text-2xl font-bold text-center">User Location</p>
+      <p className="text-xl md:text-2xl font-bold text-center">
+         {userType === "Veterinarian" ? "Update Clinik Location" : "User Location"}
+      </p>
 
       {!location && !errorMsg && <p>Fetching your location...</p>}
       {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
@@ -213,7 +218,10 @@ const LocationComponent = () => {
         )}
 
         {/* Submit Button */}
-        <button onClick={locationSubmit} className="py-2 px-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded shadow-md">
+        <button
+          onClick={locationSubmit}
+          className="py-2 px-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded shadow-md"
+        >
           Submit
         </button>
       </div>
