@@ -20,6 +20,7 @@ import PetUpdate from './components/PetUpdate';
 import CreatePost from './components/CreatePost';
 import Feed from './components/Feed';
 import Veterinarian from './components/Veterinarian';
+import Search_Profile from './components/Search_Profile'
 
 function App() {
   return (
@@ -63,6 +64,7 @@ const AppRoutes = ({ isAuthenticated, userData, theme }) => {
       <Route path="signup" element={<Signup />} />
       <Route path="login" element={isAuthenticated ? <Navigate to={`/${email || userData?.user?.email}`} /> : <Login />} />
       <Route path="/:email" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
+      <Route path="/search" element={isAuthenticated ? <Search_Profile /> : <Navigate to="/login" />} />
       <Route path="pets" element={isAuthenticated ? <Pets /> : <Navigate to="/login" />} />
       <Route path="/:email/petform" element={isAuthenticated ? <PetForm /> : <Navigate to="/login" />} />
       <Route path="adopt" element={<Adopt />} />

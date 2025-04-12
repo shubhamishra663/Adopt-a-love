@@ -67,7 +67,7 @@ const UserType = () => {
       }
 
       const res = await fetch(
-        "http://localhost:5000/userType",
+        "https://adopt-a-love-backend.vercel.app/userType",
         {
           method: "POST",
           headers: {

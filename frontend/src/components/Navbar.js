@@ -188,6 +188,16 @@ export default function Navbar({ userData }) {
             </li>
             <li>
               <Link
+                to={`/search`}
+                className={`block py-2 px-3 rounded ${getActiveClass(
+                  `/search`
+                )}`}
+              >
+                Search
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/feed"
                 className={`block py-2 px-3 rounded ${getActiveClass("/feed")}`}
               >
