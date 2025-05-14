@@ -109,27 +109,27 @@ export default function Signup() {
   if (!emailExists) {
     try {
       // Make the API request to send OTP
-      const response = await axios.post('http://localhost:5000/send-otp', {
+      const response = await axios.post('https://adopt-a-love-backend.vercel.app/send-otp', {
         email: user.email, // Send the email address
       });
 
       // Check for successful response
       if (response.status === 200) {
-        alert("OTP sent!"); // You can replace this with a more user-friendly message
+        showNotification("Success", "OTP sent!", "success");
         setShowOtpField(true);
       } else {
-        alert("Failed to send OTP. Please try again.");
+        showNotification("Error", "Failed to send OTP. Please try again.", "danger");
       }
     } catch (error) {
-      console.error("Error sending OTP:", error);
-      alert("An error occurred while sending OTP.");
+      console.error("Error sending OTP:", error);        
+      showNotification("Error", "An error occurred while sending OTP.", "danger");
     }
   }
 };
 
   const handleOtpVerify = async () => {
   try {
-    const response = await fetch("http://localhost:5000/verify-otp", {
+    const response = await fetch("https://adopt-a-love-backend.vercel.app/verify-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
