@@ -3,6 +3,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../utils/logo.png";
 import { AuthContext } from "../context/authContext";
 import defaultAvatar from "../utils/defaultAvatar.jpg";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserSlash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Navbar({ userData }) {
   const navigate = useNavigate();
@@ -12,6 +15,7 @@ export default function Navbar({ userData }) {
   const location = useLocation();
   const { theme, logout, setTheme, navUserData, isAuthenticated } =
     useContext(AuthContext);
+  const [ showDeleteAccount, setShowDeleteAccount ] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -34,6 +38,7 @@ export default function Navbar({ userData }) {
   };
 
   return (
+    
     <nav className="bg-white border-gray-200 dark:bg-black shadow-xl border-b-[1px] dark:border-[#565656] sticky top-0 z-50">
       <div className="max-w-screen-2xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link
@@ -125,11 +130,29 @@ export default function Navbar({ userData }) {
                       logout();
                       toggleProfileMenu();
                     }}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white w-full text-left"
+                    className="block px-4 py-2 text-sm font-bold text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-400 w-full text-left"
                   >
-                    Sign out
+                    <span>
+                      <FontAwesomeIcon icon={faSignOutAlt} /> Sign Out
+                    </span>
                   </button>
                 </li>
+
+                <li>
+                  <button
+                    onClick={() => {
+                      setShowDeleteAccount(!showDeleteAccount);
+                      toggleProfileMenu();
+                    }}
+                    className="block px-4 py-2 text-sm font-bold text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500 w-full text-left"
+                  >
+                    <span>
+                      <FontAwesomeIcon icon={faUserSlash} /> Delete Account
+                    </span>
+                  </button>
+
+                </li>
+                {showDeleteAccount && <DeleteAccount />}
               </ul>
             </div>
           )}
@@ -240,3 +263,11 @@ export default function Navbar({ userData }) {
     </nav>
   );
 }
+
+const DeleteAccount = () => {
+  return (
+    <div className="h-screen w-screen bg-blue-300 absolute top-0 left-0 z-50 m-0 p-0 flex justify-center items-center">
+      <div className="text-5xl text-white">Are you sure you want to delete your account?</div>
+    </div>
+  );
+};
