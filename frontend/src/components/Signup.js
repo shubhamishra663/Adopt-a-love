@@ -109,7 +109,7 @@ export default function Signup() {
   if (!emailExists) {
     try {
       // Make the API request to send OTP
-      const response = await axios.post('http://localhost:5000/send-otp', {
+      const response = await axios.post('https://adopt-a-love-backend.vercel.app/send-otp', {
         email: user.email, // Send the email address
       });
 
@@ -129,7 +129,7 @@ export default function Signup() {
 
   const handleOtpVerify = async () => {
   try {
-    const response = await fetch("http://localhost:5000/verify-otp", {
+    const response = await fetch("https://adopt-a-love-backend.vercel.app/verify-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
