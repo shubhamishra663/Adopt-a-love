@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram, faFacebook } from "@fortawesome/free-brands-svg-icons";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -68,24 +69,25 @@ function Footer() {
         <h1 className="pt-3 pb-2 font-Poppins font-normal text-lg">Policy</h1>
         <ul>
           <li>
-            <a href="#privacy-policy" className="hover:underline">
+            <Link to="/policies#privacy-policy" className="hover:underline">
               Privacy Policy
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#refund-policy" className="hover:underline">
+            <Link to="/policies#refund-policy" className="hover:underline">
               Refund Policy
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#cancellation-policy" className="hover:underline">
+
+            <Link to="/policies#cancellation-policy"  className="hover:underline">
               Cancellation Policy
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#terms-conditions" className="hover:underline">
+            <Link to="/policies#terms-conditions" className="hover:underline">
               Terms and Conditions
-            </a>
+            </Link>
           </li>
         </ul>
       </div>

@@ -21,6 +21,7 @@ import CreatePost from './components/CreatePost';
 import Feed from './components/Feed';
 import Veterinarian from './components/Veterinarian';
 import Search_Profile from './components/Search_Profile'
+import PoliciesPage from './components/PoliciesPage';
 
 function App() {
   return (
@@ -79,6 +80,8 @@ const AppRoutes = ({ isAuthenticated, userData, theme }) => {
       {/* <Route path="/:email/edit" element={<ProfileEdit />} /> */}
       <Route path="petprofile/:petid" element={<PetProfile />} />
       <Route path="lostpetprofile/:petid" element={<PetProfile />} />
+      <Route path="policies" element={<PoliciesPage/>} />
+
 
       <Route path="*" element={<NotFound />} />
     </Routes>
