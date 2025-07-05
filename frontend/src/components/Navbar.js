@@ -5,13 +5,15 @@ import { AuthContext } from "../context/authContext";
 import defaultAvatar from "../utils/defaultAvatar.jpg";
 import { faSignOutAlt, faUserSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 
 export default function Navbar({ userData }) {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const location = useLocation();
-  const { theme, logout, setTheme, navUserData, isAuthenticated } = useContext(AuthContext);
+  const { theme, logout, setTheme, navUserData, isAuthenticated } =
+    useContext(AuthContext);
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -31,16 +33,32 @@ export default function Navbar({ userData }) {
 
   const handleDeleteAccount = () => {
     // Add your actual delete account logic here
-    console.log("Account deletion would happen here");
+    const token = localStorage.getItem("token"); // or from context/store
+    alert(token)
+
+    axios
+      .post(`http://localhost:5000/deleteuser`, null,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log("User deleted:", res.data);
+      })
+      .catch((err) => {
+        console.error(
+          "Error deleting user:",
+          err.response?.data || err.message
+        );
+      });
     setShowDeleteAccount(false);
-    // logout();
-    // navigate("/");
+    logout();
   };
 
   return (
     <>
       {showDeleteAccount && (
-        <DeleteAccount 
+        <DeleteAccount
           onDelete={handleDeleteAccount}
           onCancel={() => setShowDeleteAccount(false)}
         />
@@ -48,7 +66,10 @@ export default function Navbar({ userData }) {
 
       <nav className="bg-white border-gray-200 dark:bg-black shadow-xl border-b-[1px] dark:border-[#565656] sticky top-0 z-50">
         <div className="max-w-screen-2xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+          <Link
+            to="/"
+            className="flex items-center space-x-3 rtl:space-x-reverse"
+          >
             <img src={logo} className="h-8" alt="Logo" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               Adopt a Love
@@ -190,14 +211,19 @@ export default function Navbar({ userData }) {
           >
             <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-black md:dark:bg-black dark:border-gray-700">
               <li>
-                <Link to="/" className={`block py-2 px-3 rounded ${getActiveClass("/")}`}>
+                <Link
+                  to="/"
+                  className={`block py-2 px-3 rounded ${getActiveClass("/")}`}
+                >
                   Home
                 </Link>
               </li>
               <li>
                 <Link
                   to={`/${userData?.user?.email}`}
-                  className={`block py-2 px-3 rounded ${getActiveClass(`/${userData?.user?.email}`)}`}
+                  className={`block py-2 px-3 rounded ${getActiveClass(
+                    `/${userData?.user?.email}`
+                  )}`}
                 >
                   Profile
                 </Link>
@@ -205,7 +231,9 @@ export default function Navbar({ userData }) {
               <li>
                 <Link
                   to="/search"
-                  className={`block py-2 px-3 rounded ${getActiveClass("/search")}`}
+                  className={`block py-2 px-3 rounded ${getActiveClass(
+                    "/search"
+                  )}`}
                 >
                   Search
                 </Link>
@@ -213,7 +241,9 @@ export default function Navbar({ userData }) {
               <li>
                 <Link
                   to="/feed"
-                  className={`block py-2 px-3 rounded ${getActiveClass("/feed")}`}
+                  className={`block py-2 px-3 rounded ${getActiveClass(
+                    "/feed"
+                  )}`}
                 >
                   Feed
                 </Link>
@@ -221,7 +251,9 @@ export default function Navbar({ userData }) {
               <li>
                 <Link
                   to="/about"
-                  className={`block py-2 px-3 rounded ${getActiveClass("/about")}`}
+                  className={`block py-2 px-3 rounded ${getActiveClass(
+                    "/about"
+                  )}`}
                 >
                   About Us
                 </Link>
@@ -229,7 +261,9 @@ export default function Navbar({ userData }) {
               <li>
                 <Link
                   to="/adopt"
-                  className={`block py-2 px-3 rounded ${getActiveClass("/adopt")}`}
+                  className={`block py-2 px-3 rounded ${getActiveClass(
+                    "/adopt"
+                  )}`}
                 >
                   Adopt
                 </Link>
@@ -237,7 +271,9 @@ export default function Navbar({ userData }) {
               <li>
                 <Link
                   to="/contactus"
-                  className={`block py-2 px-3 rounded ${getActiveClass("/contactus")}`}
+                  className={`block py-2 px-3 rounded ${getActiveClass(
+                    "/contactus"
+                  )}`}
                 >
                   Contact Us
                 </Link>
@@ -258,7 +294,8 @@ const DeleteAccount = ({ onDelete, onCancel }) => {
           Delete Account
         </h2>
         <p className="text-gray-600 mb-8">
-          Are you absolutely sure you want to delete your account? This action cannot be undone.
+          Are you absolutely sure you want to delete your account? This action
+          cannot be undone.
         </p>
         <div className="flex w-full justify-center gap-4">
           <button
