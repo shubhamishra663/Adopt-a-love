@@ -32,9 +32,7 @@ export default function Navbar({ userData }) {
   };
 
   const handleDeleteAccount = () => {
-    // Add your actual delete account logic here
-    const token = localStorage.getItem("token"); // or from context/store
-    alert(token)
+    const token = localStorage.getItem("token"); 
 
     axios
       .post(`http://localhost:5000/deleteuser`, null,{
