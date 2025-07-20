@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const FAQs = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
+gsap.registerPlugin(ScrollTrigger);
+
+const FAQ = () => {
+  const sectionRef = useRef(null);
+  const titleRef = useRef(null);
+  const [openIndex, setOpenIndex] = useState(0);
 
   const Questions = [
     {
@@ -46,37 +53,103 @@ const FAQs = () => {
     },
   ];
 
-  const toggleActive = (index) => {
-    setActiveIndex(activeIndex === index ? null : index);
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        titleRef.current,
+        { y: 100, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.2,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: titleRef.current,
+            start: 'top 80%',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        '.faq-item',
+        { x: -100, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.faq-item',
+            start: 'top 80%',
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+
+    const answer = document.querySelector(`#faq-answer-${index}`);
+    const icon = document.querySelector(`#faq-icon-${index}`);
+
+    if (openIndex === index) {
+      gsap.to(answer, { height: 0, opacity: 0, duration: 0.3, ease: 'power2.inOut' });
+      gsap.to(icon, { rotation: 0, duration: 0.3, ease: 'power2.inOut' });
+    } else {
+      gsap.set(answer, { height: 'auto' });
+      gsap.from(answer, { height: 0, duration: 0.3, ease: 'power2.inOut' });
+      gsap.to(answer, { opacity: 1, duration: 0.3, ease: 'power2.inOut' });
+      gsap.to(icon, { rotation: 180, duration: 0.3, ease: 'power2.inOut' });
+    }
   };
 
   return (
-    <div className="bg-yellow-500 dark:bg-black pb-3 pt-3">
-      <div className="p-5">
-        <p className="text-center text-xl font-bold md:text-3xl text-white">Frequently Asked Questions</p>
-      </div>
-      <div className="flex flex-col items-center w-full py-4 font-Poppins">
-        {Questions.map(({ id, q, a }, index) => (
-          <div key={id} className="w-[80%] mb-3">
+    <section ref={sectionRef} className="py-20 dark:bg-black relative">
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 ref={titleRef} className="text-4xl md:text-5xl font-bold text-black dark:white mb-4">
+            Frequently Asked
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-400">
+              Questions
+            </span>
+          </h2>
+        </div>
+
+        <div className="space-y-4">
+          {Questions.map((faq, index) => (
             <div
-              onClick={() => toggleActive(index)}
-              className="bg-[#f5f0ff] dark:bg-[#333] border-2 border-[#444] flex justify-between items-center rounded-md cursor-pointer p-3"
+              key={faq.id}
+              className="faq-item bg-gradient-to-r from-slate-800/50 to-slate-700/30 backdrop-blur-lg border border-slate-600/30 rounded-2xl overflow-hidden"
             >
-              <h1 className="md:text-lg dark:text-white">{q}</h1>
-              <h1 className="text-2xl font-medium">
-                {activeIndex === index ? "-" : "+"}
-              </h1>
-            </div>
-            {activeIndex === index && (
-              <div className="bg-gray-100 dark:bg-[#444] rounded-md p-2 pt-5 pb-5">
-                <p className="md:text-sm text-xs md:font-medium dark:text-white">{a}</p>
+              <button
+                onClick={() => toggleFAQ(index)}
+                className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-slate-700/30 transition-colors duration-300"
+              >
+                <h3 className="text-lg font-semibold text-white pr-4">{faq.q}</h3>
+                <ChevronDown
+                  id={`faq-icon-${index}`}
+                  className="w-6 h-6 text-emerald-400 flex-shrink-0 transition-transform duration-300"
+                />
+              </button>
+
+              <div
+                id={`faq-answer-${index}`}
+                className={`px-8 pb-6 text-gray-300 leading-relaxed ${
+                  openIndex === index ? 'block' : 'hidden'
+                }`}
+              >
+                {faq.a}
               </div>
-            )}
-          </div>
-        ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default FAQs;
+export default FAQ;

@@ -71,6 +71,7 @@ export default function Pets() {
           },
         }
       );
+
   
       setPetsData((prev) => prev.filter((pet) => pet._id !== petId));
       setSelectedPetId(null); // Reset the selected pet ID if applicable

@@ -22,6 +22,7 @@ const PetsCard = ({ pet, onClick }) => {
       <div className="h-[60%] rounded-xl overflow-hidden">
         <img
           className="h-full w-full object-center transition-transform duration-300 transform hover:scale-125"
+          loading='lazy'
           src={pet?.image}
           alt={pet.petName || "Pet"}
         />

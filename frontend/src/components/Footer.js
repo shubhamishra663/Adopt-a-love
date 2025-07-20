@@ -56,7 +56,7 @@ function Footer() {
           <li>
             Phone:{" "}
             <a href="tel:+919876543210" className="hover:underline">
-              +91 9876543210
+              +91 9472314319
             </a>
           </li>
           <li>Address: Patna, Bihar, 801105</li>

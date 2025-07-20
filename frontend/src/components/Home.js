@@ -8,6 +8,7 @@ import Footer from './Footer';
 import WhyChooseUs from './Dashboard/WhyChooseUs';
 import Header from './Dashboard/Header';
 import NeedVeterinarian from './Dashboard/NeedVeterinarian';
+import SectionWrapper from './Dashboard/SectionWrapper';
 
 
 
@@ -15,8 +16,7 @@ function Home() {
     return (
         <div className="relative overflow-hidden">
             <Header/>
-            <NeedVeterinarian/>
-            <WhyChooseUs/>
+            <SectionWrapper/>
             <Review />
             <Donation/>
             <FAQs/>

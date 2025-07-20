@@ -37,7 +37,7 @@ function Header() {
     },[currentIndex]);
 
   return (
-    <div className='bg-yellow-500 dark:bg-black flex  h-[70vh] '>
+    <div className='bg-yellow-500 dark:bg-black flex  h-screen '>
         <div className='w-[60%]'>
             <div className='h-[40%] flex justify-center md:justify-end items-center flex-col '>
                 <h1 style={{fontFamily:"Playfair Display"}} className=' font-playbill font-[700] md:text-5xl text-[28px] text-green-800' ref={textRef}>WELCOME TO </h1>
