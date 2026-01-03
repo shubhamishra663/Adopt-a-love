@@ -64,7 +64,7 @@ export default function Pets() {
       }
   
       await axios.delete(
-        `http://localhost:5000/delete-pet/${petId}`,
+        `https://adopt-a-love-backend.vercel.app/delete-pet/${petId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
